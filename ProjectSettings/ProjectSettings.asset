@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 28
-  productGUID: 97692fd17ddd46442b7e4c529d1dcdad
+  productGUID: 051c5905e68755d4289ae7b7d537b3ba
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: 2026_CapStoneDesign_DoIT
+  productName: 2026_Capstone
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -843,16 +843,16 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: 2026_CapStoneDesign_DoIT
-  metroPackageVersion: 
+  metroPackageName: 2026Capstone
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: 2026_CapStoneDesign_DoIT
+  metroApplicationDescription: 2026_Capstone
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: 2026_Capstone
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -921,11 +921,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 7a4851e4-6be7-41b8-be9e-1f87f22f9c53
+  cloudProjectId: dd33c8ce-76c1-4484-a891-a5d04dc17438
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 2026_CapStoneDesign_DoIT
-  organizationId: hwoo2814
+  projectName: 2026_Capstone
+  organizationId: gplexs
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
