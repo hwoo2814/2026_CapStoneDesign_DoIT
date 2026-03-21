@@ -5,6 +5,11 @@ public class CardController : MonoBehaviour
     // 각 정책 카드를 선택했을 때 실행하는 함수
     public void OnClickYouthPolicy() // 청년 정책
     { 
+        // 튜토리얼 중에 청년 정책을 누르면 다음 칭찬 대사로 넘어가도록 지시
+        if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
+        {
+            TutorialManager.Instance.OnYouthPolicyClicked(); 
+        }
         ProcessPolicy(Random.Range(-35f, -30f), 1); 
     }
     public void OnClickSeniorPolicy() // 노년 정책
@@ -20,10 +25,10 @@ public class CardController : MonoBehaviour
     public void OnClickFunding() 
     {
         float currentMoney = ScoreManager.Instance.money;
+
         if (currentMoney >= 100f) return; // 100이면 선택 불가
 
         float rand = Random.value;
-
         if (rand <= 0.5f) // 50% 확률
         {
             ScoreManager.Instance.ModifyMoney(Random.Range(10f, 25f));
@@ -40,7 +45,7 @@ public class CardController : MonoBehaviour
         GameManager.Instance.OnPlayerActionCompleted();
     }
 
-    // 정책 버튼을 선택했을때 전달받은 cost와 policyType를 받아 실행하는 함수
+    // 정책 버튼을 선택했을때 전달받은 각각의 cost와 policyType를 받아 실행하는 함수
     private void ProcessPolicy(float cost, int policyType)
     {
         float currentMoney = ScoreManager.Instance.money;
@@ -79,6 +84,9 @@ public class CardController : MonoBehaviour
     // 현재 돈 게이지를 기준으로 정책의 성공 확률을 계산하는 함수
     private bool CheckSuccess(float money)
     {
+        // 튜토리얼 중이라면 돈이나 확률에 상관없이 무조건 100% 성공
+        if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial) return true;
+
         if (money >= 100f) return true;
         if (money <= 0f) return false;
 

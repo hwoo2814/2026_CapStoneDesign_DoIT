@@ -68,6 +68,7 @@ public class ScoreManager : MonoBehaviour
         float turnTotalScore = scoreUniv + scoreSilver + scoreIndustry + scoreHouse;
         totalScore += turnTotalScore;
         
+        // 계산된 총점수를 UI에 업데이트
         UIManager.Instance.UpdateTotalScoreUI(totalScore);
     }
 
@@ -76,7 +77,7 @@ public class ScoreManager : MonoBehaviour
     {
         float baseScore = dev * ((youthAffinity * wY) + (seniorAffinity * wS) + (corpAffinity * wC));
         float multiplier = dev >= 50f ? 2.5f : (dev >= 20f ? 1.5f : 1.0f);
-        //지역 레벨에 따른 점수 배율
+        // 지역 레벨에 따른 점수 배율
         // 발전도(dev)가 50 이상이면 x2.5 (LV 3)
         // 발전도(dev)가 20 이상이면 x1.5 (LV 2)
         // 그 외(0~19)는 x1.0 (LV 1)
@@ -121,6 +122,7 @@ public class ScoreManager : MonoBehaviour
             description ="설명설명설명"; 
         }
 
+        // UI로 보이게 함
         UIManager.Instance.ShowEndingPanel(grade, title, totalScore, description);
     }
 }
