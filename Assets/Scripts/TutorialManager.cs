@@ -116,6 +116,12 @@ public class TutorialManager : MonoBehaviour
     {
         isTutorial = false;
         tutorialPanel.SetActive(false); // 튜토리얼 창 끄기
+
+        // 튜토리얼 때 나온 로그 텍스트를 지움
+        if (UIManager.Instance.policyLogText != null)
+        {
+            UIManager.Instance.policyLogText.text = ""; 
+        }
         
         // 잠가뒀던 모든 버튼 다시 켜주기 (본 게임 시작)
         youthPolicyBtn.interactable = true;
@@ -123,7 +129,7 @@ public class TutorialManager : MonoBehaviour
         corpPolicyBtn.interactable = true;
         fundingBtn.interactable = true;
 
-        //튜토리얼에서 변했던 데이터를 전부 초기화 함
+        // 튜토리얼에서 변했던 데이터를 전부 초기화 함
         ScoreManager.Instance.InitData(); 
         GameManager.Instance.CURRENT_TURN = 1; 
 

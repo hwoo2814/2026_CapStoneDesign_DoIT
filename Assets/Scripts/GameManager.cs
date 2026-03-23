@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public static bool isTutorialMode = false;
-    public Slider MoneyBar; // 돈 게이지 슬라이드
+
+    public Image MoneyBar; // 돈 게이지 슬라이드
 
     public int CURRENT_TURN = 1;
     public int MAX_TURN = 35; // 최대 턴수
@@ -85,7 +86,7 @@ public class GameManager : MonoBehaviour
     {
         if (MoneyBar != null)
         {
-            MoneyBar.value = (float)ScoreManager.Instance.money / MAX_MONEY;
+            MoneyBar.fillAmount = (float)ScoreManager.Instance.money / MAX_MONEY;
         }
     }
 
@@ -120,7 +121,12 @@ public class GameManager : MonoBehaviour
     // 옵션
     public void Option()
     {
-        SceneManager.LoadScene("OptionScene");
+        
+    }
+
+    public void NewsButton()
+    {
+        
     }
 
     // 게임 끝내기

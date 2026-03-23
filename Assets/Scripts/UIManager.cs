@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour
 
     public GameObject eventPanel; // 돌발 이벤트가 뜰 때 화면에 나타나는 GameObject
     public Text eventTitleText; // 돌발 이벤트 창의 제목 텍스트
-    public Image eventbackGround; // 돌발 이벤트 배경(앵커, 타이틀 배경 등등...)
     public Image eventImage; // 돌발 이벤트 이미지(앵커 옆에)
 
     public GameObject hoverTooltip; // 마우스를 지역에 올렸을 때 마우스 옆에 튀어나오는 작은 창
@@ -21,12 +20,13 @@ public class UIManager : MonoBehaviour
     public GameObject endingPanel; // 턴이 모두 끝난 후 화면을 덮으며 나타날 최종 결과 창
 
     public Text endingResultText; // 결과 티어 텍스트
-    public Text endingDescText; // 스크롤 뷰 안의 결과에 대한 자세한 설명 텍스트
+    public Text endingDescText; // 결과 스크롤 뷰 안의 결과에 대한 자세한 설명 텍스트
 
     public Image univImage; // 대학가 이미지
     public Image silverImage; // 실버타운 이미지
     public Image industryImage; // 산업단지 이미지
     public Image houseImage; // 주거단지 이미지
+    public Text policyLogText; // Log Text 변수
 
     // 각 지역별 1~3레벨 전용 이미지 변수들
     // 대학가 발전도 이미지
@@ -93,14 +93,9 @@ public class UIManager : MonoBehaviour
     }
 
     // 돌발 이벤트 보여주는 함수
-    public void ShowEventPopup(string title, Sprite backGround, Sprite eventSprite)
+    public void ShowEventPopup(string title, Sprite eventSprite)
     {
         eventTitleText.text = title;
-
-        if (eventbackGround != null)
-        {
-            eventbackGround.sprite = backGround;
-        }
         
         if (eventImage != null)
         {
@@ -137,5 +132,15 @@ public class UIManager : MonoBehaviour
         endingResultText.text = $"최종 점수: {Mathf.RoundToInt(finalScore)}\n등급: {grade}\n칭호: {title}";
         endingDescText.text = description;
         endingPanel.SetActive(true);
+    }
+
+    // 로그 메시지를 화면에 띄우는 함수
+    public void AddPolicyLog(string logMsg)
+    {
+        if (policyLogText != null)
+        {
+            // 새로 들어온 메시지는 줄바꿈(\n)
+            policyLogText.text += logMsg + "\n";
+        }
     }
 }

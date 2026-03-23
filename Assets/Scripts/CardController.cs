@@ -25,22 +25,20 @@ public class CardController : MonoBehaviour
     public void OnClickFunding() 
     {
         float currentMoney = ScoreManager.Instance.money;
+        float rand = Random.value;
 
         if (currentMoney >= 100f) return; // 100이면 선택 불가
+        float getMoney = 0f; //자금이 얼마나 올랐는지 로그에 적기위한 변수
 
-        float rand = Random.value;
-        if (rand <= 0.5f) // 50% 확률
-        {
-            ScoreManager.Instance.ModifyMoney(Random.Range(10f, 25f));
-        }
-        else if (rand <= 0.8f) // 30% 확률
-        {
-            ScoreManager.Instance.ModifyMoney(Random.Range(20f, 35f));
-        }
-        else // 20% 확률
-        {
-            ScoreManager.Instance.money = GameManager.Instance.MAX_MONEY; // 100으로 SET
-        }
+        if (rand <= 0.5f) getMoney = Random.Range(10f, 25f); // 50% 확률
+        else if (rand <= 0.8f) getMoney = Random.Range(20f, 35f); // 30% 확률
+        else getMoney = GameManager.Instance.MAX_MONEY - currentMoney; // 20% 확률
+
+        ScoreManager.Instance.ModifyMoney(getMoney); // 돈 더하기
+        
+        // 자금 확보 로그 메시지를 만들어 UIManager로 전송
+        int turn = GameManager.Instance.CURRENT_TURN;
+        UIManager.Instance.AddPolicyLog($"{turn}번째 턴 : 자금 확보 성공 +{getMoney:F0}");
 
         GameManager.Instance.OnPlayerActionCompleted();
     }
@@ -52,30 +50,59 @@ public class CardController : MonoBehaviour
         bool isSuccess = CheckSuccess(currentMoney); // 성공, 실패 체크
 
         ScoreManager.Instance.ModifyMoney(cost); // 돈 차감
+        int turn = GameManager.Instance.CURRENT_TURN; // 로그에 몇 번째 턴인지 적기 위한 변수
+        string logMessage = $"{turn}번째 턴 : 정책이 "; // 로그 앞문장 미리쓰기
 
         if (isSuccess)
         {
+            logMessage += "성공 하였습니다. (";
+
             if (policyType == 1) // 청년정책 성공시
             {
-                ScoreManager.Instance.ModifyAffinity(Random.Range(1f, 1.5f), Random.Range(0.5f, 0.9f), Random.Range(0.5f, 0.9f));
+                // 변화량을 로그에 적기 위해 랜덤값을 dY, dS, dC에 저장
+                float dY = Random.Range(1f, 1.5f); 
+                float dS = Random.Range(0.5f, 0.9f); 
+                float dC = Random.Range(0.5f, 0.9f);
+
+                ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(5f, 0, 0, 5f);
+                
+                logMessage += $"청년 +{dY:F1}, 노년 +{dS:F1}, 기업 +{dC:F1} / 대학가 +5, 주거단지 +5)";
             }
             else if (policyType == 2) // 노년정책 성공시
             {
-                ScoreManager.Instance.ModifyAffinity(Random.Range(-0.9f, -0.5f), Random.Range(1f, 1.5f), Random.Range(-0.9f, -0.5f));
+                float dY = Random.Range(-0.9f, -0.5f); 
+                float dS = Random.Range(1f, 1.5f); 
+                float dC = Random.Range(-0.9f, -0.5f);
+
+                ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(0, 5f, 0, 5f);
+
+                logMessage += $"청년 {dY:F1}, 노년 +{dS:F1}, 기업 {dC:F1} / 실버타운 +5, 주거단지 +5)";
             }
             else if (policyType == 3) // 기업정책 성공시
             {
-                ScoreManager.Instance.ModifyAffinity(Random.Range(0.5f, 0.9f), Random.Range(-0.9f, -0.5f), Random.Range(1f, 1.5f));
+                float dY = Random.Range(0.5f, 0.9f); 
+                float dS = Random.Range(-0.9f, -0.5f); 
+                float dC = Random.Range(1f, 1.5f);
+
+                ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(0, 0, 5f, 0);
+
+                logMessage += $"청년 +{dY:F1}, 노년 {dS:F1}, 기업 +{dC:F1} / 산업단지 +5)";
             }
         }
         else // 실패 시 -0.5 ~ -1.5 사이값으로 하락, 발전도 증가 없음
         {
             float fMin = GameManager.Instance.FAIL_RND_MIN; 
             float fMax = GameManager.Instance.FAIL_RND_MAX; 
-            ScoreManager.Instance.ModifyAffinity(Random.Range(fMin, fMax), Random.Range(fMin, fMax), Random.Range(fMin, fMax));
+            
+            float dY = Random.Range(fMin, fMax); 
+            float dS = Random.Range(fMin, fMax); 
+            float dC = Random.Range(fMin, fMax);
+            ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
+            
+            logMessage += $"실패 하였습니다. (청년 {dY:F1}, 노년 {dS:F1}, 기업 {dC:F1})";
         }
 
         GameManager.Instance.OnPlayerActionCompleted();

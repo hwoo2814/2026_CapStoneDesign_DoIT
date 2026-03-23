@@ -19,9 +19,6 @@ public class SuddenEventManager : MonoBehaviour
     
     public List<EventData> events; // 이벤트 목록
 
-     
-    public Sprite commonBackground; // 공통 배경이미지
-
     // 이벤트별 이미지 설정
     public Sprite imgAiCompute;
     public Sprite imgSilverCare;
@@ -60,7 +57,7 @@ public class SuddenEventManager : MonoBehaviour
         ScoreManager.Instance.ModifyDev(ev.dUniv, ev.dSilver, ev.dInd, ev.dHouse);
 
         // 돌발 이벤트 UI 띄우기 (턴 시작 전 표출)
-        UIManager.Instance.ShowEventPopup(ev.eventName, ev.backGround , ev.eventSprite);
+        UIManager.Instance.ShowEventPopup(ev.eventName, ev.eventSprite);
     }
 
     private void InitEventData()
@@ -70,54 +67,54 @@ public class SuddenEventManager : MonoBehaviour
             // 긍정 이벤트 5개
             new EventData { 
                 eventName = "AI 컴퓨팅, 데이터 센터 유치",
-                backGround = commonBackground, eventSprite = imgAiCompute,
+                eventSprite = imgAiCompute,
                 dInd = 15f, dHouse = -5f, dCorp = 0.6f 
             },
             new EventData { 
                 eventName = "실버 AI 돌봄 서비스 보급",
-                backGround = commonBackground, eventSprite = imgSilverCare,
+                eventSprite = imgSilverCare,
                 dSilver = 10f, dInd = 15f, dSenior = 0.4f 
             },
             new EventData { 
                 eventName = "글로벌 빅테크와 국내 대학 협력",
-                backGround = commonBackground, eventSprite = imgTechCollab, 
+                eventSprite = imgTechCollab, 
                 dUniv = 5f, dInd = 7f, dYouth = 0.8f 
             },
             new EventData { 
                 eventName = "AI 에듀테크 시범지구 선정",
-                 backGround = commonBackground, eventSprite = imgEduTech,
+                eventSprite = imgEduTech,
                 dUniv = 14f, dYouth = 0.8f 
             },
             new EventData { 
                 eventName = "K-AI 스타트업 유니콘 탄생",
-                backGround = commonBackground, eventSprite = imgStartup,
+                eventSprite = imgStartup,
                 dInd = 12f 
             },
 
             // 부정 이벤트 5개
             new EventData { 
                 eventName = "AI 일자리 대체 공포 확산",
-                backGround = commonBackground, eventSprite = imgJobFear, 
+                eventSprite = imgJobFear, 
                 dYouth = -0.7f, dSenior = -0.4f 
             },
             new EventData { 
                 eventName = "AI 금융 사기 급증",
-                backGround = commonBackground, eventSprite = imgFraud, 
+                eventSprite = imgFraud, 
                 dYouth = -0.3f, dSenior = -0.3f, dCorp = -0.3f 
             },
             new EventData { 
                 eventName = "데이터 센터 전력 과부하, 화재 사고",
-                backGround = commonBackground, eventSprite = imgFire, 
+                eventSprite = imgFire, 
                 dInd = -15f 
             },
             new EventData { 
                 eventName = "AI 연산용 '워터 쇼크'",
-                backGround = commonBackground, eventSprite = imgWaterShock, 
+                eventSprite = imgWaterShock, 
                 dHouse = -15f, dYouth = -0.5f, dSenior = -0.5f, dCorp = -0.5f 
             },
             new EventData { 
                 eventName = "글로벌 AI 규제 요구",
-                backGround = commonBackground, eventSprite = imgRegulation, 
+                eventSprite = imgRegulation, 
                 dCorp = -0.7f, dInd = -9f 
             }
         };
