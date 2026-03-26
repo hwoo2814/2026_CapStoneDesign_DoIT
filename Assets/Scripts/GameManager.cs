@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 턴 시작 시 호출
+    // 새로운 턴 시작 시 호출
     public void StartTurn()
     {
         if (CURRENT_TURN > MAX_TURN) // 모든 턴이 끝나면
@@ -79,29 +79,22 @@ public class GameManager : MonoBehaviour
             SuddenEventManager.Instance.CheckAndTriggerEvent(); // 돌발 이벤트 체크 및 발생 함수
         }
 
-        UpdateMoneyUI(); // 돈 게이지 업데이트
+        UIManager.Instance.UpdateMoneyUI(); // 돈 게이지 업데이트
         UIManager.Instance.UpdateTurnText(); // 현재 턴 업데이트
         UIManager.Instance.UpdateFundingButtonState(); // 자금에 따른 버튼 상태 갱신 
+        UIManager.Instance.UpdateAffinityUI(); // 민심 게이지 업데이트
+        UIManager.Instance.UpdateRegionImages(); // 지역 이미지 업데이트
+        UIManager.Instance.UpdateTotalScoreUI(ScoreManager.Instance.totalScore); // 계산된 총점수를 UI에 업데이트
     }
 
-    // 플레이어가 카드를 선택하여 행동을 마쳤을 때 호출
+    // 플레이어가 카드를 선택하여 행동을 마쳤을 때 호출하여 턴 넘김
     public void OnPlayerActionCompleted()
     {
-        UpdateMoneyUI(); //UI에 현재 돈 업데이트
+        UIManager.Instance.UpdateMoneyUI(); //UI에 현재 돈 업데이트
         ScoreManager.Instance.CalculateTurnScore(); // 턴점수 계산
 
         CURRENT_TURN++;
         StartTurn();
-    }
-
-    // 돈 게이지, 성공 확률 업데이트
-    public void UpdateMoneyUI()
-    {
-        if (MoneyBar != null)
-        {
-            MoneyBar.fillAmount = (float)ScoreManager.Instance.money / MAX_MONEY;
-        }
-        UIManager.Instance.UpdateSuccessProbabilityUI(ScoreManager.Instance.money);
     }
 
     // 옵션 창의 해상도 조절 기능 함수

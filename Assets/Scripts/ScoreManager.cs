@@ -85,9 +85,6 @@ public class ScoreManager : MonoBehaviour
         // 최종 점수는 턴당 점수의 총합
         float turnTotalScore = scoreUniv + scoreSilver + scoreIndustry + scoreHouse;
         totalScore += turnTotalScore;
-        
-        // 계산된 총점수를 UI에 업데이트
-        UIManager.Instance.UpdateTotalScoreUI(totalScore);
     }
 
     // 각 지역의 민심 데이터 점수 계산 함수

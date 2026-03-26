@@ -193,10 +193,11 @@ public class TutorialManager : MonoBehaviour
         GameManager.Instance.CURRENT_TURN = 1; 
 
         // 초기화된 데이터를 UI에 반영
-        GameManager.Instance.UpdateMoneyUI();
+        UIManager.Instance.UpdateMoneyUI();
         ScoreManager.Instance.CalculateTurnScore();
         UIManager.Instance.UpdateTurnText();
         UIManager.Instance.UpdateRegionImages();
         UIManager.Instance.UpdateAffinityUI();
+        UIManager.Instance.UpdateTotalScoreUI(ScoreManager.Instance.totalScore);
     }
 }

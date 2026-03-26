@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour
     public GameObject newsPanel; // 뉴스창 패널
     public Button fundingBtn; // 자금이 100일때 버튼 선택을 막기위해서 가져옴
 
+    public Image MoneyBar; // 돈 게이지 슬라이드
+
     //민심 게이지 표현할 Image
     // 청년 민심
     public Image youthBorderImg; 
@@ -80,9 +82,16 @@ public class UIManager : MonoBehaviour
         {
             turnText.text = $"턴수 {GameManager.Instance.CURRENT_TURN}/{GameManager.Instance.MAX_TURN}";
         }
+    }
 
-        // 턴이 시작되거나 바뀔 때마다 지역레벨 체크하고 변경
-        UpdateRegionImages();
+    // 돈 게이지, 성공 확률 업데이트
+    public void UpdateMoneyUI()
+    {
+        if (MoneyBar != null)
+        {
+            MoneyBar.fillAmount = (float)ScoreManager.Instance.money / GameManager.Instance.MAX_MONEY;
+        }
+        UpdateSuccessProbabilityUI(ScoreManager.Instance.money);
     }
 
     // 현재 누적점수 표시
