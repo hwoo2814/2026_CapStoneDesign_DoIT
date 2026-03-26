@@ -13,6 +13,20 @@ public class TutorialManager : MonoBehaviour
     public Text dialogText; // 대사 텍스트 
     public GameObject dialogBox; // 대사창 배경 
 
+    // 캐릭터 이미지와 대사창의 위치 정보를 담을 배열입니다.
+    // Dialogues 배열과 크기가 같아야 합니다.
+    // characterPositions, dialogBoxPositions, dialogues, highlightTargets 
+    // 위 4개의 배열을 크기가 같아야 에러가 나지 않습니다.
+    public Vector2[] characterPositions; // 각 스텝별 캐릭터 위치
+    public Vector2[] dialogBoxPositions; // 각 스텝별 대사창 위치
+
+    [TextArea(1, 5)] // 한 대사에 최소 줄수 1 ~ 최대 줄수 5줄까지 입력할수 있음. 자유롭게 수정하여 사용.
+    public string[] dialogues;
+
+    // 대사가 넘어갈 때마다 밝게 강조할 UI 오브젝트를 넣을 배열과 현재 강조 중인 대상을 기억할 변수
+    public GameObject[] highlightTargets; 
+    private GameObject currentHighlightTarget = null;
+
     public Button youthPolicyBtn; // 청년 정책 (이것만 누르게 함)  
     public Button seniorPolicyBtn; // 노년 정책 (튜토리얼 중 잠금)
     public Button corpPolicyBtn; // 기업 정책 (튜토리얼 중 잠금)   
@@ -20,20 +34,6 @@ public class TutorialManager : MonoBehaviour
 
     public int buttonClickStep = 5; // 청년 정책 버튼을 누르라고 지시하는 대사의 순번
                                     // 5번째 대사에서 클릭을 기다리게함 (임시)
-
-    [TextArea(1, 5)] // 한 대사에 최소 줄수 1 ~ 최대 줄수 5줄까지 입력할수 있음. 자유롭게 수정하여 사용.
-
-    public string[] dialogues = new string[]
-    {
-        "대사...", // 0
-        "대사...", // 1
-        "대사...", // 2
-        "대사...", // 3
-        "대사...", // 4
-        "대사...", // 5 (여기서 진행 멈추고 버튼 활성화!)
-        "대사...", // 6 (버튼 클릭 후 나오는 대사)
-        "대사..." // 7 (마지막 대사)
-    };
 
     void Awake()
     {
@@ -86,6 +86,16 @@ public class TutorialManager : MonoBehaviour
     {
         dialogText.text = dialogues[currentStep];
 
+        UpdateUIPositions();
+        ResetHighlight();
+
+        // 이번 대사 순번에 맞게 강조해야 할 타겟 UI가 있다면 어두운 배경 앞으로 끌어옴
+        if (highlightTargets != null && highlightTargets.Length > currentStep && highlightTargets[currentStep] != null)
+        {
+            currentHighlightTarget = highlightTargets[currentStep];
+            SetHighlight(currentHighlightTarget);
+        }
+
         if (currentStep == buttonClickStep)
         {
             // 청년 버튼만 켜서 청년 정책 누르는게 함, 튜토리얼 패널 클릭 비활성화
@@ -95,6 +105,52 @@ public class TutorialManager : MonoBehaviour
         else
         {
             tutorialPanel.GetComponent<Image>().raycastTarget = true;
+        }
+    }
+
+    // RectTransform의 anchoredPosition을 이용해 UI 위치를 옮기는 함수
+    private void UpdateUIPositions()
+    {
+        if (characterPositions != null && characterPositions.Length > currentStep)
+        {
+            characterImage.rectTransform.anchoredPosition = characterPositions[currentStep];
+        }
+
+        if (dialogBoxPositions != null && dialogBoxPositions.Length > currentStep)
+        {
+            dialogBox.GetComponent<RectTransform>().anchoredPosition = dialogBoxPositions[currentStep];
+        }
+    }
+
+    // 특정 UI가 tutorialPanel을 뚫고 맨 앞으로 보이게 해주는 함수
+    private void SetHighlight(GameObject target)
+    {
+        // 타겟에 Canvas 컴포넌트가 없으면 임시로 붙임
+        Canvas canvas = target.GetComponent<Canvas>();
+        if (canvas == null) canvas = target.AddComponent<Canvas>();
+
+        // 타겟에 GraphicRaycaster가 없으면 임시로 붙임 (버튼 클릭을 위해 필요)
+        GraphicRaycaster raycaster = target.GetComponent<GraphicRaycaster>();
+        if (raycaster == null) raycaster = target.AddComponent<GraphicRaycaster>();
+
+        // 렌더링 순서를 tutorialPanel 보다 높게(100) 설정하여 맨 앞으로 튀어나오게 함
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = 100; 
+    }
+
+    // 맨 앞으로 튀어나왔던 UI를 다시 원래 자리로 돌려놓는 함수
+    private void ResetHighlight()
+    {
+        if (currentHighlightTarget != null)
+        {
+            Canvas canvas = currentHighlightTarget.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                // 강제로 높였던 렌더링 순서 설정을 해제
+                canvas.overrideSorting = false;
+                canvas.sortingOrder = 0;
+            }
+            currentHighlightTarget = null; // 타겟 초기화
         }
     }
 
@@ -114,6 +170,9 @@ public class TutorialManager : MonoBehaviour
 
     public void EndTutorial()
     {
+        // 튜토리얼이 끝날 때, 켜져있는 포커싱 효과가 있다면 꺼줌
+        ResetHighlight();
+
         isTutorial = false;
         tutorialPanel.SetActive(false); // 튜토리얼 창 끄기
 
@@ -138,5 +197,6 @@ public class TutorialManager : MonoBehaviour
         ScoreManager.Instance.CalculateTurnScore();
         UIManager.Instance.UpdateTurnText();
         UIManager.Instance.UpdateRegionImages();
+        UIManager.Instance.UpdateAffinityUI();
     }
 }

@@ -5,9 +5,25 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public Text turnText; // 현재 턴 텍스트 표시
+    public GameObject optionPanel; // 옵션창 패널
+    public GameObject newsPanel; // 뉴스창 패널
+    public Button fundingBtn; // 자금이 100일때 버튼 선택을 막기위해서 가져옴
 
-    public Text totalScoreText; // 현재 누적된 총점 텍스트 표시
+    //민심 게이지 표현할 Image
+    // 청년 민심
+    public Image youthBorderImg; 
+    public Image youthFillImg;
+    // 노년 민심
+    public Image seniorBorderImg;
+    public Image seniorFillImg;
+    // 기업 민심
+    public Image corpBorderImg;
+    public Image corpFillImg;
+
+    public Text turnText; // 현재 턴 텍스트
+    public Text totalScoreText; // 게임 창에 띄울 현재 누적된 총점 텍스트
+    public Text successProbText; // 확률 텍스트 변수
+    public Text endingTotalScoreText; // 엔딩창에 띄울 최종 점수 텍스트
 
     public GameObject eventPanel; // 돌발 이벤트가 뜰 때 화면에 나타나는 GameObject
     public Text eventTitleText; // 돌발 이벤트 창의 제목 텍스트
@@ -15,13 +31,23 @@ public class UIManager : MonoBehaviour
 
     public GameObject hoverTooltip; // 마우스를 지역에 올렸을 때 마우스 옆에 튀어나오는 작은 창
 
+    //호버 툴팁 위치 설정하는 Transform 변수
+    public Transform univHoverPos;
+    public Transform silverHoverPos;
+    public Transform industryHoverPos;
+    public Transform houseHoverPos;
+
     public Text hoverInfoText; // 오버 창에 들어갈 텍스트
 
     public GameObject endingPanel; // 턴이 모두 끝난 후 화면을 덮으며 나타날 최종 결과 창
-
-    public Text endingResultText; // 결과 티어 텍스트
-    public Text endingDescText; // 결과 스크롤 뷰 안의 결과에 대한 자세한 설명 텍스트
-
+    public Text regionUnivText; // 대학가 점수
+    public Text regionSilverText; // 실버타운 점수
+    public Text regionIndustryText; // 산업단지 점수
+    public Text regionHouseText; // 주거단지 점수
+    
+    public Text gradeText; // 최종 결과 등급 텍스트
+    public Text titleText; // 등급에 따른 칭호 텍스트
+    
     public Image univImage; // 대학가 이미지
     public Image silverImage; // 실버타운 이미지
     public Image industryImage; // 산업단지 이미지
@@ -68,6 +94,59 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void UpdateSuccessProbabilityUI(float money)
+    {
+        if (successProbText != null)
+        {
+            successProbText.text = GetSuccessProbabilityText(money);
+        }
+    }
+
+    // 성공 확률 텍스트 표시 함수
+    public string GetSuccessProbabilityText(float money)
+    {
+        if (money >= 100f) return "성공 확률 : 100%";
+        if (money <= 0f) return "성공 확률 : 0%";
+
+        if (money >= 80f) return "성공 확률 : 80% ~ 99%";
+        else if (money >= 60f) return "성공 확률 : 60% ~ 79%";
+        else if (money >= 40f) return "성공 확률 : 40% ~ 59%";
+        else if (money >= 20f) return "성공 확률 : 20% ~ 39%";
+        else return "성공 확률 : 1% ~ 20%";
+    }
+
+    // 민심 게이지 표현 함수
+    public void UpdateAffinityUI()
+    {
+        // 각 계층별로 게이지 조절 함수를 호출함
+        UpdateSingleAffinity(ScoreManager.Instance.youthAffinity, youthBorderImg, youthFillImg);
+        UpdateSingleAffinity(ScoreManager.Instance.seniorAffinity, seniorBorderImg, seniorFillImg);
+        UpdateSingleAffinity(ScoreManager.Instance.corpAffinity, corpBorderImg, corpFillImg);
+    }
+
+    // 하나의 민심 게이지를 계산하고 색상을 바꿔주는 함수
+    private void UpdateSingleAffinity(float affinityValue, Image borderImg, Image fillImg)
+    {
+        if (borderImg == null || fillImg == null) return;
+
+        // 테두리 색상 처리 (-1 이하일 때만 빨간색, 나머지는 원래 색)
+        if (affinityValue <= -1f)
+        {
+            borderImg.color = Color.red;
+        }
+        else
+        {
+            borderImg.color = Color.white; // 원래 테두리 색인 흰색으로 설정
+        }
+
+        // 게이지 채우기 (0 ~ 3 사이의 값만 게이지로 표현)
+        // 만약 -1이라면 0으로 간주되어 빈 칸
+        float displayValue = Mathf.Clamp(affinityValue, 0f, 3f); 
+        
+        // 게이지의 최대치가 3이므로 3으로 나누어 0~1 사이의 값으로 만듬
+        fillImg.fillAmount = displayValue / 3f; 
+    }
+
     //각 구역 업데이트 시, 각 지역의 레벨 이미지 묶음을 넘겨주는 함수
     public void UpdateRegionImages()
     {
@@ -110,14 +189,37 @@ public class UIManager : MonoBehaviour
         hoverTooltip.SetActive(true);
         float dev = 0f;
         string rName = "";
+        RectTransform tooltipRect = hoverTooltip.GetComponent<RectTransform>();
 
-        if (regionIndex == 1) { rName = "대학가"; dev = ScoreManager.Instance.devUniv; }
-        else if (regionIndex == 2) { rName = "실버타운"; dev = ScoreManager.Instance.devSilver; }
-        else if (regionIndex == 3) { rName = "산업단지"; dev = ScoreManager.Instance.devIndustry; }
-        else if (regionIndex == 4) { rName = "주거단지"; dev = ScoreManager.Instance.devHouse; }
+        // 지역에 따라 이름, 발전도를 할당, Transform 변수 지정
+        if (regionIndex == 1) 
+        { 
+            rName = "대학가"; 
+            dev = ScoreManager.Instance.devUniv;
+            if (univHoverPos != null) tooltipRect.position = univHoverPos.position;
+        }
+        else if (regionIndex == 2) 
+        {
+            rName = "실버타운"; 
+            dev = ScoreManager.Instance.devSilver;
+            if (silverHoverPos != null) tooltipRect.position = silverHoverPos.position; 
+        }
+        else if (regionIndex == 3) 
+        {
+            rName = "산업단지"; 
+            dev = ScoreManager.Instance.devIndustry;
+            if (industryHoverPos != null) tooltipRect.position = industryHoverPos.position;
+
+        }
+        else if (regionIndex == 4)
+        { 
+            rName = "주거단지"; 
+            dev = ScoreManager.Instance.devHouse;
+            if (houseHoverPos != null) tooltipRect.position = houseHoverPos.position;
+        }
 
         string lv = dev >= 50f ? "LV 3" : (dev >= 20f ? "LV 2" : "LV 1");
-        hoverInfoText.text = $"{rName}\n발전 {lv}";
+        hoverInfoText.text = $"{rName}\n발전도 : {lv}";
     }
 
     // 마우스 오버 끝나면 꺼지게 하는 함수
@@ -126,12 +228,34 @@ public class UIManager : MonoBehaviour
         hoverTooltip.SetActive(false);
     }
 
-    // 게임 끝나면 최종 점수와 평가 보이게 하는 함수
-    public void ShowEndingPanel(string grade, string title, float finalScore, string description)
+    // 자금 100이면 버튼 비활성화하는 함수
+    public void UpdateFundingButtonState()
     {
-        endingResultText.text = $"최종 점수: {Mathf.RoundToInt(finalScore)}\n등급: {grade}\n칭호: {title}";
-        endingDescText.text = description;
+        if (fundingBtn != null)
+        {
+            // 자금이 100이거나 크면
+            bool isFull = ScoreManager.Instance.money >= GameManager.Instance.MAX_MONEY;
+            fundingBtn.interactable = !isFull; // 버튼 비활성화
+        }
+    }
+
+    // 게임 끝나면 최종 점수와 평가 보이게 하는 함수
+    public void ShowEndingPanel(string grade, string title, float finalScore)
+    {
+        // 엔딩 패널 활성화  후 시간 정지
         endingPanel.SetActive(true);
+        Time.timeScale = 0f;
+
+        // 구역별 누적 점수 가져와 보여주기 (RoundToInt로 소수점 버리고 스트링으로 표현)
+        regionUnivText.text = "대학가 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalUnivScore).ToString();
+        regionSilverText.text = "실버타운 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalSilverScore).ToString();
+        regionIndustryText.text = "산업단지 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalIndustryScore).ToString();
+        regionHouseText.text = "주거단지 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalHouseScore).ToString();
+
+        // 최종 점수 (RoundToInt로 소수점 버리고 스트링으로 표현), 등급, 칭호 입력
+        endingTotalScoreText.text = "최종 점수 : " + Mathf.RoundToInt(finalScore).ToString();
+        gradeText.text = grade;
+        titleText.text = title;
     }
 
     // 로그 메시지를 화면에 띄우는 함수

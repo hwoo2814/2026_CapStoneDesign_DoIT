@@ -5,7 +5,7 @@ public class CardController : MonoBehaviour
     // 각 정책 카드를 선택했을 때 실행하는 함수
     public void OnClickYouthPolicy() // 청년 정책
     { 
-        // 튜토리얼 중에 청년 정책을 누르면 다음 칭찬 대사로 넘어가도록 지시
+        // 튜토리얼 중이라면 청년 정책을 누르면 다음 칭찬 대사로 넘어가도록 지시
         if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
         {
             TutorialManager.Instance.OnYouthPolicyClicked(); 
@@ -27,11 +27,11 @@ public class CardController : MonoBehaviour
         float currentMoney = ScoreManager.Instance.money;
         float rand = Random.value;
 
-        if (currentMoney >= 100f) return; // 100이면 선택 불가
+        if (currentMoney >= GameManager.Instance.MAX_MONEY) return; // 100이면 선택 불가
         float getMoney = 0f; //자금이 얼마나 올랐는지 로그에 적기위한 변수
 
         if (rand <= 0.5f) getMoney = Random.Range(10f, 25f); // 50% 확률
-        else if (rand <= 0.8f) getMoney = Random.Range(20f, 35f); // 30% 확률
+        else if (rand <= 0.8f) getMoney = Random.Range(26f, 35f); // 30% 확률
         else getMoney = GameManager.Instance.MAX_MONEY - currentMoney; // 20% 확률
 
         ScoreManager.Instance.ModifyMoney(getMoney); // 돈 더하기
@@ -55,7 +55,7 @@ public class CardController : MonoBehaviour
 
         if (isSuccess)
         {
-            logMessage += "성공 하였습니다. (";
+            logMessage += "성공 하였습니다.\n(";
 
             if (policyType == 1) // 청년정책 성공시
             {
@@ -105,6 +105,7 @@ public class CardController : MonoBehaviour
             logMessage += $"실패 하였습니다. (청년 {dY:F1}, 노년 {dS:F1}, 기업 {dC:F1})";
         }
 
+        UIManager.Instance.AddPolicyLog(logMessage);
         GameManager.Instance.OnPlayerActionCompleted();
     }
 

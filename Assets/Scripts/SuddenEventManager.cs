@@ -8,7 +8,6 @@ public class SuddenEventManager : MonoBehaviour
     public class EventData
     {
         public string eventName; // 이벤트 이름
-        public Sprite backGround; // 배경(앵커, 타이틀 배경 등등...)
         public Sprite eventSprite; // 각 이벤트 이미지(앵커 옆에)
 
         public float dYouth, dSenior, dCorp; // 변경될 민심들
@@ -42,7 +41,7 @@ public class SuddenEventManager : MonoBehaviour
         InitEventData(); // 게임 시작 시 events 리스트에 있는 이벤트를 등록
     }
 
-    // 이벤트 발생 함수
+    // 이벤트 발생 체크하고 실행하는 함수
     public void CheckAndTriggerEvent()
     {
         // 1차로 이벤트 발생 확률 추첨
