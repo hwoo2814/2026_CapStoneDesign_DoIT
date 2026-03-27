@@ -1011,7 +1011,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00028246874}
+  m_AnchoredPosition: {x: 0, y: 0.00029961125}
   m_SizeDelta: {x: 0, y: 130}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &133434088
@@ -8865,8 +8865,9 @@ MonoBehaviour:
   optionPanel: {fileID: 1713390046}
   newsPanel: {fileID: 464329212}
   fundingBtn: {fileID: 17068605}
+  MoneyBar: {fileID: 2092605079}
   youthBorderImg: {fileID: 716123225}
-  youthFillImg: {fileID: 1548532278}
+  youthFillImg: {fileID: 1509654494}
   seniorBorderImg: {fileID: 1422954431}
   seniorFillImg: {fileID: 1548532278}
   corpBorderImg: {fileID: 946293456}

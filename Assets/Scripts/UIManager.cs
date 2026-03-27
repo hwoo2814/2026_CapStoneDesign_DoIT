@@ -80,7 +80,7 @@ public class UIManager : MonoBehaviour
     {
         if (turnText != null)
         {
-            turnText.text = $"ео╪Ж {GameManager.Instance.CURRENT_TURN}/{GameManager.Instance.MAX_TURN}";
+            turnText.text = $"{GameManager.Instance.CURRENT_TURN}/{GameManager.Instance.MAX_TURN}";
         }
     }
 
