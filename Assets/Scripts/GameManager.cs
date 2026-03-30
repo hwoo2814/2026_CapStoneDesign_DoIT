@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
@@ -59,10 +60,10 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))// ESC 키를 눌렀는지 체크
-        {
-            OptionButton();
-        }
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+    {
+        OptionButton();
+    }
     }
 
     // 새로운 턴 시작 시 호출
