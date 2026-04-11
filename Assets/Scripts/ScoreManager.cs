@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -7,7 +8,15 @@ public class ScoreManager : MonoBehaviour
     public float money; //돈 게이지
     public float youthAffinity, seniorAffinity, corpAffinity; //각 민심 데이터
     public float devUniv, devSilver, devIndustry, devHouse; //각 지역 발전도
-    
+
+    // 지역 비활성화 기준 레벨 (임시 값 : 1 = LV1)
+    public int DEACTIVATE_LEVEL_DATA = 1;
+
+    public bool isUnivDeactivated = false;
+    public bool isSilverDeactivated = false;
+    public bool isIndustryDeactivated = false;
+    public bool isHouseDeactivated = false;
+
     public float totalUnivScore, totalSilverScore, totalIndustryScore, totalHouseScore; //구역별 누적 점수
     public float totalScore; // 총 누적 점수
 
@@ -31,6 +40,11 @@ public class ScoreManager : MonoBehaviour
         devIndustry = 0f; 
         devHouse = 0f;
 
+        isUnivDeactivated = false;
+        isSilverDeactivated = false;
+        isIndustryDeactivated = false;
+        isHouseDeactivated = false;
+
         totalUnivScore = 0f;
         totalSilverScore = 0f;
         totalIndustryScore = 0f;
@@ -45,11 +59,11 @@ public class ScoreManager : MonoBehaviour
         money = Mathf.Clamp(money + amount, 0f, GameManager.Instance.MAX_MONEY);
     }
     
-    //민심 계산 함수(각각의 민심 Clamp함수로 계산, 계산 결과를 -1과 3 사이로 제한)
+    //민심 계산 함수(각각의 민심 Clamp함수로 계산, 계산 결과를 0과 10 사이로 제한)
     public void ModifyAffinity(float youth, float senior, float corp)
     {
-        int min = GameManager.Instance.MIN_AFFINITY; // -1
-        int max = GameManager.Instance.MAX_AFFINITY; // 3
+        int min = GameManager.Instance.MIN_AFFINITY; // 0
+        int max = GameManager.Instance.MAX_AFFINITY; // 10
         
         youthAffinity = Mathf.Clamp(youthAffinity + youth, min, max);
         seniorAffinity = Mathf.Clamp(seniorAffinity + senior, min, max);
@@ -71,10 +85,11 @@ public class ScoreManager : MonoBehaviour
     //해당 턴의 획득 점수를 계산하여 누적 총점에 더하는 함수
     public void CalculateTurnScore()
     {
-        float scoreUniv = CalculateRegionScore(devUniv, 0.7f, 0.1f, 0.2f);
-        float scoreSilver = CalculateRegionScore(devSilver, 0.1f, 0.8f, 0.1f);
-        float scoreIndustry = CalculateRegionScore(devIndustry, 0.2f, 0.1f, 0.7f);
-        float scoreHouse = CalculateRegionScore(devHouse, 0.3f, 0.4f, 0.3f);
+        // 지역이 비활성화되었는지 확인하고 true면 0으로 반환
+        float scoreUniv = isUnivDeactivated ? 0f : CalculateRegionScore(devUniv, 0.7f, 0.1f, 0.2f);
+        float scoreSilver = isSilverDeactivated ? 0f : CalculateRegionScore(devSilver,0.1f, 0.8f, 0.1f);
+        float scoreIndustry = isIndustryDeactivated ? 0f : CalculateRegionScore(devIndustry, 0.2f, 0.1f, 0.7f);
+        float scoreHouse = isHouseDeactivated ? 0f : CalculateRegionScore(devHouse, 0.3f, 0.4f, 0.3f);
 
         // 턴마다 구역별 점수를 더함
         totalUnivScore += scoreUniv;
@@ -87,6 +102,61 @@ public class ScoreManager : MonoBehaviour
         totalScore += turnTotalScore;
     }
 
+    //발전도 값을 기반으로 지역 레벨(1~3)을 반환하는 함수
+    private int GetDevLevel(float dev)
+    {
+        if (dev >= 50f) return 3;
+        if (dev >= 20f) return 2;
+        return 1;
+    }
+
+    // 현재 LV1 상태인 지역 이름 목록을 반환
+    // GameManager의 경고(15~19턴) 및 소멸 선별(20턴)에서 공통으로 사용
+    public List<string> GetLV1Regions()
+    {
+        List<string> lv1Regions = new List<string>();
+
+        if (!isUnivDeactivated && GetDevLevel(devUniv) <= DEACTIVATE_LEVEL_DATA)
+            lv1Regions.Add("신도시");
+        if (!isSilverDeactivated && GetDevLevel(devSilver) <= DEACTIVATE_LEVEL_DATA)
+            lv1Regions.Add("농촌");
+        if (!isIndustryDeactivated && GetDevLevel(devIndustry) <= DEACTIVATE_LEVEL_DATA)
+            lv1Regions.Add("지방");
+        if (!isHouseDeactivated && GetDevLevel(devHouse) <= DEACTIVATE_LEVEL_DATA)
+            lv1Regions.Add("수도권");
+
+        return lv1Regions;
+    }
+
+    // 20턴 종료 시점에 LV1 지역 중 랜덤 1개만 소멸시키는 함수
+    // GameManager.OnPlayerActionCompleted()에서 CURRENT_TURN == 20일 때 호출
+    public void CheckDeactivationAtTurn20()
+    {
+        List<string> lv1Regions = GetLV1Regions();
+
+        // LV1 지역이 하나도 없으면 소멸 없이 종료
+        if (lv1Regions.Count == 0) return;
+
+        // 여러 개의 LV1 지역 중 랜덤으로 1개만 선택
+        int idx = Random.Range(0, lv1Regions.Count);
+        string targetRegion = lv1Regions[idx];
+
+        DeactivateSingleRegion(targetRegion);
+    }
+
+    // 지역 이름을 받아 해당 지역 1개만 소멸 처리하는 함수
+    // CheckDeactivationAtTurn20()에서 선별된 1개 지역에만 호출됨
+    private void DeactivateSingleRegion(string regionName)
+    {
+        if (regionName == "신도시") isUnivDeactivated = true;
+        else if (regionName == "농촌") isSilverDeactivated = true;
+        else if (regionName == "지방") isIndustryDeactivated = true;
+        else if (regionName == "수도권") isHouseDeactivated = true;
+
+        UIManager.Instance.ShowDeactivationNotice(regionName);
+        UIManager.Instance.UpdateRegionImages();
+    }
+    
     // 각 지역의 민심 데이터 점수 계산 함수
     public float CalculateRegionScore(float dev, float wY, float wS, float wC)
     {
@@ -130,7 +200,6 @@ public class ScoreManager : MonoBehaviour
             grade = "D"; 
             title = "위태로운 초보";
         }
-
         // UI로 보이게 함
         UIManager.Instance.ShowEndingPanel(grade, title, totalScore);
     }

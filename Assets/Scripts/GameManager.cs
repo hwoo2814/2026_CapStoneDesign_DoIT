@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 using UnityEngine.InputSystem;
 using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public CardController cardController; //explainPolicyPanel의 "예"/"아니요" 버튼 처리를 위해
+                                          //CardController의 pending 데이터와 Execute 함수에 접근할 참조 변수.
 
     public static bool isTutorialMode = false;
 
@@ -20,9 +23,9 @@ public class GameManager : MonoBehaviour
     public int CURRENT_TURN = 1;
     public int MAX_TURN = 35; // 최대 턴수
     public int START_MONEY = 100, MAX_MONEY = 100; // 초기자금, 자금 최대치
-    public int MIN_AFFINITY = -1; // 민심 데이터 최솟값
-    public int MAX_AFFINITY = 3;  // 민심 데이터 최댓값
-    public int START_AFFINITY = 0; // 모든 계층 초기 민심
+    public int MIN_AFFINITY = 0; // 민심 데이터 최솟값
+    public int MAX_AFFINITY = 10;  // 민심 데이터 최댓값
+    public int START_AFFINITY = 5; // 모든 계층 초기 민심
     public float FAIL_RND_MIN = -1.5f;   // 실패 시 민심 감소 최대 마이너스 값
     public float FAIL_RND_MAX = -0.5f;   // 실패 시 민심 감소 최소 마이너스 값
 
@@ -61,9 +64,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-    {
-        OptionButton();
-    }
+        {
+            OptionButton();
+        }
     }
 
     // 새로운 턴 시작 시 호출
@@ -80,6 +83,20 @@ public class GameManager : MonoBehaviour
             SuddenEventManager.Instance.CheckAndTriggerEvent(); // 돌발 이벤트 체크 및 발생 함수
         }
 
+        // 15턴 이상 20턴 미만일 때, LV1 상태인 지역이 있으면 뉴스 패널에 경고 표시
+        // 20턴에 소멸 발동 예정인 지역을 플레이어에게 미리 알려주는 용도
+        if (CURRENT_TURN >= 15 && CURRENT_TURN < 20)
+        {
+            List<string> lv1Regions = ScoreManager.Instance.GetLV1Regions();
+            if (lv1Regions.Count > 0)
+            {
+                int turnsLeft = 20 - CURRENT_TURN; // 소멸까지 남은 턴 수
+                // warningMsg : 경고 메세지 
+                string warningMsg = $"[지역 소멸 위기] {turnsLeft}턴 후 LV1 지역이 소멸됩니다!\n위험 지역 : {string.Join(", ", lv1Regions)}";
+                UIManager.Instance.ShowRegionDeactivationWarning(warningMsg);
+            }
+        }
+
         UIManager.Instance.UpdateMoneyUI(); // 돈 게이지 업데이트
         UIManager.Instance.UpdateTurnText(); // 현재 턴 업데이트
         UIManager.Instance.UpdateFundingButtonState(); // 자금에 따른 버튼 상태 갱신 
@@ -91,11 +108,121 @@ public class GameManager : MonoBehaviour
     // 플레이어가 카드를 선택하여 행동을 마쳤을 때 호출하여 턴 넘김
     public void OnPlayerActionCompleted()
     {
-        UIManager.Instance.UpdateMoneyUI(); //UI에 현재 돈 업데이트
-        ScoreManager.Instance.CalculateTurnScore(); // 턴점수 계산
+        if (CURRENT_TURN == 20)
+        {
+            ScoreManager.Instance.CheckDeactivationAtTurn20();
+        }
+
+        ScoreManager.Instance.CalculateTurnScore();
 
         CURRENT_TURN++;
         StartTurn();
+    }
+
+    // 정책 패널의 "예" 버튼
+    // 실행 순서 
+    // 1. 패널을 닫음
+    // 2. pendingPolicyType이 0(자금확보)이면 ExecuteFunding() 호출,
+    //    1~3(정책)이면 ExecutePendingPolicy() 호출하여 실제 정책 실행
+    // 3. pending 데이터를 -1, 0으로 초기화하여 중복 실행 방지
+    // 튜토리얼 중일 때는 CheckSuccess()가 isTutorial을 감지해 무조건 성공 반환
+    public void OnClickConfirmPolicy()
+    {
+        UIManager.Instance.HideExplainPolicyPanel();
+
+        if (cardController.pendingPolicyType == 0)
+        {
+            cardController.ExecuteFunding();
+        }
+        else
+        {
+            cardController.ProcessPolicy(cardController.pendingPolicyCost, cardController.pendingPolicyType);
+        }
+
+        cardController.pendingPolicyType = -1;
+        cardController.pendingPolicyCost = 0f;
+    }
+
+    // 정책 패널의 "아니요" 버튼
+    // 실행 순서
+    // 1. pending 데이터를 -1, 0으로 초기화하여 선택을 취소
+    // 2. 패널을 닫음
+    // 정책이 실행되지 않으므로 턴이 넘어가지 않음
+    public void OnClickCancelPolicy()
+    {
+        cardController.pendingPolicyType = -1;
+        cardController.pendingPolicyCost = 0f;
+        UIManager.Instance.HideExplainPolicyPanel();
+    }
+    
+    // 뉴스 브렌치 켜기 끄기 버튼
+    public void NewsBranchButton()
+    {
+        if (UIManager.Instance.newsBranchPanel.activeSelf == true) 
+        {
+            UIManager.Instance.newsBranchPanel.SetActive(false);
+        }
+        else 
+        {
+            UIManager.Instance.newsBranchPanel.SetActive(true);
+        }
+    }
+
+    public void EmaillButton()
+    {
+        if (UIManager.Instance.EmailPanel.activeSelf == true) 
+        {  
+            UIManager.Instance.EmailPanel.SetActive(false);
+        }
+        else 
+        {
+            UIManager.Instance.newsBranchPanel.SetActive(false);
+            UIManager.Instance.EmailPanel.SetActive(true);
+        }
+    }
+
+    // 뉴스 켜기 끄기 버튼
+    public void NewsButton()
+    {
+        if (UIManager.Instance.newsPanel.activeSelf == true) 
+        {
+            UIManager.Instance.newsPanel.SetActive(false);
+        }
+        else 
+        {
+            UIManager.Instance.newsBranchPanel.SetActive(false);
+            UIManager.Instance.newsPanel.SetActive(true);
+        }
+    }
+
+    public void AcceptButten()
+    {
+        //퀘스트 수락 추가
+        UIManager.Instance.ResultProposal.text = "본 제안서를 채택하겠습니다.";
+    }
+
+    public void RefuseButten()
+    {
+        UIManager.Instance.ResultProposal.text = "제시하신 제안서는 채택이 어려울거 같습니다.";
+    }
+
+    // 돌발 이벤트창 끄기 버튼
+    public void SuddenEventEndButten()
+    {
+        UIManager.Instance.eventPanel.SetActive(false);
+    }
+
+    // 옵션 창 켜기 끄기
+    public void OptionButton()
+    {
+        if (UIManager.Instance.optionPanel.activeSelf == true) 
+        {
+            UIManager.Instance.optionPanel.SetActive(false);
+        }
+        else 
+        {
+            UIManager.Instance.optionPanel.SetActive(true);
+        }
     }
 
     // 옵션 창의 해상도 조절 기능 함수
@@ -105,7 +232,7 @@ public class GameManager : MonoBehaviour
         else if (index == 1) Screen.SetResolution(1280, 720, false); // 창모드
     }
 
-    // 옵션 창의 소리 조절 기능 함수
+    // 옵션 창의 배경소리 조절 기능 함수
     public void SetBGMVolume(float volume)
     {
         PlayerPrefs.SetFloat("BGMVolume", volume);
@@ -124,44 +251,13 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("MainScene");
     }
 
-    // 옵션 창 켜기 끄기
-    public void OptionButton()
-    {
-        if (UIManager.Instance.optionPanel.activeSelf == true) 
-        {
-            UIManager.Instance.optionPanel.SetActive(false);
-        }
-        else 
-        {
-            UIManager.Instance.optionPanel.SetActive(true);
-        }
-    }
-    
-    // 뉴스 켜기 끄기 버튼
-    public void NewsButton()
-    {
-        if (UIManager.Instance.newsPanel.activeSelf == true) 
-        {
-            UIManager.Instance.newsPanel.SetActive(false);
-        }
-        else 
-        {
-            UIManager.Instance.newsPanel.SetActive(true);
-        }
-    }
-
-    // 돌발 이벤트창 끄기 버튼
-    public void SuddenEventEndButten()
-    {
-        UIManager.Instance.eventPanel.SetActive(false);
-    }
-
     // 튜토리얼이 없는 재시작
-    public void RestartWithTutorial()
+    public void RestartWithoutTutorial()
     {
         Time.timeScale = 1f;
-        PlayerPrefs.SetInt("PlayTutorial", 1);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        PlayerPrefs.SetInt("PlayTutorial", 0);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("GameScene");
     }
 
     // 게임 끝내기

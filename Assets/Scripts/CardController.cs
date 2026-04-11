@@ -2,7 +2,33 @@ using UnityEngine;
 
 public class CardController : MonoBehaviour
 {
-    // 각 정책 카드를 선택했을 때 실행하는 함수
+    // 플레이어가 버튼을 눌렀을 때 아직 확정되지 않은 정책 타입을 저장
+    // (0 = 자금확보, 1 = 청년, 2 = 노년, 3 = 기업 / -1 = 없음)
+    public int pendingPolicyType = -1;
+    public float pendingPolicyCost = 0f; // 정책 비용 (자금 차감 값)
+
+
+    // 각 정책 타입에 대응하는 이름 배열, [0]=자금확보 [1]=청년 [2]=노년 [3]=기업
+    private readonly string[] policyNames =
+    {
+        "자금 확보",
+        "청년 정책",
+        "노년 정책",
+        "기업 정책"
+    };
+
+    // 각 정책 타입에 대응하는 설명 배열, [0]=자금확보 [1]=청년 [2]=노년 [3]=기업
+    // UIManager에 explainPolicyPanel의 ExplainPolicyText에 표시될 텍스트
+    private readonly string[] policyDescs =
+    {
+        "자금을 확보합니다.\n설명...",
+        "청년층을 위한 정책을 시행합니다.\n설명...",
+        "노년층을 위한 정책을 시행합니다.\n설명...",
+        "기업을 위한 정책을 시행합니다.\n설명..."
+    };
+
+    //청년/노년/기업 정책 함수는 pendingPolicyType과 pendingPolicyCost에 값을 저장한 뒤
+    //explainPolicyPanel을 띄워 플레이어의 최종 확인을 기다림
     public void OnClickYouthPolicy() // 청년 정책
     { 
         // 튜토리얼 중이라면 청년 정책을 누르면 다음 칭찬 대사로 넘어가도록 지시
@@ -10,41 +36,60 @@ public class CardController : MonoBehaviour
         {
             TutorialManager.Instance.OnYouthPolicyClicked(); 
         }
-        ProcessPolicy(Random.Range(-35f, -30f), 1); 
+        ShowPolicyConfirmPanel(1, Random.Range(-35f, -30f)); 
     }
     public void OnClickSeniorPolicy() // 노년 정책
     { 
-        ProcessPolicy(Random.Range(-20f, -10f), 2); 
+        ShowPolicyConfirmPanel(2, Random.Range(-20f, -10f)); 
     }
     public void OnClickCorpPolicy() // 기업 정책
     { 
-        ProcessPolicy(Random.Range(-50f, -40f), 3);
+        ShowPolicyConfirmPanel(3, Random.Range(-50f, -40f));
     }
 
-    //자금 확보 카드를 선택했을 때 실행되는 함수
+    // 자금 확보 버튼.
+    // ShowPolicyConfirmPanel()을 통해 패널을 먼저 표시하고
+    // 자금을 얼마나 채울지는 "예" 확정 후 ExecuteFunding() 안에서 처리
     public void OnClickFunding() 
+    {
+        ShowPolicyConfirmPanel(0, 0f);
+    }
+
+    //자금 학보 선택시 얼마큼 확보하는지 실행하여 결정하는 함수
+    public void ExecuteFunding()
     {
         float currentMoney = ScoreManager.Instance.money;
         float rand = Random.value;
 
-        if (currentMoney >= GameManager.Instance.MAX_MONEY) return; // 100이면 선택 불가
-        float getMoney = 0f; //자금이 얼마나 올랐는지 로그에 적기위한 변수
+        if (currentMoney >= 100f) return;
+        float getMoney = 0f;
 
-        if (rand <= 0.5f) getMoney = Random.Range(10f, 25f); // 50% 확률
-        else if (rand <= 0.8f) getMoney = Random.Range(26f, 35f); // 30% 확률
-        else getMoney = GameManager.Instance.MAX_MONEY - currentMoney; // 20% 확률
+        if (rand <= 0.5f) getMoney = Random.Range(10f, 25f);
+        else if (rand <= 0.8f) getMoney = Random.Range(20f, 35f);
+        else getMoney = GameManager.Instance.MAX_MONEY - currentMoney;
 
-        ScoreManager.Instance.ModifyMoney(getMoney); // 돈 더하기
-        
-        // 자금 확보 로그 메시지를 만들어 UIManager로 전송
+        ScoreManager.Instance.ModifyMoney(getMoney);
+
         int turn = GameManager.Instance.CURRENT_TURN;
         UIManager.Instance.AddPolicyLog($"{turn}번째 턴 : 자금 확보 성공 +{getMoney:F0}");
 
         GameManager.Instance.OnPlayerActionCompleted();
     }
 
+    // 정책 버튼 클릭 시 정책 타입과 차감될 자금을 인수로 받아 저장하고 
+    // UIManager에 policyNames, policyDescs 배열에서 
+    // 해당 텍스트를 꺼내 패널 표시를 요청
+    // policyType : 0=자금확보 1=청년 2=노년 3=기업
+    // cost : 정책 실행 시 차감될 자금 (음수)
+    private void ShowPolicyConfirmPanel(int policyType, float cost)
+    {
+        pendingPolicyType = policyType;
+        pendingPolicyCost = cost;
+        UIManager.Instance.ShowExplainPolicyPanel(policyNames[policyType], policyDescs[policyType]);
+    }
+
     // 정책 버튼을 선택했을때 전달받은 각각의 cost와 policyType를 받아 실행하는 함수
-    private void ProcessPolicy(float cost, int policyType)
+    public void ProcessPolicy(float cost, int policyType)
     {
         float currentMoney = ScoreManager.Instance.money;
         bool isSuccess = CheckSuccess(currentMoney); // 성공, 실패 체크
@@ -118,7 +163,7 @@ public class CardController : MonoBehaviour
         if (money >= 100f) return true;
         if (money <= 0f) return false;
 
-        float chance = 0f;
+        float chance = 0f; // 자금의 양에 따라 확률을 저장하는 변수
         
         if (money >= 80f) chance = Random.Range(80f, 100f);
         else if (money >= 60f) chance = Random.Range(60f, 80f);
