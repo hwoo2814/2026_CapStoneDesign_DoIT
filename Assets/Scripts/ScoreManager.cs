@@ -82,6 +82,34 @@ public class ScoreManager : MonoBehaviour
         devHouse = Mathf.Max(0f, devHouse + house);
     }
 
+        // 특정 지역의 발전도 레벨을 levelChange 만큼 올리는 함수
+    // QuestManager.ApplyEffect() 에서 퀘스트 보상 적용 시 호출됨
+    // regionIndex : 0=신도시(devUniv), 1=농촌(devSilver), 2=지방(devIndustry), 3=수도권(devHouse)
+    // levelChange : 올릴 레벨 수 (보통 1)
+    public void IncreaseDevLevel(int regionIndex, int levelChange)
+    {
+        for (int i = 0; i < levelChange; i++)
+        {
+            switch (regionIndex)
+            {
+                case 0: devUniv = BumpToNextLevel(devUniv); break;
+                case 1: devSilver = BumpToNextLevel(devSilver); break;
+                case 2: devIndustry = BumpToNextLevel(devIndustry); break;
+                case 3: devHouse = BumpToNextLevel(devHouse); break;
+            }
+        }
+        UIManager.Instance.UpdateRegionImages();
+    }
+
+    // 발전도 값을 현재 레벨의 다음 레벨 최솟값으로 올려 반환하는 헬퍼 함수
+    // LV1(0~19) → LV2 최솟값(20), LV2(20~49) → LV3 최솟값(50), LV3 이상은 변화 없음
+    private float BumpToNextLevel(float dev)
+    {
+        if (dev < 20f) return 20f;
+        if (dev < 50f) return 50f;
+        return dev;
+    }
+
     //해당 턴의 획득 점수를 계산하여 누적 총점에 더하는 함수
     public void CalculateTurnScore()
     {

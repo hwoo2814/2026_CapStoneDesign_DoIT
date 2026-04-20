@@ -68,6 +68,8 @@ public class CardController : MonoBehaviour
         else if (rand <= 0.8f) getMoney = Random.Range(20f, 35f);
         else getMoney = GameManager.Instance.MAX_MONEY - currentMoney;
 
+        getMoney *= QuestManager.Instance != null ? QuestManager.Instance.GetFundingMultiplier() : 1f;
+
         ScoreManager.Instance.ModifyMoney(getMoney);
 
         int turn = GameManager.Instance.CURRENT_TURN;
@@ -151,6 +153,10 @@ public class CardController : MonoBehaviour
         }
 
         UIManager.Instance.AddPolicyLog(logMessage);
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnPolicyUsed(policyType);
+        }
         GameManager.Instance.OnPlayerActionCompleted();
     }
 

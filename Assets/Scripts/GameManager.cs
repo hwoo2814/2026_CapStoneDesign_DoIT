@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public CardController cardController; //explainPolicyPanel의 "예"/"아니요" 버튼 처리를 위해
                                           //CardController의 pending 데이터와 Execute 함수에 접근할 참조 변수.
-
+    public QuestManager questManager;
     public static bool isTutorialMode = false;
 
     public Image MoneyBar; // 돈 게이지 슬라이드
@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour
         {
             CURRENT_TURN = 1;
             ScoreManager.Instance.InitData();
+            if (UIManager.Instance.emailBtn != null)
+            {
+                UIManager.Instance.emailBtn.SetActive(false);
+            }
 
             // "PlayTutorial" 을 찾아서 읽기
             int doTutorial = PlayerPrefs.GetInt("PlayTutorial", 1);
@@ -55,6 +59,11 @@ public class GameManager : MonoBehaviour
             {
                 TutorialManager.Instance.tutorialPanel.SetActive(false);
                 TutorialManager.Instance.isTutorial = false;
+            }
+
+        if (QuestManager.Instance != null)
+            {
+                    QuestManager.Instance.InitData();
             }
 
         StartTurn(); // 튜토리얼 세팅 완료 후 턴 시작
@@ -96,6 +105,10 @@ public class GameManager : MonoBehaviour
                 UIManager.Instance.ShowRegionDeactivationWarning(warningMsg);
             }
         }
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnTurnStart(CURRENT_TURN);
+        }
 
         UIManager.Instance.UpdateMoneyUI(); // 돈 게이지 업데이트
         UIManager.Instance.UpdateTurnText(); // 현재 턴 업데이트
@@ -111,6 +124,10 @@ public class GameManager : MonoBehaviour
         if (CURRENT_TURN == 20)
         {
             ScoreManager.Instance.CheckDeactivationAtTurn20();
+        }
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnTurnEnd();
         }
 
         ScoreManager.Instance.CalculateTurnScore();
@@ -168,16 +185,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 퀘스트(이메일) 페널 켜기
     public void EmaillButton()
     {
-        if (UIManager.Instance.EmailPanel.activeSelf == true) 
+        if (UIManager.Instance.questPanel.activeSelf == true) 
         {  
-            UIManager.Instance.EmailPanel.SetActive(false);
+            UIManager.Instance.questPanel.SetActive(false);
         }
         else 
         {
             UIManager.Instance.newsBranchPanel.SetActive(false);
-            UIManager.Instance.EmailPanel.SetActive(true);
+            UIManager.Instance.questPanel.SetActive(true);
         }
     }
 
@@ -195,15 +213,42 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 퀘스트 수락 버튼
     public void AcceptButten()
     {
-        //퀘스트 수락 추가
         UIManager.Instance.ResultProposal.text = "본 제안서를 채택하겠습니다.";
+
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnQuestAccepted();
+        }
+
+        UIManager.Instance.acceptBtn.SetActive(false);
+        UIManager.Instance.refuseBtn.SetActive(false);
+
+        if (UIManager.Instance.newsButtonImage != null && UIManager.Instance.newsDefaultSprite != null)
+        {
+            UIManager.Instance.newsButtonImage.sprite = UIManager.Instance.newsDefaultSprite;
+        }
     }
 
+    // 퀘스트 거절 버튼
     public void RefuseButten()
     {
         UIManager.Instance.ResultProposal.text = "제시하신 제안서는 채택이 어려울거 같습니다.";
+
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnQuestRefused();
+        }
+
+        UIManager.Instance.acceptBtn.SetActive(false);
+        UIManager.Instance.refuseBtn.SetActive(false);
+
+        if (UIManager.Instance.newsButtonImage != null && UIManager.Instance.newsDefaultSprite != null)
+        {
+            UIManager.Instance.newsButtonImage.sprite = UIManager.Instance.newsDefaultSprite;
+        }
     }
 
     // 돌발 이벤트창 끄기 버튼

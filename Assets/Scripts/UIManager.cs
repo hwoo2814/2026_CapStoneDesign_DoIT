@@ -7,13 +7,24 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     public GameObject optionPanel; // 옵션창 패널
-    public GameObject newsBranchPanel;
-    public GameObject EmailPanel;
+    public GameObject emailBtn; // 퀘스트가 있을 때만 활성화할 이메일 버튼
+    public Image newsButtonImage; // 뉴스 버튼 이미지 (퀘스트 알림 시 교체할 토대)
+    public Sprite newsDefaultSprite; // 뉴스 버튼 기본 이미지
+    public Sprite newsQuestAlertSprite; // 퀘스트 생성 시 표시할 알림 이미지
+    public GameObject newsBranchPanel; // 뉴스 브렌치 패널
+    public GameObject questPanel; // 이메일(퀘스트) 패널
     public GameObject newsPanel; // 뉴스창 패널
-    public Text ResultProposal;
+    public Text ResultProposal; // 수락/거절 문구 텍스트
+    public GameObject acceptBtn; // 안건 수락 버튼 오브젝트
+    public GameObject refuseBtn; // 안건 거절 버튼 오브젝트
     public Button fundingBtn; // 자금이 100일때 버튼 선택을 막기위해서 가져옴
     public Image MoneyBar; // 돈 게이지 슬라이드
-
+    public GameObject aiHintPanel; // AI 힌트를 표시하는 패널
+    public Text aiHintText; // AI 힌트 잔여 턴 수 텍스트
+    public Text questTitleText; // 퀘스트 제목 텍스트
+    public Text questDescText; // 퀘스트 배경 설명 텍스트
+    public Text summaryText; // 퀘스트 요약 텍스트
+    public Text resultProposalText; // 퀘스트 수락/거절 텍스트
     public GameObject explainPolicyPanel; //정책 설명 패널
     public Text policyTitleText; // 정책 이름 텍스트
     public Text policyDescText; // 정책 설명 텍스트
@@ -39,7 +50,6 @@ public class UIManager : MonoBehaviour
     public Image eventImage; // 돌발 이벤트 이미지(앵커 옆에)
 
     public GameObject hoverTooltip; // 마우스를 지역에 올렸을 때 마우스 옆에 튀어나오는 작은 창
-
     //호버 툴팁 위치 설정하는 Transform 변수
     public Transform univHoverPos;
     public Transform silverHoverPos;
@@ -345,13 +355,65 @@ public class UIManager : MonoBehaviour
         AddPolicyLog($"경고! : [{regionName}] 지역이 비활성화되었습니다!!!\n이제부터 해당 지역 점수가 제외됩니다.");
     }
 
+    // 퀘스트 패널을 활성화하고 퀘스트 기본 정보를 표시하는 함수
+    // QuestManager.GenerateNewQuest() 에서 새 퀘스트 등장 시 호출됨
+    public void ShowQuestPanel(QuestDefinition quest)
+    {
+        if (questPanel == null) return;
+
+        if (ResultProposal != null) ResultProposal.text = "";
+        if (questTitleText != null) questTitleText.text = quest.questTitle;
+        if (questDescText  != null) questDescText.text  = quest.questDesc;
+        if (summaryText != null) summaryText.text = $"목표: {quest.questGoalText}\n보상: {quest.questRewardText}\n리스크: {quest.questRiskText}";
+
+        // 퀘스트 존재 시 이메일 버튼 활성화
+        if (emailBtn != null) emailBtn.SetActive(true);
+
+        // 뉴스 버튼 이미지를 퀘스트 알림 이미지로 교체
+        if (newsButtonImage != null && newsQuestAlertSprite != null)
+            newsButtonImage.sprite = newsQuestAlertSprite;
+
+        if (acceptBtn != null) acceptBtn.SetActive(true);
+        if (refuseBtn != null) refuseBtn.SetActive(true);
+
+    }
+
+    // 퀘스트 종료(성공/실패/거절) 시 텍스트 초기화, 버튼 비활성화, 뉴스 버튼 이미지 복구하는 함수
+    // QuestManager 에서 호출됨
+    public void ClearQuestPanel()
+    {
+        if (questTitleText != null) questTitleText.text = "";
+        if (questDescText != null) questDescText.text = "";
+        if (summaryText != null) summaryText.text = "";
+        if (resultProposalText != null) resultProposalText.text = "";
+
+        // 퀘스트 없을 때 이메일 버튼 비활성화
+        if (emailBtn != null) emailBtn.SetActive(false);
+
+        // 뉴스 버튼 이미지를 기본 이미지로 복구
+        if (newsButtonImage != null && newsDefaultSprite != null)
+            newsButtonImage.sprite = newsDefaultSprite;
+    }
+
+    // AI 힌트 패널 표시 상태를 갱신하는 함수
+    // QuestManager.OnTurnStart() 에서 매 턴 호출됨
+    // isActive : AI 힌트 활성화 여부 / remainingTurns : 잔여 활성화 턴 수
+    public void UpdateAIHintUI(bool isActive, int remainingTurns)
+    {
+        if (aiHintPanel == null) return;
+        aiHintPanel.SetActive(isActive);
+        if (isActive && aiHintText != null)
+            aiHintText.text = $"AI 힌트 활성화 ({remainingTurns}턴 남음)";
+    }
+
+
     // 로그 메시지를 화면에 띄우는 함수
     public void AddPolicyLog(string logMsg)
     {
         if (policyLogText != null)
         {
             // 새로 들어온 메시지는 줄바꿈(\n)
-            policyLogText.text += logMsg + "\n";
+            policyLogText.text += logMsg + "\n" + "\n";
         }
     }
 }
