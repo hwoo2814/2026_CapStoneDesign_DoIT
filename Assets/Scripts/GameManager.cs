@@ -158,6 +158,10 @@ public class GameManager : MonoBehaviour
 
         cardController.pendingPolicyType = -1;
         cardController.pendingPolicyCost = 0f;
+
+        // 튜토리얼 중이라면 "예" 버튼 클릭 시 TutorialManager에 알려 다음 대사로 진행
+        if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
+            TutorialManager.Instance.OnYesBtnClicked();
     }
 
     // 정책 패널의 "아니요" 버튼
@@ -182,6 +186,11 @@ public class GameManager : MonoBehaviour
         else 
         {
             UIManager.Instance.newsBranchPanel.SetActive(true);
+
+            // 튜토리얼 중 뉴스 버튼으로 패널을 열었을 때 다음 대사로 진행
+            if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
+                TutorialManager.Instance.OnNewsButtonClicked();
+    
         }
     }
 
@@ -196,6 +205,10 @@ public class GameManager : MonoBehaviour
         {
             UIManager.Instance.newsBranchPanel.SetActive(false);
             UIManager.Instance.questPanel.SetActive(true);
+
+            // 튜토리얼 중 이메일 버튼으로 퀘스트 패널을 열었을 때 다음 대사로 진행
+            if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
+                TutorialManager.Instance.OnEmailBtnClicked();
         }
     }
 

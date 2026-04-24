@@ -11056,7 +11056,14 @@ MonoBehaviour:
   seniorPolicyBtn: {fileID: 2024104461}
   corpPolicyBtn: {fileID: 1841703747}
   fundingBtn: {fileID: 17068605}
+  yesBtn: {fileID: 579425339}
+  noBtn: {fileID: 788953148}
+  newsButton: {fileID: 902366732}
+  emailBtn: {fileID: 842328421}
   buttonClickStep: 5
+  yesBtnClickStep: 6
+  newsButtonClickStep: 10
+  emailBtnClickStep: 12
 --- !u!114 &1836366565
 MonoBehaviour:
   m_ObjectHideFlags: 0

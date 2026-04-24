@@ -30,10 +30,19 @@ public class TutorialManager : MonoBehaviour
     public Button youthPolicyBtn; // 청년 정책 (이것만 누르게 함)  
     public Button seniorPolicyBtn; // 노년 정책 (튜토리얼 중 잠금)
     public Button corpPolicyBtn; // 기업 정책 (튜토리얼 중 잠금)   
-    public Button fundingBtn; // 자금 확보 (튜토리얼 중 잠금)      
+    public Button fundingBtn; // 자금 확보 (튜토리얼 중 잠금)
+    public Button yesBtn; // ExplainPolicyPanel의 "예" 버튼
+    public Button noBtn; // ExplainPolicyPanel의 "아니요" 버튼
+    public Button newsButton; // NewsBranchPanel을 여는 뉴스 버튼
+    public Button emailBtn; // NewsBranchPanel 안의 이메일(퀘스트) 버튼
 
-    public int buttonClickStep = 5; // 청년 정책 버튼을 누르라고 지시하는 대사의 순번
-                                    // 5번째 대사에서 클릭을 기다리게함 (임시)
+    public int buttonClickStep = 5;
+    public int yesBtnClickStep = 6; // 청년 정책 버튼을 누르라고 지시하는 대사의 순번
+                                    // 6번째 대사에서 클릭을 기다리게함 (임시)
+    public int newsButtonClickStep = 10; // 뉴스 버튼을 누르라고 지시하는 대사의 순번
+                                         // 10번째 대사에서 클릭을 기다리게함 (임시)
+    public int emailBtnClickStep = 12; // 이메일 버튼을 누르라고 지시하는 대사의 순번
+                                       // 12번째 대사에서 클릭을 기다리게함 (임시)
 
     void Awake()
     {
@@ -57,6 +66,14 @@ public class TutorialManager : MonoBehaviour
         corpPolicyBtn.interactable = false;
         fundingBtn.interactable = false;
 
+        // 시작 시 "예"/"아니요" 버튼 잠금 
+        if (yesBtn != null)    yesBtn.interactable    = false;
+        if (noBtn != null) noBtn.interactable = false;
+
+        // 시작 시 뉴스/이메일 버튼 잠금
+        if (newsButton != null) newsButton.interactable = false;
+        if (emailBtn != null) emailBtn.interactable = false;
+
         ShowNextDialogue();
     }
     
@@ -67,6 +84,9 @@ public class TutorialManager : MonoBehaviour
 
         // 버튼 클릭을 지시하는 단계에서는 화면을 눌러도 대사가 넘어가지 않음
         if (currentStep == buttonClickStep) return;
+        if (currentStep == yesBtnClickStep)    return;
+        if (currentStep == newsButtonClickStep) return;
+        if (currentStep == emailBtnClickStep)  return;
 
         currentStep++;
         
@@ -101,6 +121,26 @@ public class TutorialManager : MonoBehaviour
             // 청년 버튼만 켜서 청년 정책 누르는게 함, 튜토리얼 패널 클릭 비활성화
             tutorialPanel.GetComponent<Image>().raycastTarget = false;
             youthPolicyBtn.interactable = true;
+        }
+        else if (currentStep == yesBtnClickStep)
+        {
+            tutorialPanel.GetComponent<Image>().raycastTarget = false;
+            // "예" 버튼만 활성화하고 "아니요"는 잠가 무조건 확정하도록 유도
+            if (yesBtn != null)    yesBtn.interactable    = true;
+            if (noBtn != null) noBtn.interactable = false;
+        }
+        // 뉴스 버튼 클릭 유도 단계
+        else if (currentStep == newsButtonClickStep)
+        {
+            PrepareQuestTutorialSection(); // emailBtn 강제 활성화 (퀘스트 없어도 데모 가능하도록)
+            tutorialPanel.GetComponent<Image>().raycastTarget = false;
+            if (newsButton != null) newsButton.interactable = true;
+        }
+        // 이메일 버튼 클릭 유도 단계
+        else if (currentStep == emailBtnClickStep)
+        {
+            tutorialPanel.GetComponent<Image>().raycastTarget = false;
+            if (emailBtn != null) emailBtn.interactable = true;
         }
         else
         {
@@ -168,6 +208,72 @@ public class TutorialManager : MonoBehaviour
         ShowNextDialogue();
     }
 
+    // "예" 버튼이 눌려 정책이 실행된 직후 다음 대사로 진행시키는 함수
+    //ExplainPolicyPanel의 "예" 버튼을 누른 직후 GameManager에서 호출.
+    //"아니요" 버튼 잠금 해제 후 다음 대사로 넘어간다.
+    public void OnYesBtnClicked()
+    {
+        if (!isTutorial) return;
+
+        // "아니요" 버튼 잠금 해제 (이후 본 게임에서 정상 사용 가능하도록)
+        if (noBtn != null) noBtn.interactable = true;
+        if (yesBtn != null)    yesBtn.interactable    = false;
+
+        tutorialPanel.GetComponent<Image>().raycastTarget = true;
+
+        currentStep++;
+        if (currentStep < dialogues.Length)
+            ShowNextDialogue();
+        else
+            EndTutorial();
+    }
+
+  
+    // GameManager.NewsBranchButton() 에서 튜토리얼 중 호출
+    // NewsBranchPanel이 열린 직후 다음 대사(이메일 버튼 안내)로 진행
+    // 뉴스 버튼을 눌러 NewsBranchPanel이 열린 직후 GameManager에서 호출.
+    // 뉴스 버튼을 다시 잠그고 다음 대사로 넘어간다.
+    public void OnNewsButtonClicked()
+    {
+        if (!isTutorial) return;
+
+        if (newsButton != null) newsButton.interactable = false;
+        tutorialPanel.GetComponent<Image>().raycastTarget = true;
+
+        currentStep++;
+        if (currentStep < dialogues.Length)
+            ShowNextDialogue();
+        else
+            EndTutorial();
+    }
+
+
+    // GameManager.EmaillButton() 에서 튜토리얼 중 호출
+    // QuestPanel이 열린 직후 다음 대사(퀘스트 패널 설명)로 진행
+    // 이메일 버튼을 눌러 QuestPanel이 열린 직후 GameManager에서 호출.
+    // 이메일 버튼을 다시 잠그고 다음 대사로 넘어간다.
+    public void OnEmailBtnClicked()
+    {
+        if (!isTutorial) return;
+
+        if (emailBtn != null) emailBtn.interactable = false;
+        tutorialPanel.GetComponent<Image>().raycastTarget = true;
+
+        currentStep++;
+        if (currentStep < dialogues.Length)
+            ShowNextDialogue();
+        else
+            EndTutorial();
+    }
+
+    // 뉴스/퀘스트 튜토리얼 섹션 진입 전처리 함수
+    // 실제 퀘스트가 없어도 이메일 버튼을 임시 활성화하여 데모 시연이 가능하게 함
+    private void PrepareQuestTutorialSection()
+    {
+        if (UIManager.Instance != null && UIManager.Instance.emailBtn != null)
+            UIManager.Instance.emailBtn.SetActive(true);
+    }
+
     public void EndTutorial()
     {
         // 튜토리얼이 끝날 때, 켜져있는 포커싱 효과가 있다면 꺼줌
@@ -182,11 +288,27 @@ public class TutorialManager : MonoBehaviour
             UIManager.Instance.policyLogText.text = ""; 
         }
         
-        // 잠가뒀던 모든 버튼 다시 켜주기 (본 게임 시작)
+        // 잠가뒀던 모든 정책버튼 다시 켜주기
         youthPolicyBtn.interactable = true;
         seniorPolicyBtn.interactable = true;
         corpPolicyBtn.interactable = true;
         fundingBtn.interactable = true;
+
+        // 튜토리얼 종료 시 "예/아니요" 버튼 잠금 해제
+        if (yesBtn != null)    yesBtn.interactable = true;
+        if (noBtn != null) noBtn.interactable = true;
+
+        // 튜토리얼 종료 시 뉴스/이메일 버튼 잠금 해제
+        if (newsButton != null) newsButton.interactable = true;
+        if (emailBtn != null) emailBtn.interactable = true;
+
+        // 퀘스트 데모로 열렸을 수 있는 패널들 초기화
+        if (UIManager.Instance.newsBranchPanel != null)
+            UIManager.Instance.newsBranchPanel.SetActive(false);
+        if (UIManager.Instance.questPanel != null)
+            UIManager.Instance.questPanel.SetActive(false);
+        if (UIManager.Instance.newsPanel != null)
+            UIManager.Instance.newsPanel.SetActive(false);
 
         // 튜토리얼에서 변했던 데이터를 전부 초기화 함
         ScoreManager.Instance.InitData(); 
@@ -198,6 +320,8 @@ public class TutorialManager : MonoBehaviour
         UIManager.Instance.UpdateTurnText();
         UIManager.Instance.UpdateRegionImages();
         UIManager.Instance.UpdateAffinityUI();
+        if (UIManager.Instance.emailBtn != null) // 튜토리얼 종료 후 emailBtn은 퀘스트 없으므로 다시 비활성화
+            UIManager.Instance.emailBtn.SetActive(false);
         UIManager.Instance.UpdateTotalScoreUI(ScoreManager.Instance.totalScore);
     }
 }
