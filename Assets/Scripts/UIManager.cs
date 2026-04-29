@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class UIManager : MonoBehaviour
     public GameObject emailBtn; // 퀘스트가 있을 때만 활성화할 이메일 버튼
     public Image newsButtonImage; // 뉴스 버튼 이미지 (퀘스트 알림 시 교체할 토대)
     public Sprite newsDefaultSprite; // 뉴스 버튼 기본 이미지
-    public Sprite newsQuestAlertSprite; // 퀘스트 생성 시 표시할 알림 이미지
+    public Sprite newsQuestAlertSprite; // 퀘스트 생성 시 표시할 뉴스 알림 이미지
     public GameObject newsBranchPanel; // 뉴스 브렌치 패널
     public GameObject questPanel; // 이메일(퀘스트) 패널
     public GameObject newsPanel; // 뉴스창 패널
@@ -71,9 +72,10 @@ public class UIManager : MonoBehaviour
     public Image silverImage; // 실버타운 이미지
     public Image industryImage; // 산업단지 이미지
     public Image houseImage; // 주거단지 이미지
+  
     public Text policyLogText; // Log Text 변수
-
-    public Text newsWarningText; // 지역 소멸 경고 텍스트
+    public GameObject logPanel; // 로그 전용 패널 
+    public GameObject logCloseBtn; // 로그 패널 내부의 닫기 버튼
 
     // 각 지역별 1~3레벨 전용 이미지 변수들
     // 대학가 발전도 이미지
@@ -88,16 +90,24 @@ public class UIManager : MonoBehaviour
     // 주거단지 발전도 이미지
     public Sprite houseLv1Image; public Sprite houseLv2Image; public Sprite houseLv3Image;
 
-    // 각 지역 비활성화 이미지
-    public Sprite univDeactivatedImage; // 대학가 비활성화 시 표시할 이미지
-    public Sprite silverDeactivatedImage; // 실버타운 비활성화 시 표시할 이미지
-    public Sprite indDeactivatedImage; // 산업단지 비활성화 시 표시할 이미지
-    public Sprite houseDeactivatedImage; // 주거단지 비활성화 시 표시할 이미지
+    // 자물쇠 프리팹 (하나만 사용)
+    public GameObject lockOverlayPrefab;
+
+    // 각 지역에 생성된 자물쇠 인스턴스
+    private GameObject univLock;
+    private GameObject silverLock;
+    private GameObject indLock;
+    private GameObject houseLock;
 
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+    }
+
+    void Start()
+    {
+        InitLockOverlays();
     }
 
     // 현재 턴 표시 함수
@@ -206,24 +216,59 @@ public class UIManager : MonoBehaviour
     // 지역 비활성시 비활성된 지역 이미지를 넘김
     public void UpdateRegionImages()
     {
-        if (univImage != null) 
-            univImage.sprite = ScoreManager.Instance.isUnivDeactivated 
-                ? univDeactivatedImage 
-                : GetLevelSprite(ScoreManager.Instance.devUniv, univLv1Image, univLv2Image, univLv3Image);
-        if (silverImage != null) 
-            silverImage.sprite = ScoreManager.Instance.isSilverDeactivated
-                ? silverDeactivatedImage
-                : GetLevelSprite(ScoreManager.Instance.devSilver, silverLv1Image, silverLv2Image, silverLv3Image);
-            
-        if (industryImage != null) 
-            industryImage.sprite = ScoreManager.Instance.isIndustryDeactivated
-                ? indDeactivatedImage
-                : GetLevelSprite(ScoreManager.Instance.devIndustry, indLv1Image, indLv2Image, indLv3Image);
-            
-        if (houseImage != null) 
-            houseImage.sprite = ScoreManager.Instance.isHouseDeactivated
-                ? houseDeactivatedImage
-                : GetLevelSprite(ScoreManager.Instance.devHouse, houseLv1Image, houseLv2Image, houseLv3Image);
+        if (univImage != null)
+            univImage.sprite = GetLevelSprite(ScoreManager.Instance.devUniv, univLv1Image, univLv2Image, univLv3Image);
+
+        if (silverImage != null)
+            silverImage.sprite = GetLevelSprite(ScoreManager.Instance.devSilver, silverLv1Image, silverLv2Image, silverLv3Image);
+
+        if (industryImage != null)
+            industryImage.sprite = GetLevelSprite(ScoreManager.Instance.devIndustry, indLv1Image, indLv2Image, indLv3Image);
+
+        if (houseImage != null)
+            houseImage.sprite = GetLevelSprite(ScoreManager.Instance.devHouse, houseLv1Image, houseLv2Image, houseLv3Image);
+
+        UpdateLockOverlays();
+    }
+
+    // 각 지역 이미지 위에 자물쇠를 생성하는 함수
+    private void InitLockOverlays()
+    {
+        if (lockOverlayPrefab == null) return;
+
+        if (univImage != null)
+            univLock = Instantiate(lockOverlayPrefab, univImage.transform);
+
+        if (silverImage != null)
+            silverLock = Instantiate(lockOverlayPrefab, silverImage.transform);
+
+        if (industryImage != null)
+            indLock = Instantiate(lockOverlayPrefab, industryImage.transform);
+
+        if (houseImage != null)
+            houseLock = Instantiate(lockOverlayPrefab, houseImage.transform);
+
+        // 처음에는 전부 꺼둠
+        if (univLock != null) univLock.SetActive(false);
+        if (silverLock != null) silverLock.SetActive(false);
+        if (indLock != null) indLock.SetActive(false);
+        if (houseLock != null) houseLock.SetActive(false);
+    }
+
+    // 각 지역의 비활성화 상태에 따라 자물쇠 오버레이를 개별적으로 제어하는 함수
+    private void UpdateLockOverlays()
+    {
+        if (univLock != null)
+            univLock.SetActive(ScoreManager.Instance.isUnivDeactivated);
+
+        if (silverLock != null)
+            silverLock.SetActive(ScoreManager.Instance.isSilverDeactivated);
+
+        if (indLock != null)
+            indLock.SetActive(ScoreManager.Instance.isIndustryDeactivated);
+
+        if (houseLock != null)
+            houseLock.SetActive(ScoreManager.Instance.isHouseDeactivated);
     }
 
     //넘겨받은 해당 지역의 레벨 이미지 중에서 발전도에 맞는 것을 골라서 반환
@@ -290,7 +335,7 @@ public class UIManager : MonoBehaviour
         // 지역이 비활성화 되었다면 호버시 지역 비활성화 표시
         if (isDeactivated)
         {
-            hoverInfoText.text = $"{rName}\n[ 비활성화 ]";
+            hoverInfoText.text = $"{rName}\n[ 잠김 ]";
         }
         // 지역이 활성화 되어있다면 지역 레벨 표시
         else
@@ -315,17 +360,6 @@ public class UIManager : MonoBehaviour
             bool isFull = ScoreManager.Instance.money >= GameManager.Instance.MAX_MONEY;
             fundingBtn.interactable = !isFull; // 버튼 비활성화
         }
-    }
-
-    // 뉴스 패널을 열고 지역 소멸 경고 메시지를 표시하는 함수
-    // GameManager.StartTurn()에서 15~19턴 사이에 LV1 지역 존재 시 호출됨
-    public void ShowRegionDeactivationWarning(string warningMessage)
-    {
-        if (newsWarningText != null)
-            newsWarningText.text = warningMessage;
-
-        if (newsPanel != null)
-            newsPanel.SetActive(true);
     }
 
     // 게임 끝나면 최종 점수와 평가 보이게 하는 함수
@@ -406,7 +440,6 @@ public class UIManager : MonoBehaviour
             aiHintText.text = $"AI 힌트 활성화 ({remainingTurns}턴 남음)";
     }
 
-
     // 로그 메시지를 화면에 띄우는 함수
     public void AddPolicyLog(string logMsg)
     {
@@ -415,5 +448,44 @@ public class UIManager : MonoBehaviour
             // 새로 들어온 메시지는 줄바꿈(\n)
             policyLogText.text += logMsg + "\n" + "\n";
         }
+    }
+
+    // 로그 버튼 클릭 시 로그 패널을 여는 함수
+    // GameManager.LogButton()에서 호출됨
+    public void OpenLogPanel()
+    {
+        if (logPanel == null) return;
+        logPanel.SetActive(true);
+    }
+
+    // 로그 패널 닫기 버튼 클릭 시 호출되는 함수
+    // 로그 패널 내부의 닫기 버튼 OnClick에 연결
+    public void CloseLogPanel()
+    {
+        if (logPanel == null) return;
+        logPanel.SetActive(false);
+    }
+
+    // 퀘스트 생성 턴(7, 14, 21, 28)에 로그 패널을 강제로 열고
+    // 닫기 버튼을 delaySeconds초 동안 비활성화하는 함수
+    // GameManager.StartTurn()에서 퀘스트 생성 턴에 호출됨
+    public void ShowLogPanelForced(float delaySeconds = 4f)
+    {
+        if (logPanel == null) return;
+        logPanel.SetActive(true);
+        StartCoroutine(DisableLogCloseBtnTemporarily(delaySeconds));
+    }
+
+    // 로그 닫기 버튼을 일정 시간 동안 비활성화하는 코루틴
+    // ShowLogPanelForced()에서만 호출됨
+    private IEnumerator DisableLogCloseBtnTemporarily(float seconds)
+    {
+        if (logCloseBtn != null)
+            logCloseBtn.GetComponent<Button>().interactable = false;
+
+        yield return new WaitForSeconds(seconds);
+
+        if (logCloseBtn != null)
+            logCloseBtn.GetComponent<Button>().interactable = true;
     }
 }

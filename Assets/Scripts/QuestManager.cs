@@ -255,7 +255,7 @@ public class QuestManager : MonoBehaviour
         questExpiryTurn = currentTurn + 7;
         ResetProgressCounters();
 
-        UIManager.Instance.AddPolicyLog($"[퀘스트 등장] : {activeQuest.questTitle}");
+        UIManager.Instance.AddPolicyLog($"[퀘스트 등장] : {activeQuest.questTitle}\n뉴스 버튼을 누른다음 업무 버튼을 누르면 내용을 볼 수 있습니다.");
         UIManager.Instance.ShowQuestPanel(activeQuest);
     }
 
@@ -266,7 +266,7 @@ public class QuestManager : MonoBehaviour
         ApplyEffect(activeQuest.reward);
         ApplyEffect(activeQuest.risk);
 
-        UIManager.Instance.AddPolicyLog($"[퀘스트 성공] : {title}\n보상 및 리스크 적용");
+        UIManager.Instance.AddPolicyLog($"[퀘스트 성공] : {title}\n보상 및 리스크 모두 적용");
         UIManager.Instance.ClearQuestPanel(); // 퀘스트 텍스트 초기화
 
         activeQuest = null;

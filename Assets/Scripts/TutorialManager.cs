@@ -35,6 +35,7 @@ public class TutorialManager : MonoBehaviour
     public Button noBtn; // ExplainPolicyPanel의 "아니요" 버튼
     public Button newsButton; // NewsBranchPanel을 여는 뉴스 버튼
     public Button emailBtn; // NewsBranchPanel 안의 이메일(퀘스트) 버튼
+    public GameObject logBtn; // 로그 열기/닫기 버튼 오브젝트
 
     public int buttonClickStep = 5;
     public int yesBtnClickStep = 6; // 청년 정책 버튼을 누르라고 지시하는 대사의 순번
@@ -43,7 +44,7 @@ public class TutorialManager : MonoBehaviour
                                          // 10번째 대사에서 클릭을 기다리게함 (임시)
     public int emailBtnClickStep = 12; // 이메일 버튼을 누르라고 지시하는 대사의 순번
                                        // 12번째 대사에서 클릭을 기다리게함 (임시)
-
+    public int logBtnClickStep = 14; // 로그 버튼 클릭을 유도하는 대사의 순번 (임시값, 인스펙터에서 조정)
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -266,6 +267,23 @@ public class TutorialManager : MonoBehaviour
             EndTutorial();
     }
 
+    // 튜토리얼 중 로그 버튼이 눌렸을 때 GameManager.LogButton()에서 호출
+    // 로그 버튼을 다시 잠그고 로그 패널 설명 대사로 진행
+    public void OnLogBtnClicked()
+    {
+        if (!isTutorial) return;
+
+        // 로그 버튼 다시 잠금 (중복 클릭 방지)
+        if (logBtn != null) logBtn.GetComponent<Button>().interactable = false;
+        tutorialPanel.GetComponent<Image>().raycastTarget = true;
+
+        currentStep++;
+        if (currentStep < dialogues.Length)
+            ShowNextDialogue();
+        else
+            EndTutorial();
+    }
+
     // 뉴스/퀘스트 튜토리얼 섹션 진입 전처리 함수
     // 실제 퀘스트가 없어도 이메일 버튼을 임시 활성화하여 데모 시연이 가능하게 함
     private void PrepareQuestTutorialSection()
@@ -295,7 +313,7 @@ public class TutorialManager : MonoBehaviour
         fundingBtn.interactable = true;
 
         // 튜토리얼 종료 시 "예/아니요" 버튼 잠금 해제
-        if (yesBtn != null)    yesBtn.interactable = true;
+        if (yesBtn != null) yesBtn.interactable = true;
         if (noBtn != null) noBtn.interactable = true;
 
         // 튜토리얼 종료 시 뉴스/이메일 버튼 잠금 해제

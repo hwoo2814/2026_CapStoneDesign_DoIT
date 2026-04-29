@@ -57,6 +57,27 @@ public class SuddenEventManager : MonoBehaviour
 
         // 돌발 이벤트 UI 띄우기 (턴 시작 전 표출)
         UIManager.Instance.ShowEventPopup(ev.eventName, ev.eventSprite);
+
+        // 돌발 이벤트 발생 내용을 로그 패널에 기록
+        UIManager.Instance.AddPolicyLog(BuildEventLogMessage(ev));
+    }
+
+    // 돌발 이벤트의 수치 변화량을 읽기 쉬운 로그 문자열로 조립해 반환
+    // 변화량이 0인 항목은 출력에서 제외
+    // ev : 발생한 이벤트 데이터
+    private string BuildEventLogMessage(EventData ev)
+    {
+        string changes = "";
+
+        if (ev.dYouth  != 0f) changes += $"/청년 민심{ev.dYouth:+0.#;-0.#}";
+        if (ev.dSenior != 0f) changes += $"/노년 민심{ev.dSenior:+0.#;-0.#}";
+        if (ev.dCorp   != 0f) changes += $"/기업 민심{ev.dCorp:+0.#;-0.#}";
+        if (ev.dUniv   != 0f) changes += $"/신도시 발전도{ev.dUniv:+0.#;-0.#}";
+        if (ev.dSilver != 0f) changes += $"/농촌 발전도{ev.dSilver:+0.#;-0.#}";
+        if (ev.dInd    != 0f) changes += $"/지방 발전도{ev.dInd:+0.#;-0.#}";
+        if (ev.dHouse  != 0f) changes += $"/수도권 발전도{ev.dHouse:+0.#;-0.#}";
+
+        return $"[돌발 이벤트] {ev.eventName}\n({changes})";
     }
 
     private void InitEventData()
@@ -65,7 +86,7 @@ public class SuddenEventManager : MonoBehaviour
         {
             // 긍정 이벤트 5개
             new EventData { 
-                eventName = "AI 컴퓨팅, 데이터 센터 유치",
+                eventName = "AI 컴퓨팅 데이터 센터, 지방에 유치",
                 eventSprite = imgAiCompute,
                 dInd = 15f, dHouse = -5f, dCorp = 0.6f 
             },
@@ -75,17 +96,17 @@ public class SuddenEventManager : MonoBehaviour
                 dSilver = 10f, dInd = 15f, dSenior = 0.4f 
             },
             new EventData { 
-                eventName = "글로벌 빅테크와 국내 대학 협력",
+                eventName = "글로벌 빅테크와 국내 대학 협력 발표",
                 eventSprite = imgTechCollab, 
                 dUniv = 5f, dInd = 7f, dYouth = 0.8f 
             },
             new EventData { 
-                eventName = "AI 에듀테크 시범지구 선정",
+                eventName = "교육부, AI 에듀테크 시범지구 발표",
                 eventSprite = imgEduTech,
                 dUniv = 14f, dYouth = 0.8f 
             },
             new EventData { 
-                eventName = "K-AI 스타트업 유니콘 탄생",
+                eventName = "지역 K-AI 스타트업 유니콘 탄생",
                 eventSprite = imgStartup,
                 dInd = 12f 
             },
@@ -102,17 +123,17 @@ public class SuddenEventManager : MonoBehaviour
                 dYouth = -0.3f, dSenior = -0.3f, dCorp = -0.3f 
             },
             new EventData { 
-                eventName = "데이터 센터 전력 과부하, 화재 사고",
+                eventName = "데이터 센터 전력 과부하, 화재 사고 발생",
                 eventSprite = imgFire, 
                 dInd = -15f 
             },
             new EventData { 
-                eventName = "AI 연산용 '워터 쇼크'",
+                eventName = "AI 연산발 '워터 쇼크",
                 eventSprite = imgWaterShock, 
                 dHouse = -15f, dYouth = -0.5f, dSenior = -0.5f, dCorp = -0.5f 
             },
             new EventData { 
-                eventName = "글로벌 AI 규제 요구",
+                eventName = "글로벌 AI 규제 요구로 기술 위축 우려",
                 eventSprite = imgRegulation, 
                 dCorp = -0.7f, dInd = -9f 
             }

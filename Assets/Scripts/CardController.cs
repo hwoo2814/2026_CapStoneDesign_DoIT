@@ -73,7 +73,7 @@ public class CardController : MonoBehaviour
         ScoreManager.Instance.ModifyMoney(getMoney);
 
         int turn = GameManager.Instance.CURRENT_TURN;
-        UIManager.Instance.AddPolicyLog($"{turn}번째 턴 : 자금 확보 성공 +{getMoney:F0}");
+        UIManager.Instance.AddPolicyLog($"{turn}번째 턴 : 자금 확보 성공. 자금 추가 +{getMoney:F0}");
 
         GameManager.Instance.OnPlayerActionCompleted();
     }
@@ -114,7 +114,7 @@ public class CardController : MonoBehaviour
                 ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(5f, 0, 0, 5f);
                 
-                logMessage += $"청년 +{dY:F1}, 노년 +{dS:F1}, 기업 +{dC:F1} / 대학가 +5, 주거단지 +5)";
+                logMessage += $"청년 민심+{dY:F1}, 노년 민심+{dS:F1}, 기업 민심+{dC:F1} / 대학가 발전도+5, 주거단지 발전도+5)";
             }
             else if (policyType == 2) // 노년정책 성공시
             {
@@ -125,7 +125,7 @@ public class CardController : MonoBehaviour
                 ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(0, 5f, 0, 5f);
 
-                logMessage += $"청년 {dY:F1}, 노년 +{dS:F1}, 기업 {dC:F1} / 실버타운 +5, 주거단지 +5)";
+                logMessage += $"청년 민심+{dY:F1}, 노년 민심+{dS:F1}, 기업 민심+{dC:F1} / 실버타운 발전도+5, 주거단지 발전도+5)";
             }
             else if (policyType == 3) // 기업정책 성공시
             {
@@ -136,7 +136,7 @@ public class CardController : MonoBehaviour
                 ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(0, 0, 5f, 0);
 
-                logMessage += $"청년 +{dY:F1}, 노년 {dS:F1}, 기업 +{dC:F1} / 산업단지 +5)";
+                logMessage += $"청년 민심+{dY:F1}, 노년 민심+{dS:F1}, 기업 민심+{dC:F1} / 산업단지 발전도+5)";
             }
         }
         else // 실패 시 -0.5 ~ -1.5 사이값으로 하락, 발전도 증가 없음
@@ -149,7 +149,7 @@ public class CardController : MonoBehaviour
             float dC = Random.Range(fMin, fMax);
             ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
             
-            logMessage += $"실패 하였습니다. (청년 {dY:F1}, 노년 {dS:F1}, 기업 {dC:F1})";
+            logMessage += $"실패 하였습니다. (청년 민심{dY:F1}, 노년 민심{dS:F1}, 기업 민심{dC:F1})";
         }
 
         UIManager.Instance.AddPolicyLog(logMessage);

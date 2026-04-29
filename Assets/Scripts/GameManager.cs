@@ -92,22 +92,15 @@ public class GameManager : MonoBehaviour
             SuddenEventManager.Instance.CheckAndTriggerEvent(); // 돌발 이벤트 체크 및 발생 함수
         }
 
-        // 15턴 이상 20턴 미만일 때, LV1 상태인 지역이 있으면 뉴스 패널에 경고 표시
-        // 20턴에 소멸 발동 예정인 지역을 플레이어에게 미리 알려주는 용도
-        if (CURRENT_TURN >= 15 && CURRENT_TURN < 20)
-        {
-            List<string> lv1Regions = ScoreManager.Instance.GetLV1Regions();
-            if (lv1Regions.Count > 0)
-            {
-                int turnsLeft = 20 - CURRENT_TURN; // 소멸까지 남은 턴 수
-                // warningMsg : 경고 메세지 
-                string warningMsg = $"[지역 소멸 위기] {turnsLeft}턴 후 LV1 지역이 소멸됩니다!\n위험 지역 : {string.Join(", ", lv1Regions)}";
-                UIManager.Instance.ShowRegionDeactivationWarning(warningMsg);
-            }
-        }
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.OnTurnStart(CURRENT_TURN);
+        }
+
+        bool isQuestGenerationTurn = System.Array.IndexOf(new int[] { 7, 14, 21, 28 }, CURRENT_TURN) >= 0;
+        if (isQuestGenerationTurn && !(TutorialManager.Instance != null && TutorialManager.Instance.isTutorial))
+        {
+            UIManager.Instance.ShowLogPanelForced(4f);
         }
 
         UIManager.Instance.UpdateMoneyUI(); // 돈 게이지 업데이트
@@ -282,6 +275,23 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.optionPanel.SetActive(true);
         }
     }
+
+    // HUD의 로그 버튼 클릭 시 호출되는 함수
+    // 로그 패널을 열기만 하며, 튜토리얼 중이라면 TutorialManager에 알림
+    public void LogButton()
+    {
+        UIManager.Instance.OpenLogPanel();
+
+        if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
+            TutorialManager.Instance.OnLogBtnClicked();
+    }
+
+    // 로그 패널 닫기 버튼 클릭 시 호출되는 함수
+    public void LogCloseButton()
+    {
+        UIManager.Instance.CloseLogPanel();
+    }
+
 
     // 옵션 창의 해상도 조절 기능 함수
     public void SetResolution(int index)
