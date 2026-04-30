@@ -68,10 +68,10 @@ public class UIManager : MonoBehaviour
     public Text gradeText; // 최종 결과 등급 텍스트
     public Text titleText; // 등급에 따른 칭호 텍스트
     
-    public Image univImage; // 대학가 이미지
-    public Image silverImage; // 실버타운 이미지
-    public Image industryImage; // 산업단지 이미지
-    public Image houseImage; // 주거단지 이미지
+    public GameObject univImage; // 대학가 이미지
+    public GameObject silverImage; // 실버타운 이미지
+    public GameObject industryImage; // 산업단지 이미지
+    public GameObject houseImage; // 주거단지 이미지
   
     public Text policyLogText; // Log Text 변수
     public GameObject logPanel; // 로그 전용 패널 
@@ -79,16 +79,24 @@ public class UIManager : MonoBehaviour
 
     // 각 지역별 1~3레벨 전용 이미지 변수들
     // 대학가 발전도 이미지
-    public Sprite univLv1Image; public Sprite univLv2Image; public Sprite univLv3Image; 
+    public GameObject univLv1Image; 
+    public GameObject univLv2Image; 
+    public GameObject univLv3Image; 
     
     // 실버타운 발전도 이미지
-    public Sprite silverLv1Image; public Sprite silverLv2Image; public Sprite silverLv3Image;
+    public GameObject silverLv1Image; 
+    public GameObject silverLv2Image; 
+    public GameObject silverLv3Image;
     
     // 산업단지 발전도 이미지
-    public Sprite indLv1Image; public Sprite indLv2Image; public Sprite indLv3Image;
+    public GameObject indLv1Image; 
+    public GameObject indLv2Image; 
+    public GameObject indLv3Image;
     
     // 주거단지 발전도 이미지
-    public Sprite houseLv1Image; public Sprite houseLv2Image; public Sprite houseLv3Image;
+    public GameObject houseLv1Image; 
+    public GameObject houseLv2Image; 
+    public GameObject houseLv3Image;
 
     // 자물쇠 프리팹 (하나만 사용)
     public GameObject lockOverlayPrefab;
@@ -212,26 +220,102 @@ public class UIManager : MonoBehaviour
             explainPolicyPanel.SetActive(false);
     }
 
-    // 각 구역 업데이트 시, 각 지역의 레벨 이미지 묶음을 넘겨주는 함수
-    // 지역 비활성시 비활성된 지역 이미지를 넘김
+    // 각 구역 업데이트 시, 발전도 레벨에 맞는 3D 프리팹으로 지역 오브젝트 전체를 교체하는 함수
     public void UpdateRegionImages()
     {
         if (univImage != null)
-            univImage.sprite = GetLevelSprite(ScoreManager.Instance.devUniv, univLv1Image, univLv2Image, univLv3Image);
+        {
+            GameObject nextPrefab = GetLevelPrefab(
+                ScoreManager.Instance.devUniv,
+                univLv1Image,
+                univLv2Image,
+                univLv3Image
+            );
+
+            ReplaceRegionObject(ref univImage, nextPrefab);
+        }
 
         if (silverImage != null)
-            silverImage.sprite = GetLevelSprite(ScoreManager.Instance.devSilver, silverLv1Image, silverLv2Image, silverLv3Image);
+        {
+            GameObject nextPrefab = GetLevelPrefab(
+                ScoreManager.Instance.devSilver,
+                silverLv1Image,
+                silverLv2Image,
+                silverLv3Image
+            );
+
+            ReplaceRegionObject(ref silverImage, nextPrefab);
+        }
 
         if (industryImage != null)
-            industryImage.sprite = GetLevelSprite(ScoreManager.Instance.devIndustry, indLv1Image, indLv2Image, indLv3Image);
+        {
+            GameObject nextPrefab = GetLevelPrefab(
+                ScoreManager.Instance.devIndustry,
+                indLv1Image,
+                indLv2Image,
+                indLv3Image
+            );
+
+            ReplaceRegionObject(ref industryImage, nextPrefab);
+        }
 
         if (houseImage != null)
-            houseImage.sprite = GetLevelSprite(ScoreManager.Instance.devHouse, houseLv1Image, houseLv2Image, houseLv3Image);
+        {
+            GameObject nextPrefab = GetLevelPrefab(
+                ScoreManager.Instance.devHouse,
+                houseLv1Image,
+                houseLv2Image,
+                houseLv3Image
+            );
+
+            ReplaceRegionObject(ref houseImage, nextPrefab);
+        }
 
         UpdateLockOverlays();
     }
 
-    // 각 지역 이미지 위에 자물쇠를 생성하는 함수
+    // 현재 지역 오브젝트를 발전도 레벨에 맞는 3D 프리팹으로 교체하는 함수
+    // currentObj : 현재 씬에 배치되어 있는 지역 오브젝트 참조, newPrefab : 새로 생성할 레벨별 3D 프리팹
+    private void ReplaceRegionObject(ref GameObject currentObj, GameObject newPrefab)
+    {
+        // 교체할 프리팹이 없거나 현재 오브젝트가 없으면 실행하지 않음
+        if (currentObj == null || newPrefab == null) return;
+
+        // 이미 같은 프리팹으로 생성된 오브젝트라면 불필요한 교체를 막음
+        // Instantiate된 오브젝트는 이름 뒤에 (Clone)이 붙기 때문에 이름 기준으로 비교
+        string currentName = currentObj.name.Replace("(Clone)", "").Trim();
+        string prefabName = newPrefab.name.Replace("(Clone)", "").Trim();
+
+        if (currentName == prefabName) return;
+
+        // 기존 오브젝트의 부모, 위치, 회전, 크기 정보를 저장
+        Transform parent = currentObj.transform.parent;
+        Vector3 position = currentObj.transform.position;
+        Quaternion rotation = currentObj.transform.rotation;
+        Vector3 scale = currentObj.transform.localScale;
+
+        // 기존 지역 오브젝트 제거
+        Destroy(currentObj);
+
+        // 새 프리팹을 기존 오브젝트와 같은 위치에 생성
+        GameObject createdObj = Instantiate(newPrefab, position, rotation, parent);
+
+        // 기존 오브젝트의 스케일을 유지
+        createdObj.transform.localScale = scale;
+
+        // 현재 지역 오브젝트 참조를 새로 생성된 오브젝트로 갱신
+        currentObj = createdObj;
+    }
+
+    // 발전도 값을 기준으로 현재 레벨에 맞는 3D 프리팹을 반환하는 함수
+    private GameObject GetLevelPrefab(float dev, GameObject lv1, GameObject lv2, GameObject lv3)
+    {
+        if (dev >= 50f) return lv3;
+        else if (dev >= 20f) return lv2;
+        else return lv1;
+    }
+
+    // 각 지역 위에 자물쇠 오브젝트를 생성하는 함수
     private void InitLockOverlays()
     {
         if (lockOverlayPrefab == null) return;
@@ -269,14 +353,6 @@ public class UIManager : MonoBehaviour
 
         if (houseLock != null)
             houseLock.SetActive(ScoreManager.Instance.isHouseDeactivated);
-    }
-
-    //넘겨받은 해당 지역의 레벨 이미지 중에서 발전도에 맞는 것을 골라서 반환
-    private Sprite GetLevelSprite(float dev, Sprite lv1, Sprite lv2, Sprite lv3)
-    {
-        if (dev >= 50f) return lv3;
-        else if (dev >= 20f) return lv2;
-        else return lv1;
     }
 
     // 돌발 이벤트 보여주는 함수

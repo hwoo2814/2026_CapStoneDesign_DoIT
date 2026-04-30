@@ -11295,25 +11295,25 @@ MonoBehaviour:
   regionHouseScoreText: {fileID: 256901443}
   gradeText: {fileID: 707323264}
   titleText: {fileID: 2015557601}
-  univImage: {fileID: 61576088}
-  silverImage: {fileID: 553950349}
-  industryImage: {fileID: 1809654624}
-  houseImage: {fileID: 945417352}
+  univImage: {fileID: 0}
+  silverImage: {fileID: 0}
+  industryImage: {fileID: 0}
+  houseImage: {fileID: 0}
   policyLogText: {fileID: 1913703690}
   logPanel: {fileID: 1088834338}
   logCloseBtn: {fileID: 2005574983}
-  univLv1Image: {fileID: 21300000, guid: a6a61ff7324f54648a9c3cd8a9ec05d4, type: 3}
-  univLv2Image: {fileID: 21300000, guid: 0e4f1bbf4a1416845bdb81b102733d83, type: 3}
-  univLv3Image: {fileID: 21300000, guid: b50821cfd2d20bb43a4318797a1b1825, type: 3}
+  univLv1Image: {fileID: 0}
+  univLv2Image: {fileID: 0}
+  univLv3Image: {fileID: 0}
   silverLv1Image: {fileID: 0}
   silverLv2Image: {fileID: 0}
   silverLv3Image: {fileID: 0}
-  indLv1Image: {fileID: 21300000, guid: 88ba489116bc1724a9cc215193d0983e, type: 3}
-  indLv2Image: {fileID: 21300000, guid: 7754ce4c825da32498a4836eef257431, type: 3}
-  indLv3Image: {fileID: 21300000, guid: eb66cbf7e571cbd4585af1ae8411fae9, type: 3}
-  houseLv1Image: {fileID: 21300000, guid: bdb0e844273c00a43aeea4c3ab31deb6, type: 3}
-  houseLv2Image: {fileID: 21300000, guid: 8c20e10fcb7c6cc48b2a19d505d94b0e, type: 3}
-  houseLv3Image: {fileID: 21300000, guid: 6624a88104ab8154082ad13a7988b019, type: 3}
+  indLv1Image: {fileID: 0}
+  indLv2Image: {fileID: 0}
+  indLv3Image: {fileID: 0}
+  houseLv1Image: {fileID: 0}
+  houseLv2Image: {fileID: 0}
+  houseLv3Image: {fileID: 0}
   lockOverlayPrefab: {fileID: 262110592025356657, guid: 2bd439c9d4cd00c4ebb8f25cd019bfe3, type: 3}
 --- !u!114 &1836366564
 MonoBehaviour:
