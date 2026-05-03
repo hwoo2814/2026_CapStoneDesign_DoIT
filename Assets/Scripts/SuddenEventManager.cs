@@ -7,18 +7,18 @@ public class SuddenEventManager : MonoBehaviour
 
     public class EventData
     {
-        public string eventName; // ÀÌº¥Æ® ÀÌ¸§
-        public Sprite eventSprite; // °¢ ÀÌº¥Æ® ÀÌ¹ÌÁö(¾ŞÄ¿ ¿·¿¡)
+        public string eventName; // ì´ë²¤íŠ¸ ì´ë¦„
+        public Sprite eventSprite; // ê° ì´ë²¤íŠ¸ ì´ë¯¸ì§€(ì•µì»¤ ì˜†ì—)
 
-        public float dYouth, dSenior, dCorp; // º¯°æµÉ ¹Î½Éµé
-        public float dUniv, dSilver, dInd, dHouse; // º¯°æµÉ Áö¿ªµé
+        public float dYouth, dSenior, dCorp; // ë³€ê²½ë  ë¯¼ì‹¬ë“¤
+        public float dUniv, dSilver, dInd, dHouse; // ë³€ê²½ë  ì§€ì—­ë“¤
     }
 
-    public float eventTriggerChance = 40f; // ÀÌº¥Æ® ¹ß»ı È®·ü, ÀÓ½Ã·Î Á¤ÇÔ
-    
-    public List<EventData> events; // ÀÌº¥Æ® ¸ñ·Ï
+    public float eventTriggerChance = 40f; // ì´ë²¤íŠ¸ ë°œìƒ í™•ë¥ , ì„ì‹œë¡œ ì •í•¨
 
-    // ÀÌº¥Æ®º° ÀÌ¹ÌÁö ¼³Á¤
+    public List<EventData> events; // ì´ë²¤íŠ¸ ëª©ë¡
+
+    // ì´ë²¤íŠ¸ë³„ ì´ë¯¸ì§€ ì„¤ì •
     public Sprite imgAiCompute;
     public Sprite imgSilverCare;
     public Sprite imgTechCollab;
@@ -38,104 +38,104 @@ public class SuddenEventManager : MonoBehaviour
 
     void Start()
     {
-        InitEventData(); // °ÔÀÓ ½ÃÀÛ ½Ã events ¸®½ºÆ®¿¡ ÀÖ´Â ÀÌº¥Æ®¸¦ µî·Ï
+        InitEventData(); // ê²Œì„ ì‹œì‘ ì‹œ events ë¦¬ìŠ¤íŠ¸ì— ìˆëŠ” ì´ë²¤íŠ¸ë¥¼ ë“±ë¡
     }
 
-    // ÀÌº¥Æ® ¹ß»ı Ã¼Å©ÇÏ°í ½ÇÇàÇÏ´Â ÇÔ¼ö
+    // ì´ë²¤íŠ¸ ë°œìƒ ì²´í¬í•˜ê³  ì‹¤í–‰í•˜ëŠ” í•¨ìˆ˜
     public void CheckAndTriggerEvent()
     {
-        // 1Â÷·Î ÀÌº¥Æ® ¹ß»ı È®·ü ÃßÃ·
-        if (Random.Range(1f, 100f) > eventTriggerChance) return; 
+        // 1ì°¨ë¡œ ì´ë²¤íŠ¸ ë°œìƒ í™•ë¥  ì¶”ì²¨
+        if (Random.Range(1f, 100f) > eventTriggerChance) return;
 
-        // ¹«ÀÛÀ§ ÀÌº¥Æ® 1°³ ÃßÃ·
+        // ë¬´ì‘ìœ„ ì´ë²¤íŠ¸ 1ê°œ ì¶”ì²¨
         int idx = Random.Range(0, events.Count);
         EventData ev = events[idx];
 
-        // ÀÌº¥Æ® ¼öÄ¡ Àû¿ë
+        // ì´ë²¤íŠ¸ ìˆ˜ì¹˜ ì ìš©
         ScoreManager.Instance.ModifyAffinity(ev.dYouth, ev.dSenior, ev.dCorp);
         ScoreManager.Instance.ModifyDev(ev.dUniv, ev.dSilver, ev.dInd, ev.dHouse);
 
-        // µ¹¹ß ÀÌº¥Æ® UI ¶ç¿ì±â (ÅÏ ½ÃÀÛ Àü Ç¥Ãâ)
+        // ëŒë°œ ì´ë²¤íŠ¸ UI ë„ìš°ê¸° (í„´ ì‹œì‘ ì „ í‘œì¶œ)
         UIManager.Instance.ShowEventPopup(ev.eventName, ev.eventSprite);
 
-        // µ¹¹ß ÀÌº¥Æ® ¹ß»ı ³»¿ëÀ» ·Î±× ÆĞ³Î¿¡ ±â·Ï
+        // ëŒë°œ ì´ë²¤íŠ¸ ë°œìƒ ë‚´ìš©ì„ ë¡œê·¸ íŒ¨ë„ì— ê¸°ë¡
         UIManager.Instance.AddPolicyLog(BuildEventLogMessage(ev));
     }
 
-    // µ¹¹ß ÀÌº¥Æ®ÀÇ ¼öÄ¡ º¯È­·®À» ÀĞ±â ½¬¿î ·Î±× ¹®ÀÚ¿­·Î Á¶¸³ÇØ ¹İÈ¯
-    // º¯È­·®ÀÌ 0ÀÎ Ç×¸ñÀº Ãâ·Â¿¡¼­ Á¦¿Ü
-    // ev : ¹ß»ıÇÑ ÀÌº¥Æ® µ¥ÀÌÅÍ
+    // ëŒë°œ ì´ë²¤íŠ¸ì˜ ìˆ˜ì¹˜ ë³€í™”ëŸ‰ì„ ì½ê¸° ì‰¬ìš´ ë¡œê·¸ ë¬¸ìì—´ë¡œ ì¡°ë¦½í•´ ë°˜í™˜
+    // ë³€í™”ëŸ‰ì´ 0ì¸ í•­ëª©ì€ ì¶œë ¥ì—ì„œ ì œì™¸
+    // ev : ë°œìƒí•œ ì´ë²¤íŠ¸ ë°ì´í„°
     private string BuildEventLogMessage(EventData ev)
     {
         string changes = "";
 
-        if (ev.dYouth  != 0f) changes += $"/Ã»³â ¹Î½É{ev.dYouth:+0.#;-0.#}";
-        if (ev.dSenior != 0f) changes += $"/³ë³â ¹Î½É{ev.dSenior:+0.#;-0.#}";
-        if (ev.dCorp   != 0f) changes += $"/±â¾÷ ¹Î½É{ev.dCorp:+0.#;-0.#}";
-        if (ev.dUniv   != 0f) changes += $"/½Åµµ½Ã ¹ßÀüµµ{ev.dUniv:+0.#;-0.#}";
-        if (ev.dSilver != 0f) changes += $"/³óÃÌ ¹ßÀüµµ{ev.dSilver:+0.#;-0.#}";
-        if (ev.dInd    != 0f) changes += $"/Áö¹æ ¹ßÀüµµ{ev.dInd:+0.#;-0.#}";
-        if (ev.dHouse  != 0f) changes += $"/¼öµµ±Ç ¹ßÀüµµ{ev.dHouse:+0.#;-0.#}";
+        if (ev.dYouth  != 0f) changes += $"/ì²­ë…„ ë¯¼ì‹¬{ev.dYouth:+0.#;-0.#}";
+        if (ev.dSenior != 0f) changes += $"/ë…¸ë…„ ë¯¼ì‹¬{ev.dSenior:+0.#;-0.#}";
+        if (ev.dCorp   != 0f) changes += $"/ê¸°ì—… ë¯¼ì‹¬{ev.dCorp:+0.#;-0.#}";
+        if (ev.dUniv   != 0f) changes += $"/ì‹ ë„ì‹œ ë°œì „ë„{ev.dUniv:+0.#;-0.#}";
+        if (ev.dSilver != 0f) changes += $"/ë†ì´Œ ë°œì „ë„{ev.dSilver:+0.#;-0.#}";
+        if (ev.dInd    != 0f) changes += $"/ì§€ë°© ë°œì „ë„{ev.dInd:+0.#;-0.#}";
+        if (ev.dHouse  != 0f) changes += $"/ìˆ˜ë„ê¶Œ ë°œì „ë„{ev.dHouse:+0.#;-0.#}";
 
-        return $"[µ¹¹ß ÀÌº¥Æ®] {ev.eventName}\n({changes})";
+        return $"[ëŒë°œ ì´ë²¤íŠ¸] {ev.eventName}\n({changes})";
     }
 
     private void InitEventData()
     {
         events = new List<EventData>()
         {
-            // ±àÁ¤ ÀÌº¥Æ® 5°³
-            new EventData { 
-                eventName = "AI ÄÄÇ»ÆÃ µ¥ÀÌÅÍ ¼¾ÅÍ, Áö¹æ¿¡ À¯Ä¡",
+            // ê¸ì • ì´ë²¤íŠ¸ 5ê°œ
+            new EventData {
+                eventName = "AI ì»´í“¨íŒ… ë°ì´í„° ì„¼í„°, ì§€ë°©ì— ìœ ì¹˜",
                 eventSprite = imgAiCompute,
-                dInd = 15f, dHouse = -5f, dCorp = 0.6f 
+                dInd = 15f, dHouse = -5f, dCorp = 0.6f
             },
-            new EventData { 
-                eventName = "½Ç¹ö AI µ¹º½ ¼­ºñ½º º¸±Ş",
+            new EventData {
+                eventName = "ì‹¤ë²„ AI ëŒë´„ ì„œë¹„ìŠ¤ ë³´ê¸‰",
                 eventSprite = imgSilverCare,
-                dSilver = 10f, dInd = 15f, dSenior = 0.4f 
+                dSilver = 10f, dInd = 15f, dSenior = 0.4f
             },
-            new EventData { 
-                eventName = "±Û·Î¹ú ºòÅ×Å©¿Í ±¹³» ´ëÇĞ Çù·Â ¹ßÇ¥",
-                eventSprite = imgTechCollab, 
-                dUniv = 5f, dInd = 7f, dYouth = 0.8f 
+            new EventData {
+                eventName = "ê¸€ë¡œë²Œ ë¹…í…Œí¬ì™€ êµ­ë‚´ ëŒ€í•™ í˜‘ë ¥ ë°œí‘œ",
+                eventSprite = imgTechCollab,
+                dUniv = 5f, dInd = 7f, dYouth = 0.8f
             },
-            new EventData { 
-                eventName = "±³À°ºÎ, AI ¿¡µàÅ×Å© ½Ã¹üÁö±¸ ¹ßÇ¥",
+            new EventData {
+                eventName = "êµìœ¡ë¶€, AI ì—ë“€í…Œí¬ ì‹œë²”ì§€êµ¬ ë°œí‘œ",
                 eventSprite = imgEduTech,
-                dUniv = 14f, dYouth = 0.8f 
+                dUniv = 14f, dYouth = 0.8f
             },
-            new EventData { 
-                eventName = "Áö¿ª K-AI ½ºÅ¸Æ®¾÷ À¯´ÏÄÜ Åº»ı",
+            new EventData {
+                eventName = "ì§€ì—­ K-AI ìŠ¤íƒ€íŠ¸ì—… ìœ ë‹ˆì½˜ íƒ„ìƒ",
                 eventSprite = imgStartup,
-                dInd = 12f 
+                dInd = 12f
             },
 
-            // ºÎÁ¤ ÀÌº¥Æ® 5°³
-            new EventData { 
-                eventName = "AI ÀÏÀÚ¸® ´ëÃ¼ °øÆ÷ È®»ê",
-                eventSprite = imgJobFear, 
-                dYouth = -0.7f, dSenior = -0.4f 
+            // ë¶€ì • ì´ë²¤íŠ¸ 5ê°œ
+            new EventData {
+                eventName = "AI ì¼ìë¦¬ ëŒ€ì²´ ê³µí¬ í™•ì‚°",
+                eventSprite = imgJobFear,
+                dYouth = -0.7f, dSenior = -0.4f
             },
-            new EventData { 
-                eventName = "AI ±İÀ¶ »ç±â ±ŞÁõ",
-                eventSprite = imgFraud, 
-                dYouth = -0.3f, dSenior = -0.3f, dCorp = -0.3f 
+            new EventData {
+                eventName = "AI ê¸ˆìœµ ì‚¬ê¸° ê¸‰ì¦",
+                eventSprite = imgFraud,
+                dYouth = -0.3f, dSenior = -0.3f, dCorp = -0.3f
             },
-            new EventData { 
-                eventName = "µ¥ÀÌÅÍ ¼¾ÅÍ Àü·Â °úºÎÇÏ, È­Àç »ç°í ¹ß»ı",
-                eventSprite = imgFire, 
-                dInd = -15f 
+            new EventData {
+                eventName = "ë°ì´í„° ì„¼í„° ì „ë ¥ ê³¼ë¶€í•˜, í™”ì¬ ì‚¬ê³  ë°œìƒ",
+                eventSprite = imgFire,
+                dInd = -15f
             },
-            new EventData { 
-                eventName = "AI ¿¬»ê¹ß '¿öÅÍ ¼îÅ©",
-                eventSprite = imgWaterShock, 
-                dHouse = -15f, dYouth = -0.5f, dSenior = -0.5f, dCorp = -0.5f 
+            new EventData {
+                eventName = "AI ì—°ì‚°ë°œ 'ì›Œí„° ì‡¼í¬",
+                eventSprite = imgWaterShock,
+                dHouse = -15f, dYouth = -0.5f, dSenior = -0.5f, dCorp = -0.5f
             },
-            new EventData { 
-                eventName = "±Û·Î¹ú AI ±ÔÁ¦ ¿ä±¸·Î ±â¼ú À§Ãà ¿ì·Á",
-                eventSprite = imgRegulation, 
-                dCorp = -0.7f, dInd = -9f 
+            new EventData {
+                eventName = "ê¸€ë¡œë²Œ AI ê·œì œ ìš”êµ¬ë¡œ ê¸°ìˆ  ìœ„ì¶• ìš°ë ¤",
+                eventSprite = imgRegulation,
+                dCorp = -0.7f, dInd = -9f
             }
         };
     }

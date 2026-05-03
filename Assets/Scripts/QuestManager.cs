@@ -5,50 +5,48 @@ public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance;
 
-    // ÇöÀç ÁøÇà ÁßÀÎ Äù½ºÆ® (nullÀÌ¸é È°¼º Äù½ºÆ® ¾øÀ½)
+    // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ í€˜ìŠ¤íŠ¸ (nullì´ë©´ í™œì„± í€˜ìŠ¤íŠ¸ ì—†ìŒ)
     private QuestDefinition activeQuest = null;
 
-    // Äù½ºÆ® ÀÚµ¿ »ı¼º ±âÁØ ÅÏ ¸ñ·Ï (7, 14, 21, 28)
+    // í€˜ìŠ¤íŠ¸ ìë™ ìƒì„± ê¸°ì¤€ í„´ ëª©ë¡ (7, 14, 21, 28)
     private readonly int[] questGenerationTurns = { 7, 14, 21, 28 };
 
-    // ÀÌ¹Ì »ç¿ëµÈ Äù½ºÆ® ID ÁıÇÕ (¿Ï·á¡¤½ÇÆĞÇÑ Äù½ºÆ®´Â ÀçµîÀåÇÏÁö ¾ÊÀ½)
+    // ì´ë¯¸ ì‚¬ìš©ëœ í€˜ìŠ¤íŠ¸ ID ì§‘í•© (ì™„ë£ŒÂ·ì‹¤íŒ¨í•œ í€˜ìŠ¤íŠ¸ëŠ” ì¬ë“±ì¥í•˜ì§€ ì•ŠìŒ)
     private HashSet<int> usedQuestIds = new HashSet<int>();
 
-    // ÇöÀç Äù½ºÆ®°¡ »ı¼ºµÈ ÅÏ
+    // í˜„ì¬ í€˜ìŠ¤íŠ¸ê°€ ìƒì„±ëœ í„´
     private int questStartTurn = 0;
 
-    // ÇöÀç Äù½ºÆ®ÀÇ ¸¸·á ÅÏ (»ı¼º ÅÏ + 7 = ´ÙÀ½ »ı¼º ÅÏ)
+    // í˜„ì¬ í€˜ìŠ¤íŠ¸ì˜ ë§Œë£Œ í„´ (ìƒì„± í„´ + 7 = ë‹¤ìŒ ìƒì„± í„´)
     private int questExpiryTurn = 0;
 
-    // ¸ñÇ¥ ÁøÇà ÃßÀû º¯¼ö
-
-    // ¿¬¼Ó Á¶°Ç ´Ş¼º ÅÏ Ä«¿îÅÍ
-    // MoneyAboveForConsecutiveTurns / SingleAffinity / MultiAffinity / SingleAffinityAndMoney ¿¡¼­ »ç¿ë
+    // ëª©í‘œ ì§„í–‰ ì¶”ì  ë³€ìˆ˜
+    // ì—°ì† ì¡°ê±´ ë‹¬ì„± í„´ ì¹´ìš´í„°
+    // MoneyAboveForConsecutiveTurns / SingleAffinity / MultiAffinity / SingleAffinityAndMoney ì—ì„œ ì‚¬ìš©
     private int consecutiveTurnsMet = 0;
 
-    // Á¤Ã¥ »ç¿ë ´©Àû È½¼ö Ä«¿îÅÍ (PolicyCountWithinTurns ¿¡¼­ »ç¿ë)
+    // ì •ì±… ì‚¬ìš© ëˆ„ì  íšŸìˆ˜ ì¹´ìš´í„° (PolicyCountWithinTurns ì—ì„œ ì‚¬ìš©)
     private int policyUseCount = 0;
 
-    // ¾È°Ç ¼ö¶ô ¿©ºÎ ÇÃ·¡±× (AcceptProposalWithinTurns ¿¡¼­ »ç¿ë)
+    // ì•ˆê±´ ìˆ˜ë½ ì—¬ë¶€ í”Œë˜ê·¸ (AcceptProposalWithinTurns ì—ì„œ ì‚¬ìš©)
     private bool proposalAccepted = false;
 
-    // Äù½ºÆ® ½ÃÀÛ ÀÌÈÄ °æ°úµÈ ÅÏ ¼ö
-    // AcceptProposalWithinTurns ÀÇ Á¦ÇÑ ÅÏ ÃÊ°ú Á¶±â ½ÇÆĞ ÆÇÁ¤¿¡ »ç¿ë
+    // í€˜ìŠ¤íŠ¸ ì‹œì‘ ì´í›„ ê²½ê³¼ëœ í„´ ìˆ˜
+    // AcceptProposalWithinTurns ì˜ ì œí•œ í„´ ì´ˆê³¼ ì¡°ê¸° ì‹¤íŒ¨ íŒì •ì— ì‚¬ìš©
     private int questElapsedTurns = 0;
 
-    // ÇÃ·¹ÀÌ¾îÀÇ Äù½ºÆ® °áÁ¤ »óÅÂ ÃßÀû (¹Ì°áÁ¤ / ¼ö¶ô / °ÅÀı)
+    // í”Œë ˆì´ì–´ì˜ í€˜ìŠ¤íŠ¸ ê²°ì • ìƒíƒœ ì¶”ì  (ë¯¸ê²°ì • / ìˆ˜ë½ / ê±°ì ˆ)
     private enum QuestDecisionState { Pending, Accepted, Rejected }
     private QuestDecisionState decisionState = QuestDecisionState.Pending;
 
-
-    // Áö¼Ó È¿°ú(µğ¹öÇÁ/¹öÇÁ) ÃßÀû º¯¼ö
-    // ÀÚ±İ È¹µæ·ü °¨¼Ò µğ¹öÇÁ ÀÜ¿© ÅÏ ¼ö (°ÅÁ¡ ±¹¸³´ë Áö¿ø ½ÇÆĞ ¸®½ºÅ©)
+    // ì§€ì† íš¨ê³¼(ë””ë²„í”„/ë²„í”„) ì¶”ì  ë³€ìˆ˜
+    // ìê¸ˆ íšë“ë¥  ê°ì†Œ ë””ë²„í”„ ì”ì—¬ í„´ ìˆ˜ (ê±°ì  êµ­ë¦½ëŒ€ ì§€ì› ì‹¤íŒ¨ ë¦¬ìŠ¤í¬)
     public int fundingDebuffRemainingTurns = 0;
 
-    // ÀÚ±İ È¹µæ·ü °¨¼Ò ºñÀ² (0.1 = 10% °¨¼Ò)
+    // ìê¸ˆ íšë“ë¥  ê°ì†Œ ë¹„ìœ¨ (0.1 = 10% ê°ì†Œ)
     public float fundingDebuffRate = 0f;
 
-    // AI ÈùÆ® È°¼ºÈ­ ÀÜ¿© ÅÏ ¼ö (ºòµ¥ÀÌÅÍ ¼¾ÅÍ ±¸Ãà ¼º°ø º¸»ó)
+    // AI íŒíŠ¸ í™œì„±í™” ì”ì—¬ í„´ ìˆ˜ (ë¹…ë°ì´í„° ì„¼í„° êµ¬ì¶• ì„±ê³µ ë³´ìƒ)
     public int aiHintRemainingTurns = 0;
 
     void Awake()
@@ -57,9 +55,9 @@ public class QuestManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    // ÀÚ±İ È¹µæ ½Ã Àû¿ëÇÒ ¹èÀ²À» ¹İÈ¯ÇÏ´Â ÇÔ¼ö
-    // CardController.ExecuteFunding() ¿¡¼­ ½ÇÁ¦ È¹µæ·®¿¡ °öÇÔ
-    // µğ¹öÇÁ ¾øÀ½ ¡æ 1.0f (Á¤»ó), µğ¹öÇÁ ÀÖÀ½ ¡æ (1 - debuffRate)
+    // ìê¸ˆ íšë“ ì‹œ ì ìš©í•  ë°°ìœ¨ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
+    // CardController.ExecuteFunding() ì—ì„œ ì‹¤ì œ íšë“ëŸ‰ì— ê³±í•¨
+    // ë””ë²„í”„ ì—†ìŒ â†’ 1.0f (ì •ìƒ), ë””ë²„í”„ ìˆìŒ â†’ (1 - debuffRate)
     public float GetFundingMultiplier()
     {
         if (fundingDebuffRemainingTurns > 0)
@@ -67,40 +65,38 @@ public class QuestManager : MonoBehaviour
         return 1f;
     }
 
-    // AI ÈùÆ®°¡ ÇöÀç È°¼º »óÅÂÀÎÁö ¹İÈ¯
-    // UIManager.UpdateAIHintUI() ¿¡¼­ ÆĞ³Î Ç¥½Ã ¿©ºÎ¿¡ »ç¿ë
+    // AI íŒíŠ¸ê°€ í˜„ì¬ í™œì„± ìƒíƒœì¸ì§€ ë°˜í™˜
+    // UIManager.UpdateAIHintUI() ì—ì„œ íŒ¨ë„ í‘œì‹œ ì—¬ë¶€ì— ì‚¬ìš©
     public bool IsAIHintActive()
     {
         return aiHintRemainingTurns > 0;
     }
 
-    // ÇöÀç È°¼º Äù½ºÆ®°¡ ÀÖ´ÂÁö ¿©ºÎ¸¦ ¹İÈ¯
+    // í˜„ì¬ í™œì„± í€˜ìŠ¤íŠ¸ê°€ ìˆëŠ”ì§€ ì—¬ë¶€ë¥¼ ë°˜í™˜
     public bool HasActiveQuest()
     {
         return activeQuest != null;
     }
 
-    // ¿ÜºÎ¿¡¼­ ÇöÀç È°¼º Äù½ºÆ® µ¥ÀÌÅÍ¿¡ Á¢±ÙÇÏ±â À§ÇÑ Á¢±ÙÀÚ
+    // ì™¸ë¶€ì—ì„œ í˜„ì¬ í™œì„± í€˜ìŠ¤íŠ¸ ë°ì´í„°ì— ì ‘ê·¼í•˜ê¸° ìœ„í•œ ì ‘ê·¼ì
     public QuestDefinition GetActiveQuest()
     {
         return activeQuest;
     }
 
-
-    // ÅÏ ½ÃÀÛ ½Ã GameManager.StartTurn() ¿¡¼­ È£Ãâ
-
-    // Äù½ºÆ® »ı¼º ÁÖ±â Ã¼Å©, ¸¸·á Äù½ºÆ® ½ÇÆĞ Ã³¸®, ½Å±Ô Äù½ºÆ® ¹èÁ¤À» ¼öÇà
-    // currentTurn : ¹æ±İ ½ÃÀÛµÈ ÅÏ ¹øÈ£
+    // í„´ ì‹œì‘ ì‹œ GameManager.StartTurn() ì—ì„œ í˜¸ì¶œ
+    // í€˜ìŠ¤íŠ¸ ìƒì„± ì£¼ê¸° ì²´í¬, ë§Œë£Œ í€˜ìŠ¤íŠ¸ ì‹¤íŒ¨ ì²˜ë¦¬, ì‹ ê·œ í€˜ìŠ¤íŠ¸ ë°°ì •ì„ ìˆ˜í–‰
+    // currentTurn : ë°©ê¸ˆ ì‹œì‘ëœ í„´ ë²ˆí˜¸
     public void OnTurnStart(int currentTurn)
     {
-        // Æ©Åä¸®¾ó ÁßÀÌ¸é Äù½ºÆ® ½Ã½ºÅÛ ÀüÃ¼¸¦ °Ç³Ê¶Ü
+        // íŠœí† ë¦¬ì–¼ ì¤‘ì´ë©´ í€˜ìŠ¤íŠ¸ ì‹œìŠ¤í…œ ì „ì²´ë¥¼ ê±´ë„ˆëœ€
         if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial) return;
 
-        // Áö¼Ó È¿°ú ÀÜ¿© ÅÏ °¨¼Ò
+        // ì§€ì† íš¨ê³¼ ì”ì—¬ í„´ ê°ì†Œ
         if (fundingDebuffRemainingTurns > 0) fundingDebuffRemainingTurns--;
         if (aiHintRemainingTurns > 0) aiHintRemainingTurns--;
 
-        // Äù½ºÆ® »ı¼º ÅÏ(7, 14, 21, 28)ÀÎÁö È®ÀÎ
+        // í€˜ìŠ¤íŠ¸ ìƒì„± í„´(7, 14, 21, 28)ì¸ì§€ í™•ì¸
         bool isGenerationTurn = System.Array.IndexOf(questGenerationTurns, currentTurn) >= 0;
         if (isGenerationTurn)
         {
@@ -108,13 +104,13 @@ public class QuestManager : MonoBehaviour
             {
                 if (decisionState == QuestDecisionState.Accepted)
                 {
-                    // ¼ö¶ô ÈÄ ¸ñÇ¥ ¹Ì´Ş¼º »óÅÂ·Î ±âÇÑ µµ´Ş ¡æ ½ÇÆĞ Ã³¸® ¹× ¸®½ºÅ© Àû¿ë
+                    // ìˆ˜ë½ í›„ ëª©í‘œ ë¯¸ë‹¬ì„± ìƒíƒœë¡œ ê¸°í•œ ë„ë‹¬ â†’ ì‹¤íŒ¨ ì²˜ë¦¬ ë° ë¦¬ìŠ¤í¬ ì ìš©
                     FailCurrentQuest();
                 }
                 else
                 {
-                    // ¹Ì¼ö¶ô/°ÅÀı »óÅÂ·Î ±âÇÑ µµ´Ş ¡æ ¸®½ºÅ© ¾øÀÌ Á¾·á
-                    UIManager.Instance.AddPolicyLog($"[Äù½ºÆ® Á¾·á] : {activeQuest.questTitle}");
+                    // ë¯¸ìˆ˜ë½/ê±°ì ˆ ìƒíƒœë¡œ ê¸°í•œ ë„ë‹¬ â†’ ë¦¬ìŠ¤í¬ ì—†ì´ ì¢…ë£Œ
+                    UIManager.Instance.AddPolicyLog($"[í€˜ìŠ¤íŠ¸ ì¢…ë£Œ] : {activeQuest.questTitle}");
                     UIManager.Instance.ClearQuestPanel();
                     activeQuest = null;
                     ResetProgressCounters();
@@ -125,15 +121,15 @@ public class QuestManager : MonoBehaviour
         UIManager.Instance.UpdateAIHintUI(IsAIHintActive(), aiHintRemainingTurns);
     }
 
-    // ÅÏ Á¾·á(ÇÃ·¹ÀÌ¾î Çàµ¿ ¿Ï·á) ÈÄ GameManager.OnPlayerActionCompleted() ¿¡¼­ È£Ãâ
-    // ÇöÀç È°¼º Äù½ºÆ®ÀÇ ¸ñÇ¥ ´Ş¼º ¿©ºÎ¸¦ °Ë»çÇÏ°í ¼º°ø, ½ÇÆĞ¸¦ Ã³¸®
+    // í„´ ì¢…ë£Œ(í”Œë ˆì´ì–´ í–‰ë™ ì™„ë£Œ) í›„ GameManager.OnPlayerActionCompleted() ì—ì„œ í˜¸ì¶œ
+    // í˜„ì¬ í™œì„± í€˜ìŠ¤íŠ¸ì˜ ëª©í‘œ ë‹¬ì„± ì—¬ë¶€ë¥¼ ê²€ì‚¬í•˜ê³  ì„±ê³µ, ì‹¤íŒ¨ë¥¼ ì²˜ë¦¬
     public void OnTurnEnd()
     {
         if (activeQuest == null) return;
 
         questElapsedTurns++;
 
-        // ¸ñÇ¥ ´Ş¼º ¿©ºÎ È®ÀÎ
+        // ëª©í‘œ ë‹¬ì„± ì—¬ë¶€ í™•ì¸
         bool isComplete = CheckGoalCompletion(activeQuest.goal);
         if (isComplete)
         {
@@ -149,7 +145,7 @@ public class QuestManager : MonoBehaviour
             }
             else
             {
-                UIManager.Instance.AddPolicyLog($"[Äù½ºÆ® Á¾·á] : {activeQuest.questTitle}");
+                UIManager.Instance.AddPolicyLog($"[í€˜ìŠ¤íŠ¸ ì¢…ë£Œ] : {activeQuest.questTitle}");
                 UIManager.Instance.ClearQuestPanel();
                 activeQuest = null;
                 ResetProgressCounters();
@@ -157,9 +153,9 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    // Á¤Ã¥ »ç¿ë ½Ã CardController.ProcessPolicy() ¿¡¼­ È£Ãâ
-    // PolicyCountWithinTurns Å¸ÀÔ Äù½ºÆ®ÀÇ Á¤Ã¥ »ç¿ë È½¼ö¸¦ ´©Àû
-    // policyType : 1=Ã»³â, 2=³ë³â, 3=±â¾÷
+    // ì •ì±… ì‚¬ìš© ì‹œ CardController.ProcessPolicy() ì—ì„œ í˜¸ì¶œ
+    // PolicyCountWithinTurns íƒ€ì… í€˜ìŠ¤íŠ¸ì˜ ì •ì±… ì‚¬ìš© íšŸìˆ˜ë¥¼ ëˆ„ì 
+    // policyType : 1=ì²­ë…„, 2=ë…¸ë…„, 3=ê¸°ì—…
     public void OnPolicyUsed(int policyType)
     {
         if (activeQuest == null) return;
@@ -170,54 +166,54 @@ public class QuestManager : MonoBehaviour
         policyUseCount++;
     }
 
-    // ¼ö¶ô ¹öÆ° Å¬¸¯ ½Ã GameManager.AcceptButten() ¿¡¼­ È£Ãâ
-    // AcceptProposalWithinTurns Å¸ÀÔ Äù½ºÆ®¿¡¼­ ¼ö¶ô ¿Ï·á ÇÃ·¡±×¸¦ ¼¼¿ò
+    // ìˆ˜ë½ ë²„íŠ¼ í´ë¦­ ì‹œ GameManager.AcceptButten() ì—ì„œ í˜¸ì¶œ
+    // AcceptProposalWithinTurns íƒ€ì… í€˜ìŠ¤íŠ¸ì—ì„œ ìˆ˜ë½ ì™„ë£Œ í”Œë˜ê·¸ë¥¼ ì„¸ì›€
     public void OnQuestAccepted()
     {
         if (activeQuest == null) return;
-        // °ÅÀı ÈÄ Àç¼ö¶ô ½Ãµµ Â÷´Ü
+        // ê±°ì ˆ í›„ ì¬ìˆ˜ë½ ì‹œë„ ì°¨ë‹¨
         if (decisionState == QuestDecisionState.Rejected) return;
 
-        // ±âº»ÀûÀ¸·Î´Â Äù½ºÆ®¸¦ ¼ö¶ô »óÅÂ·Î ÀüÈ¯
+        // ê¸°ë³¸ì ìœ¼ë¡œëŠ” í€˜ìŠ¤íŠ¸ë¥¼ ìˆ˜ë½ ìƒíƒœë¡œ ì „í™˜
         decisionState = QuestDecisionState.Accepted;
 
-        // 10, 11¹ø Äù½ºÆ®´Â "3ÅÏ ÀÌ³» ¼ö¶ô" ÀÚÃ¼°¡ ¼º°ø Á¶°Ç
-        // µû¶ó¼­ ÀÌ Å¸ÀÔÀº ÅÏ Á¾·á(OnTurnEnd)±îÁö ±â´Ù¸®Áö ¸»°í
-        // ¼ö¶ô ¹öÆ°À» ´©¸£´Â Áï½Ã ¼º°ø Ã³¸®
+        // 10, 11ë²ˆ í€˜ìŠ¤íŠ¸ëŠ” "3í„´ ì´ë‚´ ìˆ˜ë½" ìì²´ê°€ ì„±ê³µ ì¡°ê±´
+        // ë”°ë¼ì„œ ì´ íƒ€ì…ì€ í„´ ì¢…ë£Œ(OnTurnEnd)ê¹Œì§€ ê¸°ë‹¤ë¦¬ì§€ ë§ê³ 
+        // ìˆ˜ë½ ë²„íŠ¼ì„ ëˆ„ë¥´ëŠ” ì¦‰ì‹œ ì„±ê³µ ì²˜ë¦¬
         if (activeQuest.goal.goalType == QuestGoalType.AcceptProposalWithinTurns)
         {
-            // questElapsedTurns´Â OnTurnEnd()°¡ È£ÃâµÉ ¶§¸¶´Ù 1¾¿ Áõ°¡
-            // ÅÏ Á¾·á ¶§ Áõ°¡ÇÏ¹Ç·Î 0,1,2±îÁö¸¸ Çã¿ë
+            // questElapsedTurnsëŠ” OnTurnEnd()ê°€ í˜¸ì¶œë  ë•Œë§ˆë‹¤ 1ì”© ì¦ê°€
+            // í„´ ì¢…ë£Œ ë•Œ ì¦ê°€í•˜ë¯€ë¡œ 0,1,2ê¹Œì§€ë§Œ í—ˆìš©
             if (questElapsedTurns < activeQuest.goal.requiredTurns)
             {
-                // ¼ö¶ô ¼º°ø Á¶°ÇÀ» ¸¸Á·ÇÏ¸é true
+                // ìˆ˜ë½ ì„±ê³µ ì¡°ê±´ì„ ë§Œì¡±í•˜ë©´ true
                 proposalAccepted = true;
-                // Áï½Ã ¼º°ø Ã³¸®
+                // ì¦‰ì‹œ ì„±ê³µ ì²˜ë¦¬
                 CompleteCurrentQuest();
-                // ÀÌ¹Ì ¼º°ø Ã³¸®±îÁö ³¡³µÀ¸¹Ç·Î ÇÔ¼ö Á¾·á
+                // ì´ë¯¸ ì„±ê³µ ì²˜ë¦¬ê¹Œì§€ ëë‚¬ìœ¼ë¯€ë¡œ í•¨ìˆ˜ ì¢…ë£Œ
                 return;
             }
         }
     }
 
-    // ¼ö¶ô ¹öÆ° Å¬¸¯ ½Ã GameManager.AcceptButten() ¿¡¼­ È£Ãâ
+    // ìˆ˜ë½ ë²„íŠ¼ í´ë¦­ ì‹œ GameManager.AcceptButten() ì—ì„œ í˜¸ì¶œ
     public void OnQuestRefused()
     {
         if (activeQuest == null) return;
-        // ¼ö¶ô ÈÄ °ÅÀı ½Ãµµ Â÷´Ü
+        // ìˆ˜ë½ í›„ ê±°ì ˆ ì‹œë„ ì°¨ë‹¨
         if (decisionState == QuestDecisionState.Accepted) return;
 
         decisionState = QuestDecisionState.Rejected;
     }
 
-    // ±âÁ¸ ÇÔ¼ö¸íÀ» ÂüÁ¶ÇÏ´Â °÷ÀÌ ÀÖÀ» °æ¿ì¸¦ ´ëºñÇÑ È£È¯ wrapper
+    // ê¸°ì¡´ í•¨ìˆ˜ëª…ì„ ì°¸ì¡°í•˜ëŠ” ê³³ì´ ìˆì„ ê²½ìš°ë¥¼ ëŒ€ë¹„í•œ í˜¸í™˜ wrapper
     public void OnProposalAccepted()
     {
         OnQuestAccepted();
     }
 
-    // °ÔÀÓ Àç½ÃÀÛ ½Ã GameManager.Start() ¿¡¼­ È£Ãâ
-    // Äù½ºÆ® ½Ã½ºÅÛ ÀüÃ¼ ÃÊ±âÈ­
+    // ê²Œì„ ì¬ì‹œì‘ ì‹œ GameManager.Start() ì—ì„œ í˜¸ì¶œ
+    // í€˜ìŠ¤íŠ¸ ì‹œìŠ¤í…œ ì „ì²´ ì´ˆê¸°í™”
     public void InitData()
     {
         activeQuest = null;
@@ -230,7 +226,7 @@ public class QuestManager : MonoBehaviour
         ResetProgressCounters();
     }
 
-    // »ç¿ëÇÏÁö ¾ÊÀº Äù½ºÆ® Áß ·£´ıÀ¸·Î 1°³¸¦ ¼±ÅÃÇØ È°¼ºÈ­
+    // ì‚¬ìš©í•˜ì§€ ì•Šì€ í€˜ìŠ¤íŠ¸ ì¤‘ ëœë¤ìœ¼ë¡œ 1ê°œë¥¼ ì„ íƒí•´ í™œì„±í™”
     private void GenerateNewQuest(int currentTurn)
     {
         List<QuestDefinition> available = new List<QuestDefinition>();
@@ -242,11 +238,11 @@ public class QuestManager : MonoBehaviour
 
         if (available.Count == 0)
         {
-            UIManager.Instance.AddPolicyLog($"{currentTurn}¹øÂ° ÅÏ : »ç¿ë °¡´ÉÇÑ Äù½ºÆ®°¡ ¾ø½À´Ï´Ù.");
+            UIManager.Instance.AddPolicyLog($"{currentTurn}ë²ˆì§¸ í„´ : ì‚¬ìš© ê°€ëŠ¥í•œ í€˜ìŠ¤íŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }
 
-        // ·£´ı ¼±ÅÃ ÈÄ »ç¿ë ¸ñ·Ï¿¡ µî·Ï (ÀçµîÀå ¹æÁö)
+        // ëœë¤ ì„ íƒ í›„ ì‚¬ìš© ëª©ë¡ì— ë“±ë¡ (ì¬ë“±ì¥ ë°©ì§€)
         int idx = Random.Range(0, available.Count);
         activeQuest = available[idx];
         usedQuestIds.Add(activeQuest.questId);
@@ -255,44 +251,46 @@ public class QuestManager : MonoBehaviour
         questExpiryTurn = currentTurn + 7;
         ResetProgressCounters();
 
-        UIManager.Instance.AddPolicyLog($"[Äù½ºÆ® µîÀå] : {activeQuest.questTitle}\n´º½º ¹öÆ°À» ´©¸¥´ÙÀ½ ¾÷¹« ¹öÆ°À» ´©¸£¸é ³»¿ëÀ» º¼ ¼ö ÀÖ½À´Ï´Ù.");
+        UIManager.Instance.AddPolicyLog($"[í€˜ìŠ¤íŠ¸ ë“±ì¥] : {activeQuest.questTitle}\në‰´ìŠ¤ ë²„íŠ¼ì„ ëˆ„ë¥¸ë‹¤ìŒ ì—…ë¬´ ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ë‚´ìš©ì„ ë³¼ ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
         UIManager.Instance.ShowQuestPanel(activeQuest);
     }
 
-    // Äù½ºÆ® ¼º°ø: º¸»ó + ¸®½ºÅ© ¸ğµÎ Àû¿ë
+    // í€˜ìŠ¤íŠ¸ ì„±ê³µ: ë³´ìƒ + ë¦¬ìŠ¤í¬ ëª¨ë‘ ì ìš©
     private void CompleteCurrentQuest()
     {
+        GameManager.Instance.questSuccessAudioSource.PlayOneShot(GameManager.Instance.questSuccessAudioSource.clip);
+
         string title = activeQuest.questTitle;
         ApplyEffect(activeQuest.reward);
         ApplyEffect(activeQuest.risk);
 
-        UIManager.Instance.AddPolicyLog($"[Äù½ºÆ® ¼º°ø] : {title}\nº¸»ó ¹× ¸®½ºÅ© ¸ğµÎ Àû¿ë");
-        UIManager.Instance.ClearQuestPanel(); // Äù½ºÆ® ÅØ½ºÆ® ÃÊ±âÈ­
+        UIManager.Instance.AddPolicyLog($"[í€˜ìŠ¤íŠ¸ ì„±ê³µ] : {title}\në³´ìƒ ë° ë¦¬ìŠ¤í¬ ëª¨ë‘ ì ìš©");
+        UIManager.Instance.ClearQuestPanel(); // í€˜ìŠ¤íŠ¸ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”
 
         activeQuest = null;
         ResetProgressCounters();
     }
 
-    // Äù½ºÆ® ½ÇÆĞ: ¸®½ºÅ©¸¸ Àû¿ë
+    // í€˜ìŠ¤íŠ¸ ì‹¤íŒ¨: ë¦¬ìŠ¤í¬ë§Œ ì ìš©
     private void FailCurrentQuest()
     {
         string title = activeQuest.questTitle;
         ApplyEffect(activeQuest.risk);
 
-        UIManager.Instance.AddPolicyLog($"[Äù½ºÆ® ½ÇÆĞ] : {title}\n¸®½ºÅ©¸¸ Àû¿ë");
-        UIManager.Instance.ClearQuestPanel(); // Äù½ºÆ® ÅØ½ºÆ® ÃÊ±âÈ­
+        UIManager.Instance.AddPolicyLog($"[í€˜ìŠ¤íŠ¸ ì‹¤íŒ¨] : {title}\në¦¬ìŠ¤í¬ë§Œ ì ìš©");
+        UIManager.Instance.ClearQuestPanel(); // í€˜ìŠ¤íŠ¸ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”
 
         activeQuest = null;
         ResetProgressCounters();
     }
 
-    // Äù½ºÆ® ¸ñÇ¥ Á¶°ÇÀ» °Ë»çÇÏ¿© ´Ş¼º ¿©ºÎ(bool)¸¦ ¹İÈ¯
+    // í€˜ìŠ¤íŠ¸ ëª©í‘œ ì¡°ê±´ì„ ê²€ì‚¬í•˜ì—¬ ë‹¬ì„± ì—¬ë¶€(bool)ë¥¼ ë°˜í™˜
     private bool CheckGoalCompletion(QuestGoalData goal)
     {
         ScoreManager sm = ScoreManager.Instance;
 
-        // 10, 11¹ø(AcceptProposalWithinTurns)À» Á¦¿ÜÇÑ Äù½ºÆ®´Â
-        // ¼ö¶ô »óÅÂ¿©¾ß¸¸ ¼º°ø/½ÇÆĞ ÆÇÁ¤ ÁøÀÔ
+        // 10, 11ë²ˆ(AcceptProposalWithinTurns)ì„ ì œì™¸í•œ í€˜ìŠ¤íŠ¸ëŠ”
+        // ìˆ˜ë½ ìƒíƒœì—¬ì•¼ë§Œ ì„±ê³µ/ì‹¤íŒ¨ íŒì • ì§„ì…
         if (goal.goalType != QuestGoalType.AcceptProposalWithinTurns && decisionState != QuestDecisionState.Accepted)
         {
             return false;
@@ -343,50 +341,50 @@ public class QuestManager : MonoBehaviour
                 return consecutiveTurnsMet >= goal.requiredTurns;
 
             case QuestGoalType.AcceptProposalWithinTurns:
-                // ¼ö¶ô ¿©ºÎ(proposalAccepted) + 3ÅÏ ÀÌ³» ¼ö¶ô ¿©ºÎ(questElapsedTurns) µ¿½Ã °Ë»ç
-                // 3ÅÏ ÃÊ°ú ÈÄ ¼ö¶ôÇÏ¸é proposalAccepted=true¿©µµ ¼º°øÇÏÁö ¾ÊÀ½
+                // ìˆ˜ë½ ì—¬ë¶€(proposalAccepted) + 3í„´ ì´ë‚´ ìˆ˜ë½ ì—¬ë¶€(questElapsedTurns) ë™ì‹œ ê²€ì‚¬
+                // 3í„´ ì´ˆê³¼ í›„ ìˆ˜ë½í•˜ë©´ proposalAccepted=trueì—¬ë„ ì„±ê³µí•˜ì§€ ì•ŠìŒ
                 return proposalAccepted && questElapsedTurns <= goal.requiredTurns;
         }
         return false;
     }
 
-    // QuestEffectData ¸¦ ¹Ş¾Æ ScoreManager ¹× QuestManager ¼öÄ¡¿¡ ¹İ¿µ
+    // QuestEffectData ë¥¼ ë°›ì•„ ScoreManager ë° QuestManager ìˆ˜ì¹˜ì— ë°˜ì˜
     private void ApplyEffect(QuestEffectData effect)
     {
         if (effect == null) return;
         ScoreManager sm = ScoreManager.Instance;
 
-        // ÀÚ±İ º¯È­
+        // ìê¸ˆ ë³€í™”
         if (effect.moneyChange != 0f)
             sm.ModifyMoney(effect.moneyChange);
 
-        // ¹Î½É º¯È­
+        // ë¯¼ì‹¬ ë³€í™”
         if (effect.youthAffinityChange != 0f || effect.seniorAffinityChange != 0f || effect.corpAffinityChange != 0f)
             sm.ModifyAffinity(effect.youthAffinityChange, effect.seniorAffinityChange, effect.corpAffinityChange);
 
-        // °³º° Áö¿ª ¹ßÀüµµ ·¹º§ º¯È­
+        // ê°œë³„ ì§€ì—­ ë°œì „ë„ ë ˆë²¨ ë³€í™”
         if (effect.devUnivLevelChange != 0) sm.IncreaseDevLevel(0, effect.devUnivLevelChange);
         if (effect.devSilverLevelChange != 0) sm.IncreaseDevLevel(1, effect.devSilverLevelChange);
         if (effect.devIndustryLevelChange != 0) sm.IncreaseDevLevel(2, effect.devIndustryLevelChange);
         if (effect.devHouseLevelChange != 0) sm.IncreaseDevLevel(3, effect.devHouseLevelChange);
 
-        // ÀüÃ¼ Áö¿ª ¹ßÀüµµ ÀÏ°ı º¯È­
+        // ì „ì²´ ì§€ì—­ ë°œì „ë„ ì¼ê´„ ë³€í™”
         if (effect.allDevChange != 0f)
             sm.ModifyDev(effect.allDevChange, effect.allDevChange, effect.allDevChange, effect.allDevChange);
 
-        // ÀÚ±İ È¹µæ·ü µğ¹öÇÁ Àû¿ë
+        // ìê¸ˆ íšë“ë¥  ë””ë²„í”„ ì ìš©
         if (effect.fundingDebuffTurns > 0)
         {
             fundingDebuffRemainingTurns = effect.fundingDebuffTurns + 1;
             fundingDebuffRate = effect.fundingDebuffRate;
         }
 
-        // AI ÈùÆ® È°¼ºÈ­
+        // AI íŒíŠ¸ í™œì„±í™”
         if (effect.activateAIHint)
             aiHintRemainingTurns = effect.aiHintTurns + 1;
     }
 
-    // ¹Î½É Å¸ÀÔ ÀÎµ¦½º(0=Ã»³â, 1=³ë³â, 2=±â¾÷)·Î ½ÇÁ¦ ¹Î½É °ªÀ» ¹İÈ¯
+    // ë¯¼ì‹¬ íƒ€ì… ì¸ë±ìŠ¤(0=ì²­ë…„, 1=ë…¸ë…„, 2=ê¸°ì—…)ë¡œ ì‹¤ì œ ë¯¼ì‹¬ ê°’ì„ ë°˜í™˜
     private float GetAffinityValue(int affinityType)
     {
         switch (affinityType)
@@ -398,7 +396,7 @@ public class QuestManager : MonoBehaviour
         return 0f;
     }
 
-    // ¸ñÇ¥ ÁøÇà °ü·Ã Ä«¿îÅÍ¸¦ ¸ğµÎ ÃÊ±âÈ­
+    // ëª©í‘œ ì§„í–‰ ê´€ë ¨ ì¹´ìš´í„°ë¥¼ ëª¨ë‘ ì´ˆê¸°í™”
     private void ResetProgressCounters()
     {
         consecutiveTurnsMet = 0;

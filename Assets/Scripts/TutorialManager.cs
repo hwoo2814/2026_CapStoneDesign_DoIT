@@ -5,104 +5,107 @@ public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance;
 
-    public bool isTutorial = false; // Æ©Åä¸®¾ó »óÅÂ
-    private int currentStep = 0; // Æ©Åä¸®¾ó ´ë»ç ÇÑÁÙ¾¿ Ä«¿îÆÃ
+    public bool isTutorial = false; // íŠœí† ë¦¬ì–¼ ìƒíƒœ
+    private int currentStep = 0; // íŠœí† ë¦¬ì–¼ ëŒ€ì‚¬ í•œì¤„ì”© ì¹´ìš´íŒ…
 
-    public GameObject tutorialPanel; // È­¸é ÀüÃ¼¸¦ µ¤´Â Åõ¸í ÆĞ³Î 
-    public Image characterImage;  // ºñ¼­ Ä³¸¯ÅÍ ÀÌ¹ÌÁö
-    public Text dialogText; // ´ë»ç ÅØ½ºÆ® 
-    public GameObject dialogBox; // ´ë»çÃ¢ ¹è°æ 
+    public GameObject tutorialPanel; // í™”ë©´ ì „ì²´ë¥¼ ë®ëŠ” íˆ¬ëª… íŒ¨ë„
+    public Image characterImage;  // ë¹„ì„œ ìºë¦­í„° ì´ë¯¸ì§€
+    public Text dialogText; // ëŒ€ì‚¬ í…ìŠ¤íŠ¸
+    public GameObject dialogBox; // ëŒ€ì‚¬ì°½ ë°°ê²½
 
-    // Ä³¸¯ÅÍ ÀÌ¹ÌÁö¿Í ´ë»çÃ¢ÀÇ À§Ä¡ Á¤º¸¸¦ ´ãÀ» ¹è¿­ÀÔ´Ï´Ù.
-    // Dialogues ¹è¿­°ú Å©±â°¡ °°¾Æ¾ß ÇÕ´Ï´Ù.
-    // characterPositions, dialogBoxPositions, dialogues, highlightTargets 
-    // À§ 4°³ÀÇ ¹è¿­À» Å©±â°¡ °°¾Æ¾ß ¿¡·¯°¡ ³ªÁö ¾Ê½À´Ï´Ù.
-    public Vector2[] characterPositions; // °¢ ½ºÅÜº° Ä³¸¯ÅÍ À§Ä¡
-    public Vector2[] dialogBoxPositions; // °¢ ½ºÅÜº° ´ë»çÃ¢ À§Ä¡
+    // ìºë¦­í„° ì´ë¯¸ì§€ì™€ ëŒ€ì‚¬ì°½ì˜ ìœ„ì¹˜ ì •ë³´ë¥¼ ë‹´ì„ ë°°ì—´ì…ë‹ˆë‹¤.
+    // Dialogues ë°°ì—´ê³¼ í¬ê¸°ê°€ ê°™ì•„ì•¼ í•©ë‹ˆë‹¤.
+    // characterPositions, dialogBoxPositions, dialogues, highlightTargets
+    // ìœ„ 4ê°œì˜ ë°°ì—´ì„ í¬ê¸°ê°€ ê°™ì•„ì•¼ ì—ëŸ¬ê°€ ë‚˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
+    public Vector2[] characterPositions; // ê° ìŠ¤í…ë³„ ìºë¦­í„° ìœ„ì¹˜
+    public Vector2[] dialogBoxPositions; // ê° ìŠ¤í…ë³„ ëŒ€ì‚¬ì°½ ìœ„ì¹˜
 
-    [TextArea(1, 5)] // ÇÑ ´ë»ç¿¡ ÃÖ¼Ò ÁÙ¼ö 1 ~ ÃÖ´ë ÁÙ¼ö 5ÁÙ±îÁö ÀÔ·ÂÇÒ¼ö ÀÖÀ½. ÀÚÀ¯·Ó°Ô ¼öÁ¤ÇÏ¿© »ç¿ë.
+    [TextArea(1, 5)] // í•œ ëŒ€ì‚¬ì— ìµœì†Œ ì¤„ìˆ˜ 1 ~ ìµœëŒ€ ì¤„ìˆ˜ 5ì¤„ê¹Œì§€ ì…ë ¥í• ìˆ˜ ìˆìŒ. ììœ ë¡­ê²Œ ìˆ˜ì •í•˜ì—¬ ì‚¬ìš©.
     public string[] dialogues;
 
-    // ´ë»ç°¡ ³Ñ¾î°¥ ¶§¸¶´Ù ¹à°Ô °­Á¶ÇÒ UI ¿ÀºêÁ§Æ®¸¦ ³ÖÀ» ¹è¿­°ú ÇöÀç °­Á¶ ÁßÀÎ ´ë»óÀ» ±â¾ïÇÒ º¯¼ö
-    public GameObject[] highlightTargets; 
+    // ëŒ€ì‚¬ê°€ ë„˜ì–´ê°ˆ ë•Œë§ˆë‹¤ ë°ê²Œ ê°•ì¡°í•  UI ì˜¤ë¸Œì íŠ¸ë¥¼ ë„£ì„ ë°°ì—´ê³¼ í˜„ì¬ ê°•ì¡° ì¤‘ì¸ ëŒ€ìƒì„ ê¸°ì–µí•  ë³€ìˆ˜
+    public GameObject[] highlightTargets;
     private GameObject currentHighlightTarget = null;
 
-    public Button youthPolicyBtn; // Ã»³â Á¤Ã¥ (ÀÌ°Í¸¸ ´©¸£°Ô ÇÔ)  
-    public Button seniorPolicyBtn; // ³ë³â Á¤Ã¥ (Æ©Åä¸®¾ó Áß Àá±İ)
-    public Button corpPolicyBtn; // ±â¾÷ Á¤Ã¥ (Æ©Åä¸®¾ó Áß Àá±İ)   
-    public Button fundingBtn; // ÀÚ±İ È®º¸ (Æ©Åä¸®¾ó Áß Àá±İ)
-    public Button yesBtn; // ExplainPolicyPanelÀÇ "¿¹" ¹öÆ°
-    public Button noBtn; // ExplainPolicyPanelÀÇ "¾Æ´Ï¿ä" ¹öÆ°
-    public Button newsButton; // NewsBranchPanelÀ» ¿©´Â ´º½º ¹öÆ°
-    public Button emailBtn; // NewsBranchPanel ¾ÈÀÇ ÀÌ¸ŞÀÏ(Äù½ºÆ®) ¹öÆ°
-    public GameObject logBtn; // ·Î±× ¿­±â/´İ±â ¹öÆ° ¿ÀºêÁ§Æ®
+    public Button youthPolicyBtn; // ì²­ë…„ ì •ì±… (ì´ê²ƒë§Œ ëˆ„ë¥´ê²Œ í•¨)
+    public Button seniorPolicyBtn; // ë…¸ë…„ ì •ì±… (íŠœí† ë¦¬ì–¼ ì¤‘ ì ê¸ˆ)
+    public Button corpPolicyBtn; // ê¸°ì—… ì •ì±… (íŠœí† ë¦¬ì–¼ ì¤‘ ì ê¸ˆ)
+    public Button fundingBtn; // ìê¸ˆ í™•ë³´ (íŠœí† ë¦¬ì–¼ ì¤‘ ì ê¸ˆ)
+    public Button yesBtn; // ExplainPolicyPanelì˜ "ì˜ˆ" ë²„íŠ¼
+    public Button noBtn; // ExplainPolicyPanelì˜ "ì•„ë‹ˆìš”" ë²„íŠ¼
+    public Button newsButton; // NewsBranchPanelì„ ì—¬ëŠ” ë‰´ìŠ¤ ë²„íŠ¼
+    public Button emailBtn; // NewsBranchPanel ì•ˆì˜ ì´ë©”ì¼(í€˜ìŠ¤íŠ¸) ë²„íŠ¼
+    public Button logBtn; // ë¡œê·¸ ì—´ê¸°/ë‹«ê¸° ë²„íŠ¼ ì˜¤ë¸Œì íŠ¸
 
     public int buttonClickStep = 5;
-    public int yesBtnClickStep = 6; // Ã»³â Á¤Ã¥ ¹öÆ°À» ´©¸£¶ó°í Áö½ÃÇÏ´Â ´ë»çÀÇ ¼ø¹ø
-                                    // 6¹øÂ° ´ë»ç¿¡¼­ Å¬¸¯À» ±â´Ù¸®°ÔÇÔ (ÀÓ½Ã)
-    public int newsButtonClickStep = 10; // ´º½º ¹öÆ°À» ´©¸£¶ó°í Áö½ÃÇÏ´Â ´ë»çÀÇ ¼ø¹ø
-                                         // 10¹øÂ° ´ë»ç¿¡¼­ Å¬¸¯À» ±â´Ù¸®°ÔÇÔ (ÀÓ½Ã)
-    public int emailBtnClickStep = 12; // ÀÌ¸ŞÀÏ ¹öÆ°À» ´©¸£¶ó°í Áö½ÃÇÏ´Â ´ë»çÀÇ ¼ø¹ø
-                                       // 12¹øÂ° ´ë»ç¿¡¼­ Å¬¸¯À» ±â´Ù¸®°ÔÇÔ (ÀÓ½Ã)
-    public int logBtnClickStep = 14; // ·Î±× ¹öÆ° Å¬¸¯À» À¯µµÇÏ´Â ´ë»çÀÇ ¼ø¹ø (ÀÓ½Ã°ª, ÀÎ½ºÆåÅÍ¿¡¼­ Á¶Á¤)
+    public int yesBtnClickStep = 6; // ì²­ë…„ ì •ì±… ë²„íŠ¼ì„ ëˆ„ë¥´ë¼ê³  ì§€ì‹œí•˜ëŠ” ëŒ€ì‚¬ì˜ ìˆœë²ˆ
+                                    // 6ë²ˆì§¸ ëŒ€ì‚¬ì—ì„œ í´ë¦­ì„ ê¸°ë‹¤ë¦¬ê²Œí•¨ (ì„ì‹œ)
+    public int newsButtonClickStep = 10; // ë‰´ìŠ¤ ë²„íŠ¼ì„ ëˆ„ë¥´ë¼ê³  ì§€ì‹œí•˜ëŠ” ëŒ€ì‚¬ì˜ ìˆœë²ˆ
+                                         // 10ë²ˆì§¸ ëŒ€ì‚¬ì—ì„œ í´ë¦­ì„ ê¸°ë‹¤ë¦¬ê²Œí•¨ (ì„ì‹œ)
+    public int emailBtnClickStep = 12; // ì´ë©”ì¼ ë²„íŠ¼ì„ ëˆ„ë¥´ë¼ê³  ì§€ì‹œí•˜ëŠ” ëŒ€ì‚¬ì˜ ìˆœë²ˆ
+                                       // 12ë²ˆì§¸ ëŒ€ì‚¬ì—ì„œ í´ë¦­ì„ ê¸°ë‹¤ë¦¬ê²Œí•¨ (ì„ì‹œ)
+    public int logBtnClickStep = 14; // ë¡œê·¸ ë²„íŠ¼ í´ë¦­ì„ ìœ ë„í•˜ëŠ” ëŒ€ì‚¬ì˜ ìˆœë²ˆ (ì„ì‹œê°’, ì¸ìŠ¤í™í„°ì—ì„œ ì¡°ì •)
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    // °ÔÀÓ ¸Å´ÏÀú°¡ °ÔÀÓ ½ÃÀÛ ½Ã È£ÃâÇÒ Æ©Åä¸®¾ó ½ÃÀÛ ÇÔ¼ö
+    // ê²Œì„ ë§¤ë‹ˆì €ê°€ ê²Œì„ ì‹œì‘ ì‹œ í˜¸ì¶œí•  íŠœí† ë¦¬ì–¼ ì‹œì‘ í•¨ìˆ˜
     public void StartTutorial()
     {
         isTutorial = true;
         currentStep = 0;
-        
-        // Æ©Åä¸®¾ó ÆĞ³Î ÄÑ±â
-        tutorialPanel.SetActive(true);
-        tutorialPanel.GetComponent<Image>().raycastTarget = true; // È­¸é Å¬¸¯ °¨Áö ÄÑ±â 
 
-        // ½ÃÀÛ ½Ã ¸ğµç Á¤Ã¥ ¹öÆ° Àá±İ (¹Ì¸® ´©¸£´Â °Í ¹æÁö)
+        // íŠœí† ë¦¬ì–¼ íŒ¨ë„ ì¼œê¸°
+        tutorialPanel.SetActive(true);
+        tutorialPanel.GetComponent<Image>().raycastTarget = true; // í™”ë©´ í´ë¦­ ê°ì§€ ì¼œê¸°
+
+        // ì‹œì‘ ì‹œ ëª¨ë“  ì •ì±… ë²„íŠ¼ ì ê¸ˆ (ë¯¸ë¦¬ ëˆ„ë¥´ëŠ” ê²ƒ ë°©ì§€)
         youthPolicyBtn.interactable = false;
         seniorPolicyBtn.interactable = false;
         corpPolicyBtn.interactable = false;
         fundingBtn.interactable = false;
 
-        // ½ÃÀÛ ½Ã "¿¹"/"¾Æ´Ï¿ä" ¹öÆ° Àá±İ 
-        if (yesBtn != null)    yesBtn.interactable    = false;
+        // ì‹œì‘ ì‹œ "ì˜ˆ"/"ì•„ë‹ˆìš”" ë²„íŠ¼ ì ê¸ˆ
+        if (yesBtn != null) yesBtn.interactable = false;
         if (noBtn != null) noBtn.interactable = false;
 
-        // ½ÃÀÛ ½Ã ´º½º/ÀÌ¸ŞÀÏ ¹öÆ° Àá±İ
+        // ì‹œì‘ ì‹œ ë‰´ìŠ¤/ì´ë©”ì¼/ë¡œê·¸ ë²„íŠ¼ ì ê¸ˆ
         if (newsButton != null) newsButton.interactable = false;
         if (emailBtn != null) emailBtn.interactable = false;
+        if (logBtn != null) emailBtn.interactable = false;
 
         ShowNextDialogue();
     }
-    
-    // È­¸é(Æ©Åä¸®¾ó ÆĞ³Î)À» Å¬¸¯ÇÒ ¶§¸¶´Ù ½ÇÇàµÊ
+
+    // í™”ë©´(íŠœí† ë¦¬ì–¼ íŒ¨ë„)ì„ í´ë¦­í•  ë•Œë§ˆë‹¤ ì‹¤í–‰ë¨
     public void OnClickScreen()
     {
+        GameManager.Instance.clickAudioSource.PlayOneShot(GameManager.Instance.clickAudioSource.clip);
         if (!isTutorial) return;
 
-        // ¹öÆ° Å¬¸¯À» Áö½ÃÇÏ´Â ´Ü°è¿¡¼­´Â È­¸éÀ» ´­·¯µµ ´ë»ç°¡ ³Ñ¾î°¡Áö ¾ÊÀ½
+        // ë²„íŠ¼ í´ë¦­ì„ ì§€ì‹œí•˜ëŠ” ë‹¨ê³„ì—ì„œëŠ” í™”ë©´ì„ ëˆŒëŸ¬ë„ ëŒ€ì‚¬ê°€ ë„˜ì–´ê°€ì§€ ì•ŠìŒ
         if (currentStep == buttonClickStep) return;
-        if (currentStep == yesBtnClickStep)    return;
+        if (currentStep == yesBtnClickStep) return;
         if (currentStep == newsButtonClickStep) return;
-        if (currentStep == emailBtnClickStep)  return;
+        if (currentStep == emailBtnClickStep) return;
+        if (currentStep == logBtnClickStep) return;
 
         currentStep++;
-        
-        // ´ë»ç°¡ ¾ÆÁ÷ ³²¾ÆÀÖ´Ù¸é ´ÙÀ½ ´ë»ç Ãâ·Â
+
+        // ëŒ€ì‚¬ê°€ ì•„ì§ ë‚¨ì•„ìˆë‹¤ë©´ ë‹¤ìŒ ëŒ€ì‚¬ ì¶œë ¥
         if (currentStep < dialogues.Length)
         {
             ShowNextDialogue();
         }
-        else // ¸ğµç ´ë»ç¸¦ ´Ù º¸°í Å¬¸¯Çß´Ù¸é Æ©Åä¸®¾ó Á¾·á!
+        else // ëª¨ë“  ëŒ€ì‚¬ë¥¼ ë‹¤ ë³´ê³  í´ë¦­í–ˆë‹¤ë©´ íŠœí† ë¦¬ì–¼ ì¢…ë£Œ!
         {
-            EndTutorial(); 
+            EndTutorial();
         }
     }
 
-    // ¼³¸í Ãâ·ÂÇÏ´Â ÇÔ¼ö
+    // ì„¤ëª… ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
     private void ShowNextDialogue()
     {
         dialogText.text = dialogues[currentStep];
@@ -110,7 +113,7 @@ public class TutorialManager : MonoBehaviour
         UpdateUIPositions();
         ResetHighlight();
 
-        // ÀÌ¹ø ´ë»ç ¼ø¹ø¿¡ ¸Â°Ô °­Á¶ÇØ¾ß ÇÒ Å¸°Ù UI°¡ ÀÖ´Ù¸é ¾îµÎ¿î ¹è°æ ¾ÕÀ¸·Î ²ø¾î¿È
+        // ì´ë²ˆ ëŒ€ì‚¬ ìˆœë²ˆì— ë§ê²Œ ê°•ì¡°í•´ì•¼ í•  íƒ€ê²Ÿ UIê°€ ìˆë‹¤ë©´ ì–´ë‘ìš´ ë°°ê²½ ì•ìœ¼ë¡œ ëŒì–´ì˜´
         if (highlightTargets != null && highlightTargets.Length > currentStep && highlightTargets[currentStep] != null)
         {
             currentHighlightTarget = highlightTargets[currentStep];
@@ -119,29 +122,39 @@ public class TutorialManager : MonoBehaviour
 
         if (currentStep == buttonClickStep)
         {
-            // Ã»³â ¹öÆ°¸¸ ÄÑ¼­ Ã»³â Á¤Ã¥ ´©¸£´Â°Ô ÇÔ, Æ©Åä¸®¾ó ÆĞ³Î Å¬¸¯ ºñÈ°¼ºÈ­
+            // ì²­ë…„ ë²„íŠ¼ë§Œ ì¼œì„œ ì²­ë…„ ì •ì±… ëˆ„ë¥´ëŠ”ê²Œ í•¨, íŠœí† ë¦¬ì–¼ íŒ¨ë„ í´ë¦­ ë¹„í™œì„±í™”
             tutorialPanel.GetComponent<Image>().raycastTarget = false;
             youthPolicyBtn.interactable = true;
         }
         else if (currentStep == yesBtnClickStep)
         {
             tutorialPanel.GetComponent<Image>().raycastTarget = false;
-            // "¿¹" ¹öÆ°¸¸ È°¼ºÈ­ÇÏ°í "¾Æ´Ï¿ä"´Â Àá°¡ ¹«Á¶°Ç È®Á¤ÇÏµµ·Ï À¯µµ
-            if (yesBtn != null)    yesBtn.interactable    = true;
+            // "ì˜ˆ" ë²„íŠ¼ë§Œ í™œì„±í™”í•˜ê³  "ì•„ë‹ˆìš”"ëŠ” ì ê°€ ë¬´ì¡°ê±´ í™•ì •í•˜ë„ë¡ ìœ ë„
+            if (yesBtn != null) yesBtn.interactable = true;
             if (noBtn != null) noBtn.interactable = false;
         }
-        // ´º½º ¹öÆ° Å¬¸¯ À¯µµ ´Ü°è
+        // ë‰´ìŠ¤ ë²„íŠ¼ í´ë¦­ ìœ ë„ ë‹¨ê³„
         else if (currentStep == newsButtonClickStep)
         {
-            PrepareQuestTutorialSection(); // emailBtn °­Á¦ È°¼ºÈ­ (Äù½ºÆ® ¾ø¾îµµ µ¥¸ğ °¡´ÉÇÏµµ·Ï)
+            PrepareQuestTutorialSection(); // emailBtn ê°•ì œ í™œì„±í™” (í€˜ìŠ¤íŠ¸ ì—†ì–´ë„ ë°ëª¨ ê°€ëŠ¥í•˜ë„ë¡)
             tutorialPanel.GetComponent<Image>().raycastTarget = false;
             if (newsButton != null) newsButton.interactable = true;
         }
-        // ÀÌ¸ŞÀÏ ¹öÆ° Å¬¸¯ À¯µµ ´Ü°è
+        // ì´ë©”ì¼ ë²„íŠ¼ í´ë¦­ ìœ ë„ ë‹¨ê³„
         else if (currentStep == emailBtnClickStep)
         {
             tutorialPanel.GetComponent<Image>().raycastTarget = false;
             if (emailBtn != null) emailBtn.interactable = true;
+        }
+        // ë¡œê·¸ ë²„íŠ¼ ìœ ë„ ë‹¨ê³„
+        else if (currentStep == logBtnClickStep) 
+        {
+            tutorialPanel.GetComponent<Image>().raycastTarget = false; 
+            if (logBtn != null) 
+            {
+                Button logButton = logBtn.GetComponent<Button>(); 
+                if (logButton != null) logButton.interactable = true; 
+            } 
         }
         else
         {
@@ -149,7 +162,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    // RectTransformÀÇ anchoredPositionÀ» ÀÌ¿ëÇØ UI À§Ä¡¸¦ ¿Å±â´Â ÇÔ¼ö
+    // RectTransformì˜ anchoredPositionì„ ì´ìš©í•´ UI ìœ„ì¹˜ë¥¼ ì˜®ê¸°ëŠ” í•¨ìˆ˜
     private void UpdateUIPositions()
     {
         if (characterPositions != null && characterPositions.Length > currentStep)
@@ -163,23 +176,23 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    // Æ¯Á¤ UI°¡ tutorialPanelÀ» ¶Õ°í ¸Ç ¾ÕÀ¸·Î º¸ÀÌ°Ô ÇØÁÖ´Â ÇÔ¼ö
+    // íŠ¹ì • UIê°€ tutorialPanelì„ ëš«ê³  ë§¨ ì•ìœ¼ë¡œ ë³´ì´ê²Œ í•´ì£¼ëŠ” í•¨ìˆ˜
     private void SetHighlight(GameObject target)
     {
-        // Å¸°Ù¿¡ Canvas ÄÄÆ÷³ÍÆ®°¡ ¾øÀ¸¸é ÀÓ½Ã·Î ºÙÀÓ
+        // íƒ€ê²Ÿì— Canvas ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìœ¼ë©´ ì„ì‹œë¡œ ë¶™ì„
         Canvas canvas = target.GetComponent<Canvas>();
         if (canvas == null) canvas = target.AddComponent<Canvas>();
 
-        // Å¸°Ù¿¡ GraphicRaycaster°¡ ¾øÀ¸¸é ÀÓ½Ã·Î ºÙÀÓ (¹öÆ° Å¬¸¯À» À§ÇØ ÇÊ¿ä)
+        // íƒ€ê²Ÿì— GraphicRaycasterê°€ ì—†ìœ¼ë©´ ì„ì‹œë¡œ ë¶™ì„ (ë²„íŠ¼ í´ë¦­ì„ ìœ„í•´ í•„ìš”)
         GraphicRaycaster raycaster = target.GetComponent<GraphicRaycaster>();
         if (raycaster == null) raycaster = target.AddComponent<GraphicRaycaster>();
 
-        // ·»´õ¸µ ¼ø¼­¸¦ tutorialPanel º¸´Ù ³ô°Ô(100) ¼³Á¤ÇÏ¿© ¸Ç ¾ÕÀ¸·Î Æ¢¾î³ª¿À°Ô ÇÔ
+        // ë Œë”ë§ ìˆœì„œë¥¼ tutorialPanel ë³´ë‹¤ ë†’ê²Œ(100) ì„¤ì •í•˜ì—¬ ë§¨ ì•ìœ¼ë¡œ íŠ€ì–´ë‚˜ì˜¤ê²Œ í•¨
         canvas.overrideSorting = true;
-        canvas.sortingOrder = 100; 
+        canvas.sortingOrder = 100;
     }
 
-    // ¸Ç ¾ÕÀ¸·Î Æ¢¾î³ª¿Ô´ø UI¸¦ ´Ù½Ã ¿ø·¡ ÀÚ¸®·Î µ¹·Á³õ´Â ÇÔ¼ö
+    // ë§¨ ì•ìœ¼ë¡œ íŠ€ì–´ë‚˜ì™”ë˜ UIë¥¼ ë‹¤ì‹œ ì›ë˜ ìë¦¬ë¡œ ëŒë ¤ë†“ëŠ” í•¨ìˆ˜
     private void ResetHighlight()
     {
         if (currentHighlightTarget != null)
@@ -187,36 +200,36 @@ public class TutorialManager : MonoBehaviour
             Canvas canvas = currentHighlightTarget.GetComponent<Canvas>();
             if (canvas != null)
             {
-                // °­Á¦·Î ³ô¿´´ø ·»´õ¸µ ¼ø¼­ ¼³Á¤À» ÇØÁ¦
+                // ê°•ì œë¡œ ë†’ì˜€ë˜ ë Œë”ë§ ìˆœì„œ ì„¤ì •ì„ í•´ì œ
                 canvas.overrideSorting = false;
                 canvas.sortingOrder = 0;
             }
-            currentHighlightTarget = null; // Å¸°Ù ÃÊ±âÈ­
+            currentHighlightTarget = null; // íƒ€ê²Ÿ ì´ˆê¸°í™”
         }
     }
 
-    // Ä«µå ÄÁÆ®·Ñ·¯¿¡¼­ Ã»³â ¹öÆ°À» ´­·¶À» ¶§ È£ÃâµÇ¾î ´ÙÀ½ ´ë»ç·Î ÁøÇàÇÏ´Â ÇÔ¼ö
+    // ì¹´ë“œ ì»¨íŠ¸ë¡¤ëŸ¬ì—ì„œ ì²­ë…„ ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ í˜¸ì¶œë˜ì–´ ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ì§„í–‰í•˜ëŠ” í•¨ìˆ˜
     public void OnYouthPolicyClicked()
     {
         if (!isTutorial) return;
 
-        // ´Ù½Ã Ã»³â ¹öÆ°À» ²ô°í Æ©Åä¸®¾ó ÆĞ³Î Å¬¸¯ È°¼ºÈ­
+        // ë‹¤ì‹œ ì²­ë…„ ë²„íŠ¼ì„ ë„ê³  íŠœí† ë¦¬ì–¼ íŒ¨ë„ í´ë¦­ í™œì„±í™”
         youthPolicyBtn.interactable = false;
         tutorialPanel.GetComponent<Image>().raycastTarget = true;
 
-        // ´ÙÀ½ ´ë»ç·Î ³Ñ¾î°¡±â
+        // ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ë„˜ì–´ê°€ê¸°
         currentStep++;
         ShowNextDialogue();
     }
 
-    // "¿¹" ¹öÆ°ÀÌ ´­·Á Á¤Ã¥ÀÌ ½ÇÇàµÈ Á÷ÈÄ ´ÙÀ½ ´ë»ç·Î ÁøÇà½ÃÅ°´Â ÇÔ¼ö
-    //ExplainPolicyPanelÀÇ "¿¹" ¹öÆ°À» ´©¸¥ Á÷ÈÄ GameManager¿¡¼­ È£Ãâ.
-    //"¾Æ´Ï¿ä" ¹öÆ° Àá±İ ÇØÁ¦ ÈÄ ´ÙÀ½ ´ë»ç·Î ³Ñ¾î°£´Ù.
+    // "ì˜ˆ" ë²„íŠ¼ì´ ëˆŒë ¤ ì •ì±…ì´ ì‹¤í–‰ëœ ì§í›„ ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ì§„í–‰ì‹œí‚¤ëŠ” í•¨ìˆ˜
+    //ExplainPolicyPanelì˜ "ì˜ˆ" ë²„íŠ¼ì„ ëˆ„ë¥¸ ì§í›„ GameManagerì—ì„œ í˜¸ì¶œ.
+    //"ì•„ë‹ˆìš”" ë²„íŠ¼ ì ê¸ˆ í•´ì œ í›„ ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ë„˜ì–´ê°„ë‹¤.
     public void OnYesBtnClicked()
     {
         if (!isTutorial) return;
 
-        // "¾Æ´Ï¿ä" ¹öÆ° Àá±İ ÇØÁ¦ (ÀÌÈÄ º» °ÔÀÓ¿¡¼­ Á¤»ó »ç¿ë °¡´ÉÇÏµµ·Ï)
+        // "ì•„ë‹ˆìš”" ë²„íŠ¼ ì ê¸ˆ í•´ì œ (ì´í›„ ë³¸ ê²Œì„ì—ì„œ ì •ìƒ ì‚¬ìš© ê°€ëŠ¥í•˜ë„ë¡)
         if (noBtn != null) noBtn.interactable = true;
         if (yesBtn != null)    yesBtn.interactable    = false;
 
@@ -229,11 +242,11 @@ public class TutorialManager : MonoBehaviour
             EndTutorial();
     }
 
-  
-    // GameManager.NewsBranchButton() ¿¡¼­ Æ©Åä¸®¾ó Áß È£Ãâ
-    // NewsBranchPanelÀÌ ¿­¸° Á÷ÈÄ ´ÙÀ½ ´ë»ç(ÀÌ¸ŞÀÏ ¹öÆ° ¾È³»)·Î ÁøÇà
-    // ´º½º ¹öÆ°À» ´­·¯ NewsBranchPanelÀÌ ¿­¸° Á÷ÈÄ GameManager¿¡¼­ È£Ãâ.
-    // ´º½º ¹öÆ°À» ´Ù½Ã Àá±×°í ´ÙÀ½ ´ë»ç·Î ³Ñ¾î°£´Ù.
+
+    // GameManager.NewsBranchButton() ì—ì„œ íŠœí† ë¦¬ì–¼ ì¤‘ í˜¸ì¶œ
+    // NewsBranchPanelì´ ì—´ë¦° ì§í›„ ë‹¤ìŒ ëŒ€ì‚¬(ì´ë©”ì¼ ë²„íŠ¼ ì•ˆë‚´)ë¡œ ì§„í–‰
+    // ë‰´ìŠ¤ ë²„íŠ¼ì„ ëˆŒëŸ¬ NewsBranchPanelì´ ì—´ë¦° ì§í›„ GameManagerì—ì„œ í˜¸ì¶œ.
+    // ë‰´ìŠ¤ ë²„íŠ¼ì„ ë‹¤ì‹œ ì ê·¸ê³  ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ë„˜ì–´ê°„ë‹¤.
     public void OnNewsButtonClicked()
     {
         if (!isTutorial) return;
@@ -249,10 +262,10 @@ public class TutorialManager : MonoBehaviour
     }
 
 
-    // GameManager.EmaillButton() ¿¡¼­ Æ©Åä¸®¾ó Áß È£Ãâ
-    // QuestPanelÀÌ ¿­¸° Á÷ÈÄ ´ÙÀ½ ´ë»ç(Äù½ºÆ® ÆĞ³Î ¼³¸í)·Î ÁøÇà
-    // ÀÌ¸ŞÀÏ ¹öÆ°À» ´­·¯ QuestPanelÀÌ ¿­¸° Á÷ÈÄ GameManager¿¡¼­ È£Ãâ.
-    // ÀÌ¸ŞÀÏ ¹öÆ°À» ´Ù½Ã Àá±×°í ´ÙÀ½ ´ë»ç·Î ³Ñ¾î°£´Ù.
+    // GameManager.EmaillButton() ì—ì„œ íŠœí† ë¦¬ì–¼ ì¤‘ í˜¸ì¶œ
+    // QuestPanelì´ ì—´ë¦° ì§í›„ ë‹¤ìŒ ëŒ€ì‚¬(í€˜ìŠ¤íŠ¸ íŒ¨ë„ ì„¤ëª…)ë¡œ ì§„í–‰
+    // ì´ë©”ì¼ ë²„íŠ¼ì„ ëˆŒëŸ¬ QuestPanelì´ ì—´ë¦° ì§í›„ GameManagerì—ì„œ í˜¸ì¶œ.
+    // ì´ë©”ì¼ ë²„íŠ¼ì„ ë‹¤ì‹œ ì ê·¸ê³  ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ë„˜ì–´ê°„ë‹¤.
     public void OnEmailBtnClicked()
     {
         if (!isTutorial) return;
@@ -267,13 +280,13 @@ public class TutorialManager : MonoBehaviour
             EndTutorial();
     }
 
-    // Æ©Åä¸®¾ó Áß ·Î±× ¹öÆ°ÀÌ ´­·ÈÀ» ¶§ GameManager.LogButton()¿¡¼­ È£Ãâ
-    // ·Î±× ¹öÆ°À» ´Ù½Ã Àá±×°í ·Î±× ÆĞ³Î ¼³¸í ´ë»ç·Î ÁøÇà
+    // íŠœí† ë¦¬ì–¼ ì¤‘ ë¡œê·¸ ë²„íŠ¼ì´ ëˆŒë ¸ì„ ë•Œ GameManager.LogButton()ì—ì„œ í˜¸ì¶œ
+    // ë¡œê·¸ ë²„íŠ¼ì„ ë‹¤ì‹œ ì ê·¸ê³  ë¡œê·¸ íŒ¨ë„ ì„¤ëª… ëŒ€ì‚¬ë¡œ ì§„í–‰
     public void OnLogBtnClicked()
     {
         if (!isTutorial) return;
 
-        // ·Î±× ¹öÆ° ´Ù½Ã Àá±İ (Áßº¹ Å¬¸¯ ¹æÁö)
+        // ë¡œê·¸ ë²„íŠ¼ ë‹¤ì‹œ ì ê¸ˆ (ì¤‘ë³µ í´ë¦­ ë°©ì§€)
         if (logBtn != null) logBtn.GetComponent<Button>().interactable = false;
         tutorialPanel.GetComponent<Image>().raycastTarget = true;
 
@@ -284,8 +297,8 @@ public class TutorialManager : MonoBehaviour
             EndTutorial();
     }
 
-    // ´º½º/Äù½ºÆ® Æ©Åä¸®¾ó ¼½¼Ç ÁøÀÔ ÀüÃ³¸® ÇÔ¼ö
-    // ½ÇÁ¦ Äù½ºÆ®°¡ ¾ø¾îµµ ÀÌ¸ŞÀÏ ¹öÆ°À» ÀÓ½Ã È°¼ºÈ­ÇÏ¿© µ¥¸ğ ½Ã¿¬ÀÌ °¡´ÉÇÏ°Ô ÇÔ
+    // ë‰´ìŠ¤/í€˜ìŠ¤íŠ¸ íŠœí† ë¦¬ì–¼ ì„¹ì…˜ ì§„ì… ì „ì²˜ë¦¬ í•¨ìˆ˜
+    // ì‹¤ì œ í€˜ìŠ¤íŠ¸ê°€ ì—†ì–´ë„ ì´ë©”ì¼ ë²„íŠ¼ì„ ì„ì‹œ í™œì„±í™”í•˜ì—¬ ë°ëª¨ ì‹œì—°ì´ ê°€ëŠ¥í•˜ê²Œ í•¨
     private void PrepareQuestTutorialSection()
     {
         if (UIManager.Instance != null && UIManager.Instance.emailBtn != null)
@@ -294,33 +307,34 @@ public class TutorialManager : MonoBehaviour
 
     public void EndTutorial()
     {
-        // Æ©Åä¸®¾óÀÌ ³¡³¯ ¶§, ÄÑÁ®ÀÖ´Â Æ÷Ä¿½Ì È¿°ú°¡ ÀÖ´Ù¸é ²¨ÁÜ
+        // íŠœí† ë¦¬ì–¼ì´ ëë‚  ë•Œ, ì¼œì ¸ìˆëŠ” í¬ì»¤ì‹± íš¨ê³¼ê°€ ìˆë‹¤ë©´ êº¼ì¤Œ
         ResetHighlight();
 
         isTutorial = false;
-        tutorialPanel.SetActive(false); // Æ©Åä¸®¾ó Ã¢ ²ô±â
+        tutorialPanel.SetActive(false); // íŠœí† ë¦¬ì–¼ ì°½ ë„ê¸°
 
-        // Æ©Åä¸®¾ó ¶§ ³ª¿Â ·Î±× ÅØ½ºÆ®¸¦ Áö¿ò
+        // íŠœí† ë¦¬ì–¼ ë•Œ ë‚˜ì˜¨ ë¡œê·¸ í…ìŠ¤íŠ¸ë¥¼ ì§€ì›€
         if (UIManager.Instance.policyLogText != null)
         {
-            UIManager.Instance.policyLogText.text = ""; 
+            UIManager.Instance.policyLogText.text = "";
         }
-        
-        // Àá°¡µ×´ø ¸ğµç Á¤Ã¥¹öÆ° ´Ù½Ã ÄÑÁÖ±â
+
+        // ì ê°€ë’€ë˜ ëª¨ë“  ì •ì±…ë²„íŠ¼ ë‹¤ì‹œ ì¼œì£¼ê¸°
         youthPolicyBtn.interactable = true;
         seniorPolicyBtn.interactable = true;
         corpPolicyBtn.interactable = true;
         fundingBtn.interactable = true;
 
-        // Æ©Åä¸®¾ó Á¾·á ½Ã "¿¹/¾Æ´Ï¿ä" ¹öÆ° Àá±İ ÇØÁ¦
+        // íŠœí† ë¦¬ì–¼ ì¢…ë£Œ ì‹œ "ì˜ˆ/ì•„ë‹ˆìš”" ë²„íŠ¼ ì ê¸ˆ í•´ì œ
         if (yesBtn != null) yesBtn.interactable = true;
         if (noBtn != null) noBtn.interactable = true;
 
-        // Æ©Åä¸®¾ó Á¾·á ½Ã ´º½º/ÀÌ¸ŞÀÏ ¹öÆ° Àá±İ ÇØÁ¦
+        // íŠœí† ë¦¬ì–¼ ì¢…ë£Œ ì‹œ ë‰´ìŠ¤/ì´ë©”ì¼/ë¡œê·¸ ë²„íŠ¼ ì ê¸ˆ í•´ì œ
         if (newsButton != null) newsButton.interactable = true;
         if (emailBtn != null) emailBtn.interactable = true;
+        if (logBtn != null) emailBtn.interactable = true;
 
-        // Äù½ºÆ® µ¥¸ğ·Î ¿­·ÈÀ» ¼ö ÀÖ´Â ÆĞ³Îµé ÃÊ±âÈ­
+        // í€˜ìŠ¤íŠ¸ ë°ëª¨ë¡œ ì—´ë ¸ì„ ìˆ˜ ìˆëŠ” íŒ¨ë„ë“¤ ì´ˆê¸°í™”
         if (UIManager.Instance.newsBranchPanel != null)
             UIManager.Instance.newsBranchPanel.SetActive(false);
         if (UIManager.Instance.questPanel != null)
@@ -328,17 +342,17 @@ public class TutorialManager : MonoBehaviour
         if (UIManager.Instance.newsPanel != null)
             UIManager.Instance.newsPanel.SetActive(false);
 
-        // Æ©Åä¸®¾ó¿¡¼­ º¯Çß´ø µ¥ÀÌÅÍ¸¦ ÀüºÎ ÃÊ±âÈ­ ÇÔ
-        ScoreManager.Instance.InitData(); 
-        GameManager.Instance.CURRENT_TURN = 1; 
+        // íŠœí† ë¦¬ì–¼ì—ì„œ ë³€í–ˆë˜ ë°ì´í„°ë¥¼ ì „ë¶€ ì´ˆê¸°í™” í•¨
+        ScoreManager.Instance.InitData();
+        GameManager.Instance.CURRENT_TURN = 1;
 
-        // ÃÊ±âÈ­µÈ µ¥ÀÌÅÍ¸¦ UI¿¡ ¹İ¿µ
+        // ì´ˆê¸°í™”ëœ ë°ì´í„°ë¥¼ UIì— ë°˜ì˜
         UIManager.Instance.UpdateMoneyUI();
         ScoreManager.Instance.CalculateTurnScore();
         UIManager.Instance.UpdateTurnText();
         UIManager.Instance.UpdateRegionImages();
         UIManager.Instance.UpdateAffinityUI();
-        if (UIManager.Instance.emailBtn != null) // Æ©Åä¸®¾ó Á¾·á ÈÄ emailBtnÀº Äù½ºÆ® ¾øÀ¸¹Ç·Î ´Ù½Ã ºñÈ°¼ºÈ­
+        if (UIManager.Instance.emailBtn != null) // íŠœí† ë¦¬ì–¼ ì¢…ë£Œ í›„ emailBtnì€ í€˜ìŠ¤íŠ¸ ì—†ìœ¼ë¯€ë¡œ ë‹¤ì‹œ ë¹„í™œì„±í™”
             UIManager.Instance.emailBtn.SetActive(false);
         UIManager.Instance.UpdateTotalScoreUI(ScoreManager.Instance.totalScore);
     }

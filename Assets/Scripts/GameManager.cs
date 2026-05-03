@@ -10,24 +10,29 @@ using UnityEngine.Audio;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public CardController cardController; //explainPolicyPanelÀÇ "¿¹"/"¾Æ´Ï¿ä" ¹öÆ° Ã³¸®¸¦ À§ÇØ
-                                          //CardControllerÀÇ pending µ¥ÀÌÅÍ¿Í Execute ÇÔ¼ö¿¡ Á¢±ÙÇÒ ÂüÁ¶ º¯¼ö.
+    public CardController cardController; //explainPolicyPanelì˜ "ì˜ˆ"/"ì•„ë‹ˆìš”" ë²„íŠ¼ ì²˜ë¦¬ë¥¼ ìœ„í•´
+                                          //CardControllerì˜ pending ë°ì´í„°ì™€ Execute í•¨ìˆ˜ì— ì ‘ê·¼í•  ì°¸ì¡° ë³€ìˆ˜.
     public QuestManager questManager;
     public static bool isTutorialMode = false;
 
-    public Image MoneyBar; // µ· °ÔÀÌÁö ½½¶óÀÌµå
-    //¿Àµğ¿À ½ºÇÇÄ¿ º¯¼ö
-    //public AudioSource bgmAudioSource; // ¹è°æÀ½¾Ç ´ã´ç ½ºÇÇÄ¿
-    //public AudioSource sfxAudioSource; // È¿°úÀ½ ´ã´ç ½ºÇÇÄ¿, È¿°úÀ½ÀÌ Ãß°¡µÇ¸é ÀÌ¸§ º¯°æ
+    public Image MoneyBar; // ëˆ ê²Œì´ì§€ ìŠ¬ë¼ì´ë“œ
+
+    //ì˜¤ë””ì˜¤ ìŠ¤í”¼ì»¤ ë³€ìˆ˜
+    public AudioSource bgmAudioSource1, bgmAudioSource2, bgmAudioSource3, bgmAudioSource4; // ë°°ê²½ìŒì•… 4ê°œ
+    private Coroutine bgmRandomPlayCoroutine; // ì¤‘ë³µìœ¼ë¡œ ë°°ê²½ìŒì•… ì½”ë£¨í‹´ì´ ì‹¤í–‰ë˜ëŠ” ê²ƒì„ ë§‰ê¸° ìœ„í•´ ì‚¬ìš©
+    private AudioSource currentBgmAudioSource; // í˜„ì¬ ì–´ë–¤ ë°°ê²½ìŒì•…ì´ ì¬ìƒ ì¤‘ì¸ì§€ í™•ì¸í•˜ê¸° ìœ„í•´ ì‚¬ìš©
+    public AudioSource endingAudioSource; // ì—”ë”© ë°°ê²½ìŒì•…
+    public AudioSource questSuccessAudioSource; // í€˜ìŠ¤íŠ¸ ì„±ê³µ ìŒì•…
+    public AudioSource clickAudioSource; // ëª¨ë“  ë²„íŠ¼, ì •ì±… í´ë¦­ì‹œ ë‚˜ëŠ” ì‚¬ìš´ë“œ
 
     public int CURRENT_TURN = 1;
-    public int MAX_TURN = 35; // ÃÖ´ë ÅÏ¼ö
-    public int START_MONEY = 100, MAX_MONEY = 100; // ÃÊ±âÀÚ±İ, ÀÚ±İ ÃÖ´ëÄ¡
-    public int MIN_AFFINITY = 0; // ¹Î½É µ¥ÀÌÅÍ ÃÖ¼Ú°ª
-    public int MAX_AFFINITY = 10;  // ¹Î½É µ¥ÀÌÅÍ ÃÖ´ñ°ª
-    public int START_AFFINITY = 5; // ¸ğµç °èÃş ÃÊ±â ¹Î½É
-    public float FAIL_RND_MIN = -1.5f;   // ½ÇÆĞ ½Ã ¹Î½É °¨¼Ò ÃÖ´ë ¸¶ÀÌ³Ê½º °ª
-    public float FAIL_RND_MAX = -0.5f;   // ½ÇÆĞ ½Ã ¹Î½É °¨¼Ò ÃÖ¼Ò ¸¶ÀÌ³Ê½º °ª
+    public int MAX_TURN = 35; // ìµœëŒ€ í„´ìˆ˜
+    public int START_MONEY = 100, MAX_MONEY = 100; // ì´ˆê¸°ìê¸ˆ, ìê¸ˆ ìµœëŒ€ì¹˜
+    public int MIN_AFFINITY = 0; // ë¯¼ì‹¬ ë°ì´í„° ìµœì†Ÿê°’
+    public int MAX_AFFINITY = 10;  // ë¯¼ì‹¬ ë°ì´í„° ìµœëŒ“ê°’
+    public int START_AFFINITY = 5; // ëª¨ë“  ê³„ì¸µ ì´ˆê¸° ë¯¼ì‹¬
+    public float FAIL_RND_MIN = -1.5f;   // ì‹¤íŒ¨ ì‹œ ë¯¼ì‹¬ ê°ì†Œ ìµœëŒ€ ë§ˆì´ë„ˆìŠ¤ ê°’
+    public float FAIL_RND_MAX = -0.5f;   // ì‹¤íŒ¨ ì‹œ ë¯¼ì‹¬ ê°ì†Œ ìµœì†Œ ë§ˆì´ë„ˆìŠ¤ ê°’
 
     void Awake()
     {
@@ -37,9 +42,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // ÀÎ°ÔÀÓ¿¡¼­¸¸ ÅÏ °è»êÇÏµµ·Ï ÇÔ
+        // ì¸ê²Œì„ì—ì„œë§Œ í„´ ê³„ì‚°í•˜ë„ë¡ í•¨
         if (SceneManager.GetActiveScene().name == "GameScene")
         {
+            StartRandomBGM(); // ë°°ê²½ìŒì•… ì¬ìƒ
             CURRENT_TURN = 1;
             ScoreManager.Instance.InitData();
             if (UIManager.Instance.emailBtn != null)
@@ -47,14 +53,14 @@ public class GameManager : MonoBehaviour
                 UIManager.Instance.emailBtn.SetActive(false);
             }
 
-            // "PlayTutorial" À» Ã£¾Æ¼­ ÀĞ±â
+            // "PlayTutorial" ì„ ì°¾ì•„ì„œ ì½ê¸°
             int doTutorial = PlayerPrefs.GetInt("PlayTutorial", 1);
-            // "PlayTutorial"ÀÌ 1ÀÌ¸é Æ©Åä¸®¾ó ½ÇÇà
+            // "PlayTutorial"ì´ 1ì´ë©´ íŠœí† ë¦¬ì–¼ ì‹¤í–‰
             if (doTutorial == 1 && TutorialManager.Instance != null)
             {
                 TutorialManager.Instance.StartTutorial();
             }
-            // "PlayTutorial"ÀÌ 1ÀÌ ¾Æ´Ï¸é ¹Ù·Î °ÔÀÓ ½ÇÇà
+            // "PlayTutorial"ì´ 1ì´ ì•„ë‹ˆë©´ ë°”ë¡œ ê²Œì„ ì‹¤í–‰
             else if (TutorialManager.Instance != null)
             {
                 TutorialManager.Instance.tutorialPanel.SetActive(false);
@@ -66,7 +72,7 @@ public class GameManager : MonoBehaviour
                     QuestManager.Instance.InitData();
             }
 
-        StartTurn(); // Æ©Åä¸®¾ó ¼¼ÆÃ ¿Ï·á ÈÄ ÅÏ ½ÃÀÛ
+        StartTurn(); // íŠœí† ë¦¬ì–¼ ì„¸íŒ… ì™„ë£Œ í›„ í„´ ì‹œì‘
         }
     }
 
@@ -78,18 +84,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // »õ·Î¿î ÅÏ ½ÃÀÛ ½Ã È£Ãâ
+    // ìƒˆë¡œìš´ í„´ ì‹œì‘ ì‹œ í˜¸ì¶œ
     public void StartTurn()
     {
-        if (CURRENT_TURN > MAX_TURN) // ¸ğµç ÅÏÀÌ ³¡³ª¸é
+        if (CURRENT_TURN > MAX_TURN) // ëª¨ë“  í„´ì´ ëë‚˜ë©´
         {
-            ScoreManager.Instance.GameEnding(); // °ÔÀÓ ³¡³»°í ÃÖÁ¾ °á°ú Ãâ·Â
+            ScoreManager.Instance.GameEnding(); // ê²Œì„ ëë‚´ê³  ìµœì¢… ê²°ê³¼ ì¶œë ¥
             return;
         }
 
         if (CURRENT_TURN > 1)
         {
-            SuddenEventManager.Instance.CheckAndTriggerEvent(); // µ¹¹ß ÀÌº¥Æ® Ã¼Å© ¹× ¹ß»ı ÇÔ¼ö
+            SuddenEventManager.Instance.CheckAndTriggerEvent(); // ëŒë°œ ì´ë²¤íŠ¸ ì²´í¬ ë° ë°œìƒ í•¨ìˆ˜
         }
 
         if (QuestManager.Instance != null)
@@ -103,15 +109,15 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.ShowLogPanelForced(4f);
         }
 
-        UIManager.Instance.UpdateMoneyUI(); // µ· °ÔÀÌÁö ¾÷µ¥ÀÌÆ®
-        UIManager.Instance.UpdateTurnText(); // ÇöÀç ÅÏ ¾÷µ¥ÀÌÆ®
-        UIManager.Instance.UpdateFundingButtonState(); // ÀÚ±İ¿¡ µû¸¥ ¹öÆ° »óÅÂ °»½Å 
-        UIManager.Instance.UpdateAffinityUI(); // ¹Î½É °ÔÀÌÁö ¾÷µ¥ÀÌÆ®
-        UIManager.Instance.UpdateRegionImages(); // Áö¿ª ÀÌ¹ÌÁö ¾÷µ¥ÀÌÆ®
-        UIManager.Instance.UpdateTotalScoreUI(ScoreManager.Instance.totalScore); // °è»êµÈ ÃÑÁ¡¼ö¸¦ UI¿¡ ¾÷µ¥ÀÌÆ®
+        UIManager.Instance.UpdateMoneyUI(); // ëˆ ê²Œì´ì§€ ì—…ë°ì´íŠ¸
+        UIManager.Instance.UpdateTurnText(); // í˜„ì¬ í„´ ì—…ë°ì´íŠ¸
+        UIManager.Instance.UpdateFundingButtonState(); // ìê¸ˆì— ë”°ë¥¸ ë²„íŠ¼ ìƒíƒœ ê°±ì‹  
+        UIManager.Instance.UpdateAffinityUI(); // ë¯¼ì‹¬ ê²Œì´ì§€ ì—…ë°ì´íŠ¸
+        UIManager.Instance.UpdateRegionImages(); // ì§€ì—­ ì´ë¯¸ì§€ ì—…ë°ì´íŠ¸
+        UIManager.Instance.UpdateTotalScoreUI(ScoreManager.Instance.totalScore); // ê³„ì‚°ëœ ì´ì ìˆ˜ë¥¼ UIì— ì—…ë°ì´íŠ¸
     }
 
-    // ÇÃ·¹ÀÌ¾î°¡ Ä«µå¸¦ ¼±ÅÃÇÏ¿© Çàµ¿À» ¸¶ÃÆÀ» ¶§ È£ÃâÇÏ¿© ÅÏ ³Ñ±è
+    // í”Œë ˆì´ì–´ê°€ ì¹´ë“œë¥¼ ì„ íƒí•˜ì—¬ í–‰ë™ì„ ë§ˆì³¤ì„ ë•Œ í˜¸ì¶œí•˜ì—¬ í„´ ë„˜ê¹€
     public void OnPlayerActionCompleted()
     {
         if (CURRENT_TURN == 20)
@@ -129,15 +135,17 @@ public class GameManager : MonoBehaviour
         StartTurn();
     }
 
-    // Á¤Ã¥ ÆĞ³ÎÀÇ "¿¹" ¹öÆ°
-    // ½ÇÇà ¼ø¼­ 
-    // 1. ÆĞ³ÎÀ» ´İÀ½
-    // 2. pendingPolicyTypeÀÌ 0(ÀÚ±İÈ®º¸)ÀÌ¸é ExecuteFunding() È£Ãâ,
-    //    1~3(Á¤Ã¥)ÀÌ¸é ExecutePendingPolicy() È£ÃâÇÏ¿© ½ÇÁ¦ Á¤Ã¥ ½ÇÇà
-    // 3. pending µ¥ÀÌÅÍ¸¦ -1, 0À¸·Î ÃÊ±âÈ­ÇÏ¿© Áßº¹ ½ÇÇà ¹æÁö
-    // Æ©Åä¸®¾ó ÁßÀÏ ¶§´Â CheckSuccess()°¡ isTutorialÀ» °¨ÁöÇØ ¹«Á¶°Ç ¼º°ø ¹İÈ¯
+    // ì •ì±… íŒ¨ë„ì˜ "ì˜ˆ" ë²„íŠ¼
+    // ì‹¤í–‰ ìˆœì„œ 
+    // 1. íŒ¨ë„ì„ ë‹«ìŒ
+    // 2. pendingPolicyTypeì´ 0(ìê¸ˆí™•ë³´)ì´ë©´ ExecuteFunding() í˜¸ì¶œ,
+    //    1~3(ì •ì±…)ì´ë©´ ExecutePendingPolicy() í˜¸ì¶œí•˜ì—¬ ì‹¤ì œ ì •ì±… ì‹¤í–‰
+    // 3. pending ë°ì´í„°ë¥¼ -1, 0ìœ¼ë¡œ ì´ˆê¸°í™”í•˜ì—¬ ì¤‘ë³µ ì‹¤í–‰ ë°©ì§€
+    // íŠœí† ë¦¬ì–¼ ì¤‘ì¼ ë•ŒëŠ” CheckSuccess()ê°€ isTutorialì„ ê°ì§€í•´ ë¬´ì¡°ê±´ ì„±ê³µ ë°˜í™˜
     public void OnClickConfirmPolicy()
     {
+        clickAudioSource.PlayOneShot(clickAudioSource.clip);
+
         UIManager.Instance.HideExplainPolicyPanel();
 
         if (cardController.pendingPolicyType == 0)
@@ -152,77 +160,86 @@ public class GameManager : MonoBehaviour
         cardController.pendingPolicyType = -1;
         cardController.pendingPolicyCost = 0f;
 
-        // Æ©Åä¸®¾ó ÁßÀÌ¶ó¸é "¿¹" ¹öÆ° Å¬¸¯ ½Ã TutorialManager¿¡ ¾Ë·Á ´ÙÀ½ ´ë»ç·Î ÁøÇà
+        // íŠœí† ë¦¬ì–¼ ì¤‘ì´ë¼ë©´ "ì˜ˆ" ë²„íŠ¼ í´ë¦­ ì‹œ TutorialManagerì— ì•Œë ¤ ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ì§„í–‰
         if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
             TutorialManager.Instance.OnYesBtnClicked();
     }
 
-    // Á¤Ã¥ ÆĞ³ÎÀÇ "¾Æ´Ï¿ä" ¹öÆ°
-    // ½ÇÇà ¼ø¼­
-    // 1. pending µ¥ÀÌÅÍ¸¦ -1, 0À¸·Î ÃÊ±âÈ­ÇÏ¿© ¼±ÅÃÀ» Ãë¼Ò
-    // 2. ÆĞ³ÎÀ» ´İÀ½
-    // Á¤Ã¥ÀÌ ½ÇÇàµÇÁö ¾ÊÀ¸¹Ç·Î ÅÏÀÌ ³Ñ¾î°¡Áö ¾ÊÀ½
+    // ì •ì±… íŒ¨ë„ì˜ "ì•„ë‹ˆìš”" ë²„íŠ¼
+    // ì‹¤í–‰ ìˆœì„œ
+    // 1. pending ë°ì´í„°ë¥¼ -1, 0ìœ¼ë¡œ ì´ˆê¸°í™”í•˜ì—¬ ì„ íƒì„ ì·¨ì†Œ
+    // 2. íŒ¨ë„ì„ ë‹«ìŒ
+    // ì •ì±…ì´ ì‹¤í–‰ë˜ì§€ ì•Šìœ¼ë¯€ë¡œ í„´ì´ ë„˜ì–´ê°€ì§€ ì•ŠìŒ
     public void OnClickCancelPolicy()
     {
+        clickAudioSource.PlayOneShot(clickAudioSource.clip);
+
         cardController.pendingPolicyType = -1;
         cardController.pendingPolicyCost = 0f;
         UIManager.Instance.HideExplainPolicyPanel();
     }
     
-    // ´º½º ºê·»Ä¡ ÄÑ±â ²ô±â ¹öÆ°
+    // ë‰´ìŠ¤ ë¸Œë Œì¹˜ ì¼œê¸° ë„ê¸° ë²„íŠ¼
     public void NewsBranchButton()
     {
         if (UIManager.Instance.newsBranchPanel.activeSelf == true) 
         {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.newsBranchPanel.SetActive(false);
         }
         else 
         {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.newsBranchPanel.SetActive(true);
 
-            // Æ©Åä¸®¾ó Áß ´º½º ¹öÆ°À¸·Î ÆĞ³ÎÀ» ¿­¾úÀ» ¶§ ´ÙÀ½ ´ë»ç·Î ÁøÇà
+            // íŠœí† ë¦¬ì–¼ ì¤‘ ë‰´ìŠ¤ ë²„íŠ¼ìœ¼ë¡œ íŒ¨ë„ì„ ì—´ì—ˆì„ ë•Œ ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ì§„í–‰
             if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
                 TutorialManager.Instance.OnNewsButtonClicked();
-    
         }
     }
 
-    // Äù½ºÆ®(ÀÌ¸ŞÀÏ) Æä³Î ÄÑ±â
+    // í€˜ìŠ¤íŠ¸(ì´ë©”ì¼) í˜ë„ ì¼œê¸°
     public void EmaillButton()
     {
         if (UIManager.Instance.questPanel.activeSelf == true) 
-        {  
+        {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.questPanel.SetActive(false);
         }
         else 
         {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.newsBranchPanel.SetActive(false);
             UIManager.Instance.questPanel.SetActive(true);
 
-            // Æ©Åä¸®¾ó Áß ÀÌ¸ŞÀÏ ¹öÆ°À¸·Î Äù½ºÆ® ÆĞ³ÎÀ» ¿­¾úÀ» ¶§ ´ÙÀ½ ´ë»ç·Î ÁøÇà
+            // íŠœí† ë¦¬ì–¼ ì¤‘ ì´ë©”ì¼ ë²„íŠ¼ìœ¼ë¡œ í€˜ìŠ¤íŠ¸ íŒ¨ë„ì„ ì—´ì—ˆì„ ë•Œ ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ì§„í–‰
             if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
                 TutorialManager.Instance.OnEmailBtnClicked();
         }
     }
 
-    // ´º½º ÄÑ±â ²ô±â ¹öÆ°
+    // ë‰´ìŠ¤ ì¼œê¸° ë„ê¸° ë²„íŠ¼
     public void NewsButton()
     {
         if (UIManager.Instance.newsPanel.activeSelf == true) 
         {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.newsPanel.SetActive(false);
         }
         else 
         {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.newsBranchPanel.SetActive(false);
             UIManager.Instance.newsPanel.SetActive(true);
         }
     }
 
-    // Äù½ºÆ® ¼ö¶ô ¹öÆ°
+    // í€˜ìŠ¤íŠ¸ ìˆ˜ë½ ë²„íŠ¼
     public void AcceptButten()
     {
-        UIManager.Instance.ResultProposal.text = "º» Á¦¾È¼­¸¦ Ã¤ÅÃÇÏ°Ú½À´Ï´Ù.";
+        clickAudioSource.PlayOneShot(clickAudioSource.clip);
+
+        UIManager.Instance.ResultProposal.text = "ë³¸ ì œì•ˆì„œë¥¼ ì±„íƒí•˜ê² ìŠµë‹ˆë‹¤.";
 
         if (QuestManager.Instance != null)
         {
@@ -238,10 +255,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Äù½ºÆ® °ÅÀı ¹öÆ°
+    // í€˜ìŠ¤íŠ¸ ê±°ì ˆ ë²„íŠ¼
     public void RefuseButten()
     {
-        UIManager.Instance.ResultProposal.text = "Á¦½ÃÇÏ½Å Á¦¾È¼­´Â Ã¤ÅÃÀÌ ¾î·Á¿ï°Å °°½À´Ï´Ù.";
+        clickAudioSource.PlayOneShot(clickAudioSource.clip);
+
+        UIManager.Instance.ResultProposal.text = "ì œì‹œí•˜ì‹  ì œì•ˆì„œëŠ” ì±„íƒì´ ì–´ë ¤ìš¸ê±° ê°™ìŠµë‹ˆë‹¤.";
 
         if (QuestManager.Instance != null)
         {
@@ -257,69 +276,174 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // µ¹¹ß ÀÌº¥Æ®Ã¢ ²ô±â ¹öÆ°
+    // ëŒë°œ ì´ë²¤íŠ¸ì°½ ë„ê¸° ë²„íŠ¼
     public void SuddenEventEndButten()
     {
+        clickAudioSource.PlayOneShot(clickAudioSource.clip);
         UIManager.Instance.eventPanel.SetActive(false);
     }
 
-    // ¿É¼Ç Ã¢ ÄÑ±â ²ô±â
+    // ì˜µì…˜ ì°½ ì¼œê¸° ë„ê¸°
     public void OptionButton()
     {
         if (UIManager.Instance.optionPanel.activeSelf == true) 
         {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.optionPanel.SetActive(false);
         }
         else 
         {
+            clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.optionPanel.SetActive(true);
         }
     }
 
-    // HUDÀÇ ·Î±× ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö
-    // ·Î±× ÆĞ³ÎÀ» ¿­±â¸¸ ÇÏ¸ç, Æ©Åä¸®¾ó ÁßÀÌ¶ó¸é TutorialManager¿¡ ¾Ë¸²
+    // HUDì˜ ë¡œê·¸ ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
+    // ë¡œê·¸ íŒ¨ë„ì„ ì—´ê¸°ë§Œ í•˜ë©°, íŠœí† ë¦¬ì–¼ ì¤‘ì´ë¼ë©´ TutorialManagerì— ì•Œë¦¼
     public void LogButton()
     {
+        clickAudioSource.PlayOneShot(clickAudioSource.clip);
         UIManager.Instance.OpenLogPanel();
 
         if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
             TutorialManager.Instance.OnLogBtnClicked();
     }
 
-    // ·Î±× ÆĞ³Î ´İ±â ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö
+    // ë¡œê·¸ íŒ¨ë„ ë‹«ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
     public void LogCloseButton()
     {
+        clickAudioSource.PlayOneShot(clickAudioSource.clip);
         UIManager.Instance.CloseLogPanel();
     }
 
 
-    // ¿É¼Ç Ã¢ÀÇ ÇØ»óµµ Á¶Àı ±â´É ÇÔ¼ö
+    // ì˜µì…˜ ì°½ì˜ í•´ìƒë„ ì¡°ì ˆ ê¸°ëŠ¥ í•¨ìˆ˜
     public void SetResolution(int index)
     {
-        if (index == 0) Screen.SetResolution(1920, 1080, true); // ÀüÃ¼È­¸é
-        else if (index == 1) Screen.SetResolution(1280, 720, false); // Ã¢¸ğµå
+        if (index == 0) Screen.SetResolution(1920, 1080, true); // ì „ì²´í™”ë©´
+        else if (index == 1) Screen.SetResolution(1280, 720, false); // ì°½ëª¨ë“œ
     }
 
-    // ¿É¼Ç Ã¢ÀÇ ¹è°æ¼Ò¸® Á¶Àı ±â´É ÇÔ¼ö
-    public void SetBGMVolume(float volume)
+    // ì˜µì…˜ ì°½ì˜ ë°°ê²½ì†Œë¦¬ ì¡°ì ˆ ê¸°ëŠ¥ í•¨ìˆ˜
+    public void SetBGMVolume(float volume) 
+    { 
+        PlayerPrefs.SetFloat("BGMVolume", volume); // í˜„ì¬ ì¬ìƒ ì¤‘ì¸ BGMì´ ìˆë‹¤ë©´ ì¦‰ì‹œ ë³¼ë¥¨ì„ ë°˜ì˜ 
+        PlayerPrefs.Save();
+            if (currentBgmAudioSource != null) 
+            { 
+                currentBgmAudioSource.volume = volume; 
+            } 
+            // 4ê°œì˜ BGM AudioSource ëª¨ë‘ ê°™ì€ ë³¼ë¥¨ìœ¼ë¡œ ë§ì¶¤ // ë‹¤ìŒì— ëœë¤ìœ¼ë¡œ ì¬ìƒë  BGMì—ë„ ì˜µì…˜ ë³¼ë¥¨ì´ ì ìš©ë˜ë„ë¡ í•˜ê¸° ìœ„í•¨ 
+            if (bgmAudioSource1 != null) bgmAudioSource1.volume = volume; 
+            if (bgmAudioSource2 != null) bgmAudioSource2.volume = volume; 
+            if (bgmAudioSource3 != null) bgmAudioSource3.volume = volume; 
+            if (bgmAudioSource4 != null) bgmAudioSource4.volume = volume; 
+    }
+
+    // ëœë¤ BGM ì¬ìƒì„ ì‹œì‘í•˜ëŠ” í•¨ìˆ˜
+    // ì´ë¯¸ ì½”ë£¨í‹´ì´ ì‹¤í–‰ ì¤‘ì´ë©´ ì¤‘ë³µ ì‹¤í–‰ ë°©ì§€
+    public void StartRandomBGM()
     {
-        PlayerPrefs.SetFloat("BGMVolume", volume);
-        
-        // ÇØ´ç ¼Ò¸®¸¦ ¿¬°áÇÏ¸é ÁÖ¼® ÇØÁ¦
-        // if (bgmAudioSource != null) 
-        // {
-        //     bgmAudioSource.volume = volume;
-        // }
+        if (bgmRandomPlayCoroutine != null) return;
+        bgmRandomPlayCoroutine = StartCoroutine(RandomBGMCoroutine());
     }
 
-    // ¿©±â¼­ºÎÅÍ ¾À ÄÁÆ®·Ñ ÇÏ´Â ¹öÆ° ÇÔ¼öµéÀÓ
-    // ¸ŞÀÎ¸Ş´º·Î µ¹¾Æ°¡±â
+    // ëœë¤ BGM ì¬ìƒì„ ì •ì§€í•˜ëŠ” í•¨ìˆ˜
+    // ì‹¤í–‰ ì¤‘ì¸ ì½”ë£¨í‹´ ì¤‘ì§€
+    public void StopRandomBGM()
+    {
+        if (bgmRandomPlayCoroutine != null)
+        {
+            StopCoroutine(bgmRandomPlayCoroutine);
+            bgmRandomPlayCoroutine = null;
+        }
+
+        StopAllBGM();
+    }
+
+    // ëœë¤ BGMì„ ë°˜ë³µ ì¬ìƒí•˜ëŠ” ì½”ë£¨í‹´
+    // AudioSource ì¤‘ í•˜ë‚˜ë¥¼ ëœë¤ ì„ íƒ
+    // ê¸°ì¡´ BGM ì •ì§€ í›„ ìƒˆ BGM ì¬ìƒ
+    // ì €ì¥ëœ ë³¼ë¥¨ ì ìš©
+    // í˜„ì¬ ìŒì•…ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸° í›„ ë°˜ë³µ
+    private IEnumerator RandomBGMCoroutine()
+    {
+        while (true)
+        {
+            AudioSource selectedBgm = GetRandomBGMAudioSource();
+
+            if (selectedBgm == null)
+            {
+                yield return null;
+                continue;
+            }
+
+            StopAllBGM();
+
+            currentBgmAudioSource = selectedBgm;
+
+            float savedVolume = PlayerPrefs.GetFloat("BGMVolume", currentBgmAudioSource.volume);
+            currentBgmAudioSource.volume = savedVolume;
+
+            currentBgmAudioSource.Play();
+
+            while (currentBgmAudioSource != null && currentBgmAudioSource.isPlaying)
+            {
+                yield return null;
+            }
+        }
+    }
+
+    // ëœë¤ìœ¼ë¡œ BGM AudioSourceë¥¼ ì„ íƒí•˜ëŠ” í•¨ìˆ˜
+    // nullì´ ì•„ë‹Œ AudioSourceë§Œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
+    // ë¦¬ìŠ¤íŠ¸ì—ì„œ ë¬´ì‘ìœ„ ì„ íƒ
+    // ì‚¬ìš© ê°€ëŠ¥í•œ AudioSourceê°€ ì—†ìœ¼ë©´ null ë°˜í™˜
+    private AudioSource GetRandomBGMAudioSource()
+    {
+        List<AudioSource> bgmList = new List<AudioSource>();
+
+        if (bgmAudioSource1 != null) bgmList.Add(bgmAudioSource1);
+        if (bgmAudioSource2 != null) bgmList.Add(bgmAudioSource2);
+        if (bgmAudioSource3 != null) bgmList.Add(bgmAudioSource3);
+        if (bgmAudioSource4 != null) bgmList.Add(bgmAudioSource4);
+
+        if (bgmList.Count == 0) return null;
+
+        int randomIndex = UnityEngine.Random.Range(0, bgmList.Count);
+        return bgmList[randomIndex];
+    }
+
+    // ì—”ë”© íŒ¨ë„ì´ í™œì„±í™”ë  ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ 
+    // ê¸°ì¡´ ëœë¤ BGM ì½”ë£¨í‹´ê³¼ í˜„ì¬ ì¬ìƒ ì¤‘ì¸ BGMì„ ëª¨ë‘ ì •ì§€í•œ ë’¤ ì—”ë”© ìŒì•…ì„ ì¬ìƒí•¨
+    public void PlayEndingAudio() 
+    { 
+        StopRandomBGM(); 
+        if (endingAudioSource == null) return; 
+        float savedVolume = PlayerPrefs.GetFloat("BGMVolume", endingAudioSource.volume); 	endingAudioSource.volume = savedVolume; 
+        if (!endingAudioSource.isPlaying) 
+        { 
+            endingAudioSource.Play(); 
+        } 
+    }
+
+    // ëª¨ë“  BGMì„ ì •ì§€í•˜ëŠ” í•¨ìˆ˜
+    // ì—¬ëŸ¬ AudioSourceê°€ ë™ì‹œì— ì¬ìƒë˜ëŠ” ê²ƒì„ ë°©ì§€
+    private void StopAllBGM()
+    {
+        if (bgmAudioSource1 != null) bgmAudioSource1.Stop();
+        if (bgmAudioSource2 != null) bgmAudioSource2.Stop();
+        if (bgmAudioSource3 != null) bgmAudioSource3.Stop();
+        if (bgmAudioSource4 != null) bgmAudioSource4.Stop();
+    }
+
+    // ì—¬ê¸°ì„œë¶€í„° ì”¬ ì»¨íŠ¸ë¡¤ í•˜ëŠ” ë²„íŠ¼ í•¨ìˆ˜ë“¤ì„
+    // ë©”ì¸ë©”ë‰´ë¡œ ëŒì•„ê°€ê¸°
     public void ReturnMainMenu()
     {
         SceneManager.LoadScene("MainScene");
     }
 
-    // Æ©Åä¸®¾óÀÌ ¾ø´Â Àç½ÃÀÛ
+    // íŠœí† ë¦¬ì–¼ì´ ì—†ëŠ” ì¬ì‹œì‘
     public void RestartWithoutTutorial()
     {
         Time.timeScale = 1f;
@@ -328,7 +452,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("GameScene");
     }
 
-    // °ÔÀÓ ³¡³»±â
+    // ê²Œì„ ëë‚´ê¸°
     public void GameEndButton()
     {
         Application.Quit();

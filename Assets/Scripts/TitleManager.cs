@@ -3,38 +3,38 @@ using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
-    public GameObject startPopupPanel; // Æ©Åä¸®¾óÀÎÁö ¹Ù·Î½ÃÀÛÀÎÁö ¹°¾îº¸´Â ÆË¾÷Ã¢
+    public GameObject startPopupPanel; // íŠœí† ë¦¬ì–¼ì¸ì§€ ë°”ë¡œì‹œì‘ì¸ì§€ ë¬¼ì–´ë³´ëŠ” íŒì—…ì°½
 
     void Start()
     {
-        // ¾ÀÀÌ ½ÃÀÛµÉ ¶§ ÆË¾÷Ã¢Àº È­¸é¿¡¼­ ²û
+        // ì”¬ì´ ì‹œì‘ë  ë•Œ íŒì—…ì°½ì€ í™”ë©´ì—ì„œ ë”
         if (startPopupPanel != null)
             startPopupPanel.SetActive(false);
     }
 
-    // 1. ¸ŞÀÎ È­¸éÀÇ Game Start ¹öÆ°À» ´©¸£¸é ÆË¾÷Ã¢À» ¶ç¿ì´Â ÇÔ¼ö
+    // 1. ë©”ì¸ í™”ë©´ì˜ Game Start ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ íŒì—…ì°½ì„ ë„ìš°ëŠ” í•¨ìˆ˜
     public void OpenStartPopup()
     {
         startPopupPanel.SetActive(true);
     }
 
-    // 2. ÆË¾÷Ã¢ÀÇ Æ©Åä¸®¾ó ¹öÆ°À» ´­·¶À» ¶§ ½ÇÇàµÉ ÇÔ¼ö
+    // 2. íŒì—…ì°½ì˜ íŠœí† ë¦¬ì–¼ ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ ì‹¤í–‰ë  í•¨ìˆ˜
     public void PlayWithTutorial()
     {
-        // PlayTutorial¿¡ 1À» Àû°í °ÔÀÓ ¾ÀÀ¸·Î
-        PlayerPrefs.SetInt("PlayTutorial", 1); 
-        SceneManager.LoadScene("GameScene"); 
-    }
-
-    // 3. ÆË¾÷Ã¢ÀÇ ¹Ù·Î ½ÃÀÛ ¹öÆ°À» ´­·¶À» ¶§ ½ÇÇàµÉ ÇÔ¼ö
-    public void PlayWithoutTutorial()
-    {
-        // PlayTutorial¿¡ 0À» Àû°í °ÔÀÓ ¾ÀÀ¸·Î
-        PlayerPrefs.SetInt("PlayTutorial", 0); 
+        // PlayTutorialì— 1ì„ ì ê³  ê²Œì„ ì”¬ìœ¼ë¡œ
+        PlayerPrefs.SetInt("PlayTutorial", 1);
         SceneManager.LoadScene("GameScene");
     }
 
-    // °ÔÀÓ ²ô±â ¹öÆ°
+    // 3. íŒì—…ì°½ì˜ ë°”ë¡œ ì‹œì‘ ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ ì‹¤í–‰ë  í•¨ìˆ˜
+    public void PlayWithoutTutorial()
+    {
+        // PlayTutorialì— 0ì„ ì ê³  ê²Œì„ ì”¬ìœ¼ë¡œ
+        PlayerPrefs.SetInt("PlayTutorial", 0);
+        SceneManager.LoadScene("GameScene");
+    }
+
+    // ê²Œì„ ë„ê¸° ë²„íŠ¼
     public void GameEndButton()
     {
         Application.Quit();
