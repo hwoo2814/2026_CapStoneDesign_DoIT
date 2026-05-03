@@ -35,7 +35,7 @@ public class TutorialManager : MonoBehaviour
     public Button noBtn; // ExplainPolicyPanel의 "아니요" 버튼
     public Button newsButton; // NewsBranchPanel을 여는 뉴스 버튼
     public Button emailBtn; // NewsBranchPanel 안의 이메일(퀘스트) 버튼
-    public GameObject logBtn; // 로그 열기/닫기 버튼 오브젝트
+    public Button logBtn; // 로그 열기/닫기 버튼 오브젝트
 
     public int buttonClickStep = 5;
     public int yesBtnClickStep = 6; // 청년 정책 버튼을 누르라고 지시하는 대사의 순번
@@ -68,12 +68,13 @@ public class TutorialManager : MonoBehaviour
         fundingBtn.interactable = false;
 
         // 시작 시 "예"/"아니요" 버튼 잠금
-        if (yesBtn != null)    yesBtn.interactable    = false;
+        if (yesBtn != null) yesBtn.interactable = false;
         if (noBtn != null) noBtn.interactable = false;
 
-        // 시작 시 뉴스/이메일 버튼 잠금
+        // 시작 시 뉴스/이메일/로그 버튼 잠금
         if (newsButton != null) newsButton.interactable = false;
         if (emailBtn != null) emailBtn.interactable = false;
+        if (logBtn != null) emailBtn.interactable = false;
 
         ShowNextDialogue();
     }
@@ -81,13 +82,15 @@ public class TutorialManager : MonoBehaviour
     // 화면(튜토리얼 패널)을 클릭할 때마다 실행됨
     public void OnClickScreen()
     {
+        GameManager.Instance.clickAudioSource.PlayOneShot(GameManager.Instance.clickAudioSource.clip);
         if (!isTutorial) return;
 
         // 버튼 클릭을 지시하는 단계에서는 화면을 눌러도 대사가 넘어가지 않음
         if (currentStep == buttonClickStep) return;
-        if (currentStep == yesBtnClickStep)    return;
+        if (currentStep == yesBtnClickStep) return;
         if (currentStep == newsButtonClickStep) return;
-        if (currentStep == emailBtnClickStep)  return;
+        if (currentStep == emailBtnClickStep) return;
+        if (currentStep == logBtnClickStep) return;
 
         currentStep++;
 
@@ -127,7 +130,7 @@ public class TutorialManager : MonoBehaviour
         {
             tutorialPanel.GetComponent<Image>().raycastTarget = false;
             // "예" 버튼만 활성화하고 "아니요"는 잠가 무조건 확정하도록 유도
-            if (yesBtn != null)    yesBtn.interactable    = true;
+            if (yesBtn != null) yesBtn.interactable = true;
             if (noBtn != null) noBtn.interactable = false;
         }
         // 뉴스 버튼 클릭 유도 단계
@@ -142,6 +145,16 @@ public class TutorialManager : MonoBehaviour
         {
             tutorialPanel.GetComponent<Image>().raycastTarget = false;
             if (emailBtn != null) emailBtn.interactable = true;
+        }
+        // 로그 버튼 유도 단계
+        else if (currentStep == logBtnClickStep) 
+        {
+            tutorialPanel.GetComponent<Image>().raycastTarget = false; 
+            if (logBtn != null) 
+            {
+                Button logButton = logBtn.GetComponent<Button>(); 
+                if (logButton != null) logButton.interactable = true; 
+            } 
         }
         else
         {
@@ -316,9 +329,10 @@ public class TutorialManager : MonoBehaviour
         if (yesBtn != null) yesBtn.interactable = true;
         if (noBtn != null) noBtn.interactable = true;
 
-        // 튜토리얼 종료 시 뉴스/이메일 버튼 잠금 해제
+        // 튜토리얼 종료 시 뉴스/이메일/로그 버튼 잠금 해제
         if (newsButton != null) newsButton.interactable = true;
         if (emailBtn != null) emailBtn.interactable = true;
+        if (logBtn != null) emailBtn.interactable = true;
 
         // 퀘스트 데모로 열렸을 수 있는 패널들 초기화
         if (UIManager.Instance.newsBranchPanel != null)

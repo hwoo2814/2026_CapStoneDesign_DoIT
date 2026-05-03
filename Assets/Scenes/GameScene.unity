@@ -10741,6 +10741,13 @@ MonoBehaviour:
   cardController: {fileID: 7677390}
   questManager: {fileID: 0}
   MoneyBar: {fileID: 2092605079}
+  bgmAudioSource1: {fileID: 0}
+  bgmAudioSource2: {fileID: 0}
+  bgmAudioSource3: {fileID: 0}
+  bgmAudioSource4: {fileID: 0}
+  endingAudioSource: {fileID: 0}
+  questSuccessAudioSource: {fileID: 0}
+  clickAudioSource: {fileID: 0}
   CURRENT_TURN: 1
   MAX_TURN: 35
   START_MONEY: 100

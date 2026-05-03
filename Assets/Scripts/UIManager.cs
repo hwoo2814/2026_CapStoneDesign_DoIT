@@ -450,6 +450,10 @@ public class UIManager : MonoBehaviour
     public void ShowEndingPanel(string grade, string title, float finalScore)
     {
         // 엔딩 패널 활성화  후 시간 정지
+        if (GameManager.Instance != null) 
+        { 
+            GameManager.Instance.PlayEndingAudio(); 
+        }
         endingPanel.SetActive(true);
         Time.timeScale = 0f;
 

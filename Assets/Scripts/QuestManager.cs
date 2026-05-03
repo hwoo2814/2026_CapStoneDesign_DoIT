@@ -21,7 +21,6 @@ public class QuestManager : MonoBehaviour
     private int questExpiryTurn = 0;
 
     // 목표 진행 추적 변수
-
     // 연속 조건 달성 턴 카운터
     // MoneyAboveForConsecutiveTurns / SingleAffinity / MultiAffinity / SingleAffinityAndMoney 에서 사용
     private int consecutiveTurnsMet = 0;
@@ -39,7 +38,6 @@ public class QuestManager : MonoBehaviour
     // 플레이어의 퀘스트 결정 상태 추적 (미결정 / 수락 / 거절)
     private enum QuestDecisionState { Pending, Accepted, Rejected }
     private QuestDecisionState decisionState = QuestDecisionState.Pending;
-
 
     // 지속 효과(디버프/버프) 추적 변수
     // 자금 획득률 감소 디버프 잔여 턴 수 (거점 국립대 지원 실패 리스크)
@@ -86,9 +84,7 @@ public class QuestManager : MonoBehaviour
         return activeQuest;
     }
 
-
     // 턴 시작 시 GameManager.StartTurn() 에서 호출
-
     // 퀘스트 생성 주기 체크, 만료 퀘스트 실패 처리, 신규 퀘스트 배정을 수행
     // currentTurn : 방금 시작된 턴 번호
     public void OnTurnStart(int currentTurn)
@@ -262,6 +258,8 @@ public class QuestManager : MonoBehaviour
     // 퀘스트 성공: 보상 + 리스크 모두 적용
     private void CompleteCurrentQuest()
     {
+        GameManager.Instance.questSuccessAudioSource.PlayOneShot(GameManager.Instance.questSuccessAudioSource.clip);
+
         string title = activeQuest.questTitle;
         ApplyEffect(activeQuest.reward);
         ApplyEffect(activeQuest.risk);
