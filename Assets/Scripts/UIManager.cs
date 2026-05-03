@@ -58,6 +58,7 @@ public class UIManager : MonoBehaviour
     public Transform houseHoverPos;
 
     public Text hoverInfoText; // 오버 창에 들어갈 텍스트
+    private Outline outLine; // 지역을 강조하는 외각선
 
     public GameObject endingPanel; // 턴이 모두 끝난 후 화면을 덮으며 나타날 최종 결과 창
     public Text regionUnivScoreText; // 대학가 점수
@@ -376,6 +377,7 @@ public class UIManager : MonoBehaviour
         bool isDeactivated = false;
 
         RectTransform tooltipRect = hoverTooltip.GetComponent<RectTransform>();
+        outLine = GetComponent<Outline>();
 
         // 지역에 따라 이름, 발전도를 할당, Transform 변수 지정
         if (regionIndex == 1) 
@@ -412,18 +414,22 @@ public class UIManager : MonoBehaviour
         if (isDeactivated)
         {
             hoverInfoText.text = $"{rName}\n[ 잠김 ]";
+            outLine.enabled = true;
         }
         // 지역이 활성화 되어있다면 지역 레벨 표시
         else
         {
             string lv = dev >= 50f ? "LV 3" : (dev >= 20f ? "LV 2" : "LV 1");
             hoverInfoText.text = $"{rName}\n발전도 : {lv}";
+            outLine.enabled = true;
         }
     }
 
     // 마우스 오버 끝나면 꺼지게 하는 함수
     public void OnRegionHoverExit()
     {
+        outLine = GetComponent<Outline>();
+        outLine.enabled = false;
         hoverTooltip.SetActive(false);
     }
 
