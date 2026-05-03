@@ -1,96 +1,96 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Äù½ºÆ® ¸ñÇ¥ ÆÇÁ¤ ¹æ½ÄÀ» ±¸ºĞÇÏ´Â enumÇü
+// í€˜ìŠ¤íŠ¸ ëª©í‘œ íŒì • ë°©ì‹ì„ êµ¬ë¶„í•˜ëŠ” enumí˜•
 public enum QuestGoalType
 {
-    MoneyAboveForConsecutiveTurns, // NÅÏ ¿¬¼Ó ÀÚ±İ X ÀÌ»ó À¯Áö
-    AffinityAboveOnce, // Æ¯Á¤ ¹Î½É X ÀÌ»ó 1È¸ ´Ş¼º
-    AffinitySumAndMoneyOnce, // µÎ ¹Î½É ÇÕ°è X + ÀÚ±İ Y ÀÌ»ó µ¿½Ã ´Ş¼º
-    MultiAffinityForConsecutiveTurns, // ¿©·¯ ¹Î½É °¢°¢ X ÀÌ»ó NÅÏ ¿¬¼Ó À¯Áö
-    SingleAffinityAndMoneyForConsecutiveTurns, // ¹Î½É X + ÀÚ±İ Y ÀÌ»ó NÅÏ ¿¬¼Ó À¯Áö
-    PolicyCountWithinTurns, // Äù½ºÆ® À¯È¿ ±â°£ ³» Æ¯Á¤ Á¤Ã¥ NÈ¸ »ç¿ë
-    SingleAffinityForConsecutiveTurns, // ´ÜÀÏ ¹Î½É X ÀÌ»ó NÅÏ ¿¬¼Ó À¯Áö
-    AcceptProposalWithinTurns, // NÅÏ ÀÌ³» ¾È°Ç ¼ö¶ô ¹öÆ° Å¬¸¯
+    MoneyAboveForConsecutiveTurns, // Ní„´ ì—°ì† ìê¸ˆ X ì´ìƒ ìœ ì§€
+    AffinityAboveOnce, // íŠ¹ì • ë¯¼ì‹¬ X ì´ìƒ 1íšŒ ë‹¬ì„±
+    AffinitySumAndMoneyOnce, // ë‘ ë¯¼ì‹¬ í•©ê³„ X + ìê¸ˆ Y ì´ìƒ ë™ì‹œ ë‹¬ì„±
+    MultiAffinityForConsecutiveTurns, // ì—¬ëŸ¬ ë¯¼ì‹¬ ê°ê° X ì´ìƒ Ní„´ ì—°ì† ìœ ì§€
+    SingleAffinityAndMoneyForConsecutiveTurns, // ë¯¼ì‹¬ X + ìê¸ˆ Y ì´ìƒ Ní„´ ì—°ì† ìœ ì§€
+    PolicyCountWithinTurns, // í€˜ìŠ¤íŠ¸ ìœ íš¨ ê¸°ê°„ ë‚´ íŠ¹ì • ì •ì±… NíšŒ ì‚¬ìš©
+    SingleAffinityForConsecutiveTurns, // ë‹¨ì¼ ë¯¼ì‹¬ X ì´ìƒ Ní„´ ì—°ì† ìœ ì§€
+    AcceptProposalWithinTurns, // Ní„´ ì´ë‚´ ì•ˆê±´ ìˆ˜ë½ ë²„íŠ¼ í´ë¦­
 }
 
-// Äù½ºÆ® ¸ñÇ¥ Á¶°Ç µ¥ÀÌÅÍ¸¦ ´ã´Â Å¬·¡½º
+// í€˜ìŠ¤íŠ¸ ëª©í‘œ ì¡°ê±´ ë°ì´í„°ë¥¼ ë‹´ëŠ” í´ë˜ìŠ¤
 [System.Serializable]
 public class QuestGoalData
 {
-    public QuestGoalType goalType; // ¸ñÇ¥ ÆÇÁ¤ ¹æ½Ä
-    public float targetValue; // ÁÖ¿ä ¸ñÇ¥ ¼öÄ¡ (ÀÚ±İ·®, ¹Î½É °ª µî)
-    public float targetValue2; // º¸Á¶ ¸ñÇ¥ ¼öÄ¡ (AND Á¶°ÇÀÇ µÎ ¹øÂ° °ª)
-    public int requiredTurns; // Á¶°Ç À¯Áö ÅÏ ¼ö ¶Ç´Â Á¦ÇÑ ÅÏ ¼ö
-    public int requiredCount; // ÇÊ¿ä Çàµ¿ È½¼ö (Á¤Ã¥ »ç¿ë È½¼ö µî)
+    public QuestGoalType goalType; // ëª©í‘œ íŒì • ë°©ì‹
+    public float targetValue; // ì£¼ìš” ëª©í‘œ ìˆ˜ì¹˜ (ìê¸ˆëŸ‰, ë¯¼ì‹¬ ê°’ ë“±)
+    public float targetValue2; // ë³´ì¡° ëª©í‘œ ìˆ˜ì¹˜ (AND ì¡°ê±´ì˜ ë‘ ë²ˆì§¸ ê°’)
+    public int requiredTurns; // ì¡°ê±´ ìœ ì§€ í„´ ìˆ˜ ë˜ëŠ” ì œí•œ í„´ ìˆ˜
+    public int requiredCount; // í•„ìš” í–‰ë™ íšŸìˆ˜ (ì •ì±… ì‚¬ìš© íšŸìˆ˜ ë“±)
 
-    // PolicyCountWithinTurns Àü¿ë: ´ë»ó Á¤Ã¥ Å¸ÀÔ (1=Ã»³â, 2=³ë³â, 3=±â¾÷)
+    // PolicyCountWithinTurns ì „ìš©: ëŒ€ìƒ ì •ì±… íƒ€ì… (1=ì²­ë…„, 2=ë…¸ë…„, 3=ê¸°ì—…)
     public int policyType;
 
-    // AffinityAboveOnce / SingleAffinity °è¿­ Àü¿ë: ´ë»ó ¹Î½É Å¸ÀÔ (0=Ã»³â, 1=³ë³â, 2=±â¾÷)
+    // AffinityAboveOnce / SingleAffinity ê³„ì—´ ì „ìš©: ëŒ€ìƒ ë¯¼ì‹¬ íƒ€ì… (0=ì²­ë…„, 1=ë…¸ë…„, 2=ê¸°ì—…)
     public int affinityType;
 
-    // AffinitySumAndMoneyOnce / MultiAffinityForConsecutiveTurns Àü¿ë:
-    // ÇÕ»ê ¶Ç´Â °³º° È®ÀÎÇÒ ¹Î½É Å¸ÀÔ ¹è¿­ (¿¹: [0, 2] = Ã»³â + ±â¾÷)
+    // AffinitySumAndMoneyOnce / MultiAffinityForConsecutiveTurns ì „ìš©:
+    // í•©ì‚° ë˜ëŠ” ê°œë³„ í™•ì¸í•  ë¯¼ì‹¬ íƒ€ì… ë°°ì—´ (ì˜ˆ: [0, 2] = ì²­ë…„ + ê¸°ì—…)
     public int[] affinityTypes;
 }
 
-// Äù½ºÆ® º¸»ó ¶Ç´Â ¸®½ºÅ© ¼öÄ¡¸¦ ´ã´Â Å¬·¡½º
+// í€˜ìŠ¤íŠ¸ ë³´ìƒ ë˜ëŠ” ë¦¬ìŠ¤í¬ ìˆ˜ì¹˜ë¥¼ ë‹´ëŠ” í´ë˜ìŠ¤
 [System.Serializable]
 public class QuestEffectData
 {
-    public float moneyChange; // ÀÚ±İ º¯È­·® (+/-)
-    public float youthAffinityChange; // Ã»³â ¹Î½É º¯È­·®
-    public float seniorAffinityChange; // ³ë³â ¹Î½É º¯È­·®
-    public float corpAffinityChange; // ±â¾÷ ¹Î½É º¯È­·®
+    public float moneyChange; // ìê¸ˆ ë³€í™”ëŸ‰ (+/-)
+    public float youthAffinityChange; // ì²­ë…„ ë¯¼ì‹¬ ë³€í™”ëŸ‰
+    public float seniorAffinityChange; // ë…¸ë…„ ë¯¼ì‹¬ ë³€í™”ëŸ‰
+    public float corpAffinityChange; // ê¸°ì—… ë¯¼ì‹¬ ë³€í™”ëŸ‰
 
-    // Áö¿ª ¹ßÀüµµ ·¹º§ º¯È­·® (+1 = ·¹º§¾÷ 1´Ü°è, 0ÀÌ¸é º¯È­ ¾øÀ½)
-    public int devUnivLevelChange; // ½Åµµ½Ã
-    public int devSilverLevelChange; // ³óÃÌ
-    public int devIndustryLevelChange; // Áö¹æ
-    public int devHouseLevelChange; // ¼öµµ±Ç
+    // ì§€ì—­ ë°œì „ë„ ë ˆë²¨ ë³€í™”ëŸ‰ (+1 = ë ˆë²¨ì—… 1ë‹¨ê³„, 0ì´ë©´ ë³€í™” ì—†ìŒ)
+    public int devUnivLevelChange; // ì‹ ë„ì‹œ
+    public int devSilverLevelChange; // ë†ì´Œ
+    public int devIndustryLevelChange; // ì§€ë°©
+    public int devHouseLevelChange; // ìˆ˜ë„ê¶Œ
 
-    // ÀüÃ¼ Áö¿ª ¹ßÀüµµ ÀÏ°ı º¯È­·® (±×¸°º§Æ® ÇØÁ¦ ¸®½ºÅ© µî)
+    // ì „ì²´ ì§€ì—­ ë°œì „ë„ ì¼ê´„ ë³€í™”ëŸ‰ (ê·¸ë¦°ë²¨íŠ¸ í•´ì œ ë¦¬ìŠ¤í¬ ë“±)
     public float allDevChange;
 
-    // ÀÚ±İ È¹µæ·ü °¨¼Ò µğ¹öÇÁ (°ÅÁ¡ ±¹¸³´ë Áö¿ø ½ÇÆĞ ¸®½ºÅ© µî)
-    public int fundingDebuffTurns; // µğ¹öÇÁ Áö¼Ó ÅÏ ¼ö (0ÀÌ¸é ¹ÌÀû¿ë)
-    public float fundingDebuffRate; // °¨¼Ò ºñÀ² (0.1 = 10% °¨¼Ò)
+    // ìê¸ˆ íšë“ë¥  ê°ì†Œ ë””ë²„í”„ (ê±°ì  êµ­ë¦½ëŒ€ ì§€ì› ì‹¤íŒ¨ ë¦¬ìŠ¤í¬ ë“±)
+    public int fundingDebuffTurns; // ë””ë²„í”„ ì§€ì† í„´ ìˆ˜ (0ì´ë©´ ë¯¸ì ìš©)
+    public float fundingDebuffRate; // ê°ì†Œ ë¹„ìœ¨ (0.1 = 10% ê°ì†Œ)
 
-    // AI ÈùÆ® È°¼ºÈ­ º¸»ó (ºòµ¥ÀÌÅÍ ¼¾ÅÍ ±¸Ãà º¸»ó)
-    public bool activateAIHint; // AI ÈùÆ® È°¼ºÈ­ ¿©ºÎ
-    public int aiHintTurns; // AI ÈùÆ® Áö¼Ó ÅÏ ¼ö
+    // AI íŒíŠ¸ í™œì„±í™” ë³´ìƒ (ë¹…ë°ì´í„° ì„¼í„° êµ¬ì¶• ë³´ìƒ)
+    public bool activateAIHint; // AI íŒíŠ¸ í™œì„±í™” ì—¬ë¶€
+    public int aiHintTurns; // AI íŒíŠ¸ ì§€ì† í„´ ìˆ˜
 }
 
-// ÇÏ³ªÀÇ Äù½ºÆ® ÀüÃ¼ Á¤º¸¸¦ ´ã´Â Å¬·¡½º
+// í•˜ë‚˜ì˜ í€˜ìŠ¤íŠ¸ ì „ì²´ ì •ë³´ë¥¼ ë‹´ëŠ” í´ë˜ìŠ¤
 [System.Serializable]
 public class QuestDefinition
 {
-    public int questId; // Äù½ºÆ® °íÀ¯ ID (0ºÎÅÍ ½ÃÀÛÇÏ´Â ÀÎµ¦½º)
-    public string questTitle; // Äù½ºÆ® Á¦¸ñ
-    public string questDesc; // Äù½ºÆ® ¹è°æ ¼³¸í ÅØ½ºÆ®
-    public string questGoalText; // ¸ñÇ¥ Á¶°Ç Ç¥½Ã¿ë ÅØ½ºÆ® (UI)
-    public string questRewardText; // º¸»ó Ç¥½Ã¿ë ÅØ½ºÆ® (UI)
-    public string questRiskText; // ¸®½ºÅ© Ç¥½Ã¿ë ÅØ½ºÆ® (UI)
-    public QuestGoalData goal; // ¸ñÇ¥ Á¶°Ç µ¥ÀÌÅÍ
-    public QuestEffectData reward; // ¼º°ø ½Ã Áö±ŞÇÒ º¸»ó µ¥ÀÌÅÍ
-    public QuestEffectData risk; // ¼º°ø/½ÇÆĞ °ü°è¾øÀÌ ºÎ¿©µÉ ¸®½ºÅ© µ¥ÀÌÅÍ
+    public int questId; // í€˜ìŠ¤íŠ¸ ê³ ìœ  ID (0ë¶€í„° ì‹œì‘í•˜ëŠ” ì¸ë±ìŠ¤)
+    public string questTitle; // í€˜ìŠ¤íŠ¸ ì œëª©
+    public string questDesc; // í€˜ìŠ¤íŠ¸ ë°°ê²½ ì„¤ëª… í…ìŠ¤íŠ¸
+    public string questGoalText; // ëª©í‘œ ì¡°ê±´ í‘œì‹œìš© í…ìŠ¤íŠ¸ (UI)
+    public string questRewardText; // ë³´ìƒ í‘œì‹œìš© í…ìŠ¤íŠ¸ (UI)
+    public string questRiskText; // ë¦¬ìŠ¤í¬ í‘œì‹œìš© í…ìŠ¤íŠ¸ (UI)
+    public QuestGoalData goal; // ëª©í‘œ ì¡°ê±´ ë°ì´í„°
+    public QuestEffectData reward; // ì„±ê³µ ì‹œ ì§€ê¸‰í•  ë³´ìƒ ë°ì´í„°
+    public QuestEffectData risk; // ì„±ê³µ/ì‹¤íŒ¨ ê´€ê³„ì—†ì´ ë¶€ì—¬ë  ë¦¬ìŠ¤í¬ ë°ì´í„°
 }
 
-// ¸ğµç Äù½ºÆ® Á¤ÀÇ¸¦ º¸°üÇÏ´Â Á¤Àû µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½º
+// ëª¨ë“  í€˜ìŠ¤íŠ¸ ì •ì˜ë¥¼ ë³´ê´€í•˜ëŠ” ì •ì  ë°ì´í„°ë² ì´ìŠ¤ í´ë˜ìŠ¤
 public static class QuestDatabase
 {
     public static readonly List<QuestDefinition> AllQuests = new List<QuestDefinition>
     {
-        // ¦¡¦¡ Äù½ºÆ® 0: GTX ±¤¿ªÃ¶µµ Âø°ø ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 0: GTX ê´‘ì—­ì² ë„ ì°©ê³µ â”€â”€
         new QuestDefinition
         {
             questId = 0,
-            questTitle = "GTX ±¤¿ªÃ¶µµ Âø°ø",
-            questDesc = "ÃâÅğ±Ù ½Ã°£¿¡ ½ñ¾ÆÁö´Â ¹Î¿øÀ» ´õ ÀÌ»ó ¹æÄ¡ÇÒ ¼ö ¾ø½À´Ï´Ù. ¼öµµ±ÇÀÇ Áöµµ¸¦ ¹Ù²Ü °á´ÜÀÌ ÇÊ¿äÇÕ´Ï´Ù.",
-            questGoalText = "3ÅÏ ¿¬¼Ó ÀÚ±İ 50 ÀÌ»ó À¯ÁöÇÏ±â",
-            questRewardText = "¼öµµ±Ç LV+1, Ã»³â ¹Î½É +5",
-            questRiskText = "ÀÚ±İ -40",
+            questTitle = "GTX ê´‘ì—­ì² ë„ ì°©ê³µ",
+            questDesc = "ì¶œí‡´ê·¼ ì‹œê°„ì— ìŸì•„ì§€ëŠ” ë¯¼ì›ì„ ë” ì´ìƒ ë°©ì¹˜í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤. ìˆ˜ë„ê¶Œì˜ ì§€ë„ë¥¼ ë°”ê¿€ ê²°ë‹¨ì´ í•„ìš”í•©ë‹ˆë‹¤.",
+            questGoalText = "3í„´ ì—°ì† ìê¸ˆ 50 ì´ìƒ ìœ ì§€í•˜ê¸°",
+            questRewardText = "ìˆ˜ë„ê¶Œ LV+1, ì²­ë…„ ë¯¼ì‹¬ +5",
+            questRiskText = "ìê¸ˆ -40",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.MoneyAboveForConsecutiveTurns,
@@ -101,15 +101,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { moneyChange = -40f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 1: °ÅÁ¡ ±¹¸³´ë Áö¿ø ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 1: ê±°ì  êµ­ë¦½ëŒ€ ì§€ì› â”€â”€
         new QuestDefinition
         {
             questId = 1,
-            questTitle = "°ÅÁ¡ ±¹¸³´ë Áö¿ø",
-            questDesc = "Áö¿ªÀÇ ¹Ì·¡ÀÎ ÀÎÀçµéÀÌ ¼öµµ±ÇÀ¸·Î À¯ÃâµÇ°í ÀÖ½À´Ï´Ù.\n´ëÇĞ ÀÎÇÁ¶ó¸¦ Çõ½ÅÇØ ±×µéÀ» ºÙÀâ¾Æ¾ß ÇÕ´Ï´Ù.",
-            questGoalText = "Ã»³â ¹Î½É 7 ÀÌ»ó ´Ş¼º",
-            questRewardText = "Áö¹æ LV+1, Ã»³â/³ë³â ¹Î½É +5",
-            questRiskText = "3ÅÏ µ¿¾È ÀÚ±İ È¹µæ·ü 10% °¨¼Ò, ±â¾÷ ¹Î½É -3",
+            questTitle = "ê±°ì  êµ­ë¦½ëŒ€ ì§€ì›",
+            questDesc = "ì§€ì—­ì˜ ë¯¸ë˜ì¸ ì¸ì¬ë“¤ì´ ìˆ˜ë„ê¶Œìœ¼ë¡œ ìœ ì¶œë˜ê³  ìˆìŠµë‹ˆë‹¤.\nëŒ€í•™ ì¸í”„ë¼ë¥¼ í˜ì‹ í•´ ê·¸ë“¤ì„ ë¶™ì¡ì•„ì•¼ í•©ë‹ˆë‹¤.",
+            questGoalText = "ì²­ë…„ ë¯¼ì‹¬ 7 ì´ìƒ ë‹¬ì„±",
+            questRewardText = "ì§€ë°© LV+1, ì²­ë…„/ë…¸ë…„ ë¯¼ì‹¬ +5",
+            questRiskText = "3í„´ ë™ì•ˆ ìê¸ˆ íšë“ë¥  10% ê°ì†Œ, ê¸°ì—… ë¯¼ì‹¬ -3",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.AffinityAboveOnce,
@@ -120,15 +120,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { fundingDebuffTurns = 3, fundingDebuffRate = 0.1f, corpAffinityChange = -3f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 2: ´ëÇü º¹ÇÕ ¼îÇÎ¸ô ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 2: ëŒ€í˜• ë³µí•© ì‡¼í•‘ëª° â”€â”€
         new QuestDefinition
         {
             questId = 2,
-            questTitle = "´ëÇü º¹ÇÕ ¼îÇÎ¸ô",
-            questDesc = "½Åµµ½ÃÀÇ ¼ºÀåÀÌ Á¤Ã¼µÇ¾î ÀÖ½À´Ï´Ù.\n·£µå¸¶Å© ¼îÇÎ¸ô À¯Ä¡·Î ±â¾÷ÀÇ ÅõÀÚ¿Í ÀşÀº ¼ÒºñÃşÀ» µ¿½Ã¿¡ ÀâÀ¸½Ê½Ã¿À.",
-            questGoalText = "Ã»³â + ±â¾÷ ¹Î½É ÇÕ°è 10 ÀÌ»ó AND ÀÚ±İ 50 ÀÌ»ó º¸À¯",
-            questRewardText = "½Åµµ½Ã LV+1, Ã»³â ¹Î½É +4, ±â¾÷ ¹Î½É +5",
-            questRiskText = "ÀÚ±İ -40",
+            questTitle = "ëŒ€í˜• ë³µí•© ì‡¼í•‘ëª°",
+            questDesc = "ì‹ ë„ì‹œì˜ ì„±ì¥ì´ ì •ì²´ë˜ì–´ ìˆìŠµë‹ˆë‹¤.\nëœë“œë§ˆí¬ ì‡¼í•‘ëª° ìœ ì¹˜ë¡œ ê¸°ì—…ì˜ íˆ¬ìì™€ ì Šì€ ì†Œë¹„ì¸µì„ ë™ì‹œì— ì¡ìœ¼ì‹­ì‹œì˜¤.",
+            questGoalText = "ì²­ë…„ + ê¸°ì—… ë¯¼ì‹¬ í•©ê³„ 10 ì´ìƒ AND ìê¸ˆ 50 ì´ìƒ ë³´ìœ ",
+            questRewardText = "ì‹ ë„ì‹œ LV+1, ì²­ë…„ ë¯¼ì‹¬ +4, ê¸°ì—… ë¯¼ì‹¬ +5",
+            questRiskText = "ìê¸ˆ -40",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.AffinitySumAndMoneyOnce,
@@ -140,15 +140,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { moneyChange = -40f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 3: ±¤¿ª ¹°·ù ¼¾ÅÍ ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 3: ê´‘ì—­ ë¬¼ë¥˜ ì„¼í„° â”€â”€
         new QuestDefinition
         {
             questId = 3,
-            questTitle = "±¤¿ª ¹°·ù ¼¾ÅÍ",
-            questDesc = "³óÃÌÀÇ À¯ÈŞ ºÎÁö¸¦ Ã·´Ü ¹°·ù °ÅÁ¡À¸·Î ÀüÈ¯ÇØ¾ß ÇÕ´Ï´Ù. ±â¾÷µéÀº ÁØºñ°¡ µÇ¾ú½À´Ï´Ù.\nÁÖ¹Î¸¸ ¼³µæÇÏ½Ê½Ã¿À.",
-            questGoalText = "±â¾÷, ³ë³â ¹Î½É °¢°¢ 3 ÀÌ»ó 2ÅÏ ¿¬¼Ó À¯Áö",
-            questRewardText = "³óÃÌ LV+1, Ã»³â ¹Î½É +3, ±â¾÷ ¹Î½É +3",
-            questRiskText = "³ë³â ¹Î½É -3",
+            questTitle = "ê´‘ì—­ ë¬¼ë¥˜ ì„¼í„°",
+            questDesc = "ë†ì´Œì˜ ìœ íœ´ ë¶€ì§€ë¥¼ ì²¨ë‹¨ ë¬¼ë¥˜ ê±°ì ìœ¼ë¡œ ì „í™˜í•´ì•¼ í•©ë‹ˆë‹¤. ê¸°ì—…ë“¤ì€ ì¤€ë¹„ê°€ ë˜ì—ˆìŠµë‹ˆë‹¤.\nì£¼ë¯¼ë§Œ ì„¤ë“í•˜ì‹­ì‹œì˜¤.",
+            questGoalText = "ê¸°ì—…, ë…¸ë…„ ë¯¼ì‹¬ ê°ê° 3 ì´ìƒ 2í„´ ì—°ì† ìœ ì§€",
+            questRewardText = "ë†ì´Œ LV+1, ì²­ë…„ ë¯¼ì‹¬ +3, ê¸°ì—… ë¯¼ì‹¬ +3",
+            questRiskText = "ë…¸ë…„ ë¯¼ì‹¬ -3",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.MultiAffinityForConsecutiveTurns,
@@ -160,15 +160,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { seniorAffinityChange = -3f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 4: Ã»³â ¾È½É ÁÖÅÃ °ø±Ş ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 4: ì²­ë…„ ì•ˆì‹¬ ì£¼íƒ ê³µê¸‰ â”€â”€
         new QuestDefinition
         {
             questId = 4,
-            questTitle = "Ã»³â ¾È½É ÁÖÅÃ °ø±Ş",
-            questDesc = "³ôÀº Áı°ª¿¡ Ã»³âµéÀÌ Àı¸ÁÇÏ°í ÀÖ½À´Ï´Ù.\n¿ª¼¼±Ç ºÎÁö¿¡ Àú·ÅÇÑ ÁÖÅÃÀ» ´ë·® °ø±ŞÇØ Èñ¸ÁÀ» Áà¾ß ÇÕ´Ï´Ù.",
-            questGoalText = "2ÅÏ ¿¬¼Ó Ã»³â ¹Î½É 5 ÀÌ»ó AND ÀÚ±İ 40 ÀÌ»ó À¯Áö",
-            questRewardText = "Ã»³â ¹Î½É +8",
-            questRiskText = "ÀÚ±İ -30, ³ë³â ¹Î½É -2, ±â¾÷ ¹Î½É -2",
+            questTitle = "ì²­ë…„ ì•ˆì‹¬ ì£¼íƒ ê³µê¸‰",
+            questDesc = "ë†’ì€ ì§‘ê°’ì— ì²­ë…„ë“¤ì´ ì ˆë§í•˜ê³  ìˆìŠµë‹ˆë‹¤.\nì—­ì„¸ê¶Œ ë¶€ì§€ì— ì €ë ´í•œ ì£¼íƒì„ ëŒ€ëŸ‰ ê³µê¸‰í•´ í¬ë§ì„ ì¤˜ì•¼ í•©ë‹ˆë‹¤.",
+            questGoalText = "2í„´ ì—°ì† ì²­ë…„ ë¯¼ì‹¬ 5 ì´ìƒ AND ìê¸ˆ 40 ì´ìƒ ìœ ì§€",
+            questRewardText = "ì²­ë…„ ë¯¼ì‹¬ +8",
+            questRiskText = "ìê¸ˆ -30, ë…¸ë…„ ë¯¼ì‹¬ -2, ê¸°ì—… ë¯¼ì‹¬ -2",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.SingleAffinityAndMoneyForConsecutiveTurns,
@@ -181,15 +181,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { moneyChange = -30f, seniorAffinityChange = -2f, corpAffinityChange = -2f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 5: ¾î¸£½Å ¹«»ó ±³Åë ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 5: ì–´ë¥´ì‹  ë¬´ìƒ êµí†µ â”€â”€
         new QuestDefinition
         {
             questId = 5,
-            questTitle = "¾î¸£½Å ¹«»ó ±³Åë",
-            questDesc = "³ªÀÌ°¡ µé¾ú´Ù°í ÀÌµ¿±Ç±îÁö Á¦ÇÑ¹Ş¾Æ¼± ¾È µË´Ï´Ù.\n¹ö½º ¹«»ó ÀÌ¿ëÀº ³ë³âÃşÀÇ °¡Àå °£ÀıÇÑ ¼÷¿øÀÔ´Ï´Ù.",
-            questGoalText = "Äù½ºÆ® ±â°£ ³» ³ë³â Á¤Ã¥ 3È¸ ¼±ÅÃ",
-            questRewardText = "³ë³â ¹Î½É +10",
-            questRiskText = "ÀÚ±İ -25, Ã»³â ¹Î½É -3",
+            questTitle = "ì–´ë¥´ì‹  ë¬´ìƒ êµí†µ",
+            questDesc = "ë‚˜ì´ê°€ ë“¤ì—ˆë‹¤ê³  ì´ë™ê¶Œê¹Œì§€ ì œí•œë°›ì•„ì„  ì•ˆ ë©ë‹ˆë‹¤.\në²„ìŠ¤ ë¬´ìƒ ì´ìš©ì€ ë…¸ë…„ì¸µì˜ ê°€ì¥ ê°„ì ˆí•œ ìˆ™ì›ì…ë‹ˆë‹¤.",
+            questGoalText = "í€˜ìŠ¤íŠ¸ ê¸°ê°„ ë‚´ ë…¸ë…„ ì •ì±… 3íšŒ ì„ íƒ",
+            questRewardText = "ë…¸ë…„ ë¯¼ì‹¬ +10",
+            questRiskText = "ìê¸ˆ -25, ì²­ë…„ ë¯¼ì‹¬ -3",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.PolicyCountWithinTurns,
@@ -200,15 +200,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { moneyChange = -25f, youthAffinityChange = -3f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 6: »ê¾÷´ÜÁö ±ÔÁ¦ ¿ÏÈ­ ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 6: ì‚°ì—…ë‹¨ì§€ ê·œì œ ì™„í™” â”€â”€
         new QuestDefinition
         {
             questId = 6,
-            questTitle = "»ê¾÷´ÜÁö ±ÔÁ¦ ¿ÏÈ­",
-            questDesc = "°úµµÇÑ È¯°æ ±ÔÁ¦°¡ ±â¾÷ÀÇ ¹ß¸ñÀ» Àâ°í ÀÖ½À´Ï´Ù.\n±ÔÁ¦¸¦ Ç®¾î¾ß ÅõÀÚ°¡ »ì¾Æ³ª°í ¼¼¼ö°¡ È®º¸µË´Ï´Ù.",
-            questGoalText = "2ÅÏ ¿¬¼Ó ±â¾÷ ¹Î½É 5 ÀÌ»ó À¯Áö",
-            questRewardText = "±â¾÷ ¹Î½É +7",
-            questRiskText = "Ã»³â ¹Î½É -3, ³ë³â ¹Î½É -3",
+            questTitle = "ì‚°ì—…ë‹¨ì§€ ê·œì œ ì™„í™”",
+            questDesc = "ê³¼ë„í•œ í™˜ê²½ ê·œì œê°€ ê¸°ì—…ì˜ ë°œëª©ì„ ì¡ê³  ìˆìŠµë‹ˆë‹¤.\nê·œì œë¥¼ í’€ì–´ì•¼ íˆ¬ìê°€ ì‚´ì•„ë‚˜ê³  ì„¸ìˆ˜ê°€ í™•ë³´ë©ë‹ˆë‹¤.",
+            questGoalText = "2í„´ ì—°ì† ê¸°ì—… ë¯¼ì‹¬ 5 ì´ìƒ ìœ ì§€",
+            questRewardText = "ê¸°ì—… ë¯¼ì‹¬ +7",
+            questRiskText = "ì²­ë…„ ë¯¼ì‹¬ -3, ë…¸ë…„ ë¯¼ì‹¬ -3",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.SingleAffinityForConsecutiveTurns,
@@ -220,15 +220,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { youthAffinityChange = -3f, seniorAffinityChange = -3f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 7: Ã»³â ÀÚ»ê Çü¼º Áö¿ø ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 7: ì²­ë…„ ìì‚° í˜•ì„± ì§€ì› â”€â”€
         new QuestDefinition
         {
             questId = 7,
-            questTitle = "Ã»³â ÀÚ»ê Çü¼º Áö¿ø",
-            questDesc = "¿­½ÉÈ÷ ÀÏÇØµµ ¸ñµ· ¸¶·ÃÀÌ Èûµç ½Ã´ëÀÔ´Ï´Ù.\n½Ã ¿¹»êÀ¸·Î Ã»³âµéÀÇ ÀúÃà¿¡ ÈûÀ» º¸ÅÂÁÖ½Ê½Ã¿À.",
-            questGoalText = "Äù½ºÆ® ±â°£ ³» Ã»³â Á¤Ã¥ 3È¸ ¼±ÅÃ",
-            questRewardText = "Ã»³â ¹Î½É +8",
-            questRiskText = "ÀÚ±İ -40, ³ë³â ¹Î½É -2",
+            questTitle = "ì²­ë…„ ìì‚° í˜•ì„± ì§€ì›",
+            questDesc = "ì—´ì‹¬íˆ ì¼í•´ë„ ëª©ëˆ ë§ˆë ¨ì´ í˜ë“  ì‹œëŒ€ì…ë‹ˆë‹¤.\nì‹œ ì˜ˆì‚°ìœ¼ë¡œ ì²­ë…„ë“¤ì˜ ì €ì¶•ì— í˜ì„ ë³´íƒœì£¼ì‹­ì‹œì˜¤.",
+            questGoalText = "í€˜ìŠ¤íŠ¸ ê¸°ê°„ ë‚´ ì²­ë…„ ì •ì±… 3íšŒ ì„ íƒ",
+            questRewardText = "ì²­ë…„ ë¯¼ì‹¬ +8",
+            questRiskText = "ìê¸ˆ -40, ë…¸ë…„ ë¯¼ì‹¬ -2",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.PolicyCountWithinTurns,
@@ -239,15 +239,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { moneyChange = -40f, seniorAffinityChange = -2f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 8: Çö´ë½Ä ³ëÀÎ º¹Áö°ü ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 8: í˜„ëŒ€ì‹ ë…¸ì¸ ë³µì§€ê´€ â”€â”€
         new QuestDefinition
         {
             questId = 8,
-            questTitle = "Çö´ë½Ä ³ëÀÎ º¹Áö°ü",
-            questDesc = "°¥ °÷ ¾ø´Â ³ëÀÎµéÀÌ ´Ã°í ÀÖ½À´Ï´Ù.\nÃÖ½Å ½Ã¼³À» °®Ãá º¹Áö °ÅÁ¡À» È®ÃæÇØ ³ëÈÄÀÇ ÁúÀ» ³ô¿©ÁÖ½Ê½Ã¿À.",
-            questGoalText = "2ÅÏ ¿¬¼Ó ³ë³â ¹Î½É 5 ÀÌ»ó À¯Áö",
-            questRewardText = "³ë³â ¹Î½É +10",
-            questRiskText = "ÀÚ±İ -35, Ã»³â ¹Î½É -3",
+            questTitle = "í˜„ëŒ€ì‹ ë…¸ì¸ ë³µì§€ê´€",
+            questDesc = "ê°ˆ ê³³ ì—†ëŠ” ë…¸ì¸ë“¤ì´ ëŠ˜ê³  ìˆìŠµë‹ˆë‹¤.\nìµœì‹  ì‹œì„¤ì„ ê°–ì¶˜ ë³µì§€ ê±°ì ì„ í™•ì¶©í•´ ë…¸í›„ì˜ ì§ˆì„ ë†’ì—¬ì£¼ì‹­ì‹œì˜¤.",
+            questGoalText = "2í„´ ì—°ì† ë…¸ë…„ ë¯¼ì‹¬ 5 ì´ìƒ ìœ ì§€",
+            questRewardText = "ë…¸ë…„ ë¯¼ì‹¬ +10",
+            questRiskText = "ìê¸ˆ -35, ì²­ë…„ ë¯¼ì‹¬ -3",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.SingleAffinityForConsecutiveTurns,
@@ -259,15 +259,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { moneyChange = -35f, youthAffinityChange = -3f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 9: ¾²·¹±â ¼Ò°¢Àå °Ç¸³ ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 9: ì“°ë ˆê¸° ì†Œê°ì¥ ê±´ë¦½ â”€â”€
         new QuestDefinition
         {
             questId = 9,
-            questTitle = "¾²·¹±â ¼Ò°¢Àå °Ç¸³",
-            questDesc = "Ã³¸® ½Ã¼³ Æ÷È­·Î µµ½Ã°¡ ¾²·¹±â¿¡ ¹¯Èú À§±âÀÔ´Ï´Ù.\n°­·ÂÇÑ ÇàÁ¤·ÂÀ¸·Î ¼Ò°¢Àå ÀÔÁö¸¦ È®Á¤ÇØ¾ß ÇÕ´Ï´Ù.",
-            questGoalText = "Äù½ºÆ® ±â°£ ³» ±â¾÷ Á¤Ã¥ 3È¸ ¼±ÅÃ",
-            questRewardText = "±â¾÷ ¹Î½É +5, ÀÚ±İ +50",
-            questRiskText = "Ã»³â/³ë³â ¹Î½É °¢ -5",
+            questTitle = "ì“°ë ˆê¸° ì†Œê°ì¥ ê±´ë¦½",
+            questDesc = "ì²˜ë¦¬ ì‹œì„¤ í¬í™”ë¡œ ë„ì‹œê°€ ì“°ë ˆê¸°ì— ë¬»í ìœ„ê¸°ì…ë‹ˆë‹¤.\nê°•ë ¥í•œ í–‰ì •ë ¥ìœ¼ë¡œ ì†Œê°ì¥ ì…ì§€ë¥¼ í™•ì •í•´ì•¼ í•©ë‹ˆë‹¤.",
+            questGoalText = "í€˜ìŠ¤íŠ¸ ê¸°ê°„ ë‚´ ê¸°ì—… ì •ì±… 3íšŒ ì„ íƒ",
+            questRewardText = "ê¸°ì—… ë¯¼ì‹¬ +5, ìê¸ˆ +50",
+            questRiskText = "ì²­ë…„/ë…¸ë…„ ë¯¼ì‹¬ ê° -5",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.PolicyCountWithinTurns,
@@ -278,15 +278,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { youthAffinityChange = -5f, seniorAffinityChange = -5f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 10: Áö¹æ °ø±â¾÷ ¹Î¿µÈ­ ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 10: ì§€ë°© ê³µê¸°ì—… ë¯¼ì˜í™” â”€â”€
         new QuestDefinition
         {
             questId = 10,
-            questTitle = "Áö¹æ °ø±â¾÷ ¹Î¿µÈ­",
-            questDesc = "°ø±â¾÷ÀÇ ¹æ¸¸ÇÑ °æ¿µÀÌ ½Ã ÀçÁ¤À» Á»¸Ô°í ÀÖ½À´Ï´Ù.\nÁöºĞ ¸Å°¢À» ÅëÇØ Áï½Ã °¡¿ë ¿¹»êÀ» È®º¸ÇØ¾ß ÇÕ´Ï´Ù.",
-            questGoalText = "3ÅÏ ÀÌ³» ¾È°Ç ¼ö¶ô",
-            questRewardText = "ÀÚ±İ +80",
-            questRiskText = "Ã»³â/³ë³â ¹Î½É °¢ -2",
+            questTitle = "ì§€ë°© ê³µê¸°ì—… ë¯¼ì˜í™”",
+            questDesc = "ê³µê¸°ì—…ì˜ ë°©ë§Œí•œ ê²½ì˜ì´ ì‹œ ì¬ì •ì„ ì¢€ë¨¹ê³  ìˆìŠµë‹ˆë‹¤.\nì§€ë¶„ ë§¤ê°ì„ í†µí•´ ì¦‰ì‹œ ê°€ìš© ì˜ˆì‚°ì„ í™•ë³´í•´ì•¼ í•©ë‹ˆë‹¤.",
+            questGoalText = "3í„´ ì´ë‚´ ì•ˆê±´ ìˆ˜ë½",
+            questRewardText = "ìê¸ˆ +80",
+            questRiskText = "ì²­ë…„/ë…¸ë…„ ë¯¼ì‹¬ ê° -2",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.AcceptProposalWithinTurns,
@@ -296,15 +296,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { youthAffinityChange = -2f, seniorAffinityChange = -2f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 11: ±×¸°º§Æ® ´ë±Ô¸ğ ÇØÁ¦ ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 11: ê·¸ë¦°ë²¨íŠ¸ ëŒ€ê·œëª¨ í•´ì œ â”€â”€
         new QuestDefinition
         {
             questId = 11,
-            questTitle = "±×¸°º§Æ® ´ë±Ô¸ğ ÇØÁ¦",
-            questDesc = "±İ°í°¡ ºñ¾ú½À´Ï´Ù. º¸Á¸ °¡Ä¡°¡ ³·Àº ±×¸°º§Æ®¸¦ ÇØÁ¦ÇÏ°í ÅÃÁö·Î ºĞ¾çÇØ ¸·´ëÇÑ Àç¿øÀ» ¸¶·ÃÇÏ½Ê½Ã¿À.",
-            questGoalText = "3ÅÏ ÀÌ³» ¾È°Ç ¼ö¶ô",
-            questRewardText = "ÀÚ±İ +80, ±â¾÷ ¹Î½É +2",
-            questRiskText = "ÀüÃ¼ ¹ßÀüµµ -10",
+            questTitle = "ê·¸ë¦°ë²¨íŠ¸ ëŒ€ê·œëª¨ í•´ì œ",
+            questDesc = "ê¸ˆê³ ê°€ ë¹„ì—ˆìŠµë‹ˆë‹¤. ë³´ì¡´ ê°€ì¹˜ê°€ ë‚®ì€ ê·¸ë¦°ë²¨íŠ¸ë¥¼ í•´ì œí•˜ê³  íƒì§€ë¡œ ë¶„ì–‘í•´ ë§‰ëŒ€í•œ ì¬ì›ì„ ë§ˆë ¨í•˜ì‹­ì‹œì˜¤.",
+            questGoalText = "3í„´ ì´ë‚´ ì•ˆê±´ ìˆ˜ë½",
+            questRewardText = "ìê¸ˆ +80, ê¸°ì—… ë¯¼ì‹¬ +2",
+            questRiskText = "ì „ì²´ ë°œì „ë„ -10",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.AcceptProposalWithinTurns,
@@ -314,15 +314,15 @@ public static class QuestDatabase
             risk  = new QuestEffectData { allDevChange = -10f }
         },
 
-        // ¦¡¦¡ Äù½ºÆ® 12: ºòµ¥ÀÌÅÍ ¼¾ÅÍ ±¸Ãà ¦¡¦¡
+        // â”€â”€ í€˜ìŠ¤íŠ¸ 12: ë¹…ë°ì´í„° ì„¼í„° êµ¬ì¶• â”€â”€
         new QuestDefinition
         {
             questId = 12,
-            questTitle = "ºòµ¥ÀÌÅÍ ¼¾ÅÍ ±¸Ãà",
-            questDesc = "µ¥ÀÌÅÍ ±â¹İÀÇ °úÇĞÀû ÇàÁ¤À» ½ÇÇöÇØ¾ß ÇÕ´Ï´Ù.\n½Ã Àü¿ªÀÇ Á¤º¸¸¦ ÅëÇÕ °ü¸®ÇÒ ¼­¹ö½ÇÀÌ ÇÊ¿äÇÕ´Ï´Ù.",
-            questGoalText = "3ÅÏ ¿¬¼Ó ÀÚ±İ 50 ÀÌ»ó À¯Áö",
-            questRewardText = "5ÅÏ°£ AI ÈùÆ® È°¼ºÈ­",
-            questRiskText = "ÀÚ±İ -50",
+            questTitle = "ë¹…ë°ì´í„° ì„¼í„° êµ¬ì¶•",
+            questDesc = "ë°ì´í„° ê¸°ë°˜ì˜ ê³¼í•™ì  í–‰ì •ì„ ì‹¤í˜„í•´ì•¼ í•©ë‹ˆë‹¤.\nì‹œ ì „ì—­ì˜ ì •ë³´ë¥¼ í†µí•© ê´€ë¦¬í•  ì„œë²„ì‹¤ì´ í•„ìš”í•©ë‹ˆë‹¤.",
+            questGoalText = "3í„´ ì—°ì† ìê¸ˆ 50 ì´ìƒ ìœ ì§€",
+            questRewardText = "5í„´ê°„ AI íŒíŠ¸ í™œì„±í™”",
+            questRiskText = "ìê¸ˆ -50",
             goal = new QuestGoalData
             {
                 goalType = QuestGoalType.MoneyAboveForConsecutiveTurns,

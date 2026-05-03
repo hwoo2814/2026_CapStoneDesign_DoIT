@@ -5,11 +5,11 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    public float money; //µ· °ÔÀÌÁö
-    public float youthAffinity, seniorAffinity, corpAffinity; //°¢ ¹Î½É µ¥ÀÌÅÍ
-    public float devUniv, devSilver, devIndustry, devHouse; //°¢ Áö¿ª ¹ßÀüµµ
+    public float money; //ëˆ ê²Œì´ì§€
+    public float youthAffinity, seniorAffinity, corpAffinity; //ê° ë¯¼ì‹¬ ë°ì´í„°
+    public float devUniv, devSilver, devIndustry, devHouse; //ê° ì§€ì—­ ë°œì „ë„
 
-    // Áö¿ª ºñÈ°¼ºÈ­ ±âÁØ ·¹º§ (ÀÓ½Ã °ª : 1 = LV1)
+    // ì§€ì—­ ë¹„í™œì„±í™” ê¸°ì¤€ ë ˆë²¨ (ì„ì‹œ ê°’ : 1 = LV1)
     public int DEACTIVATE_LEVEL_DATA = 1;
 
     public bool isUnivDeactivated = false;
@@ -17,8 +17,8 @@ public class ScoreManager : MonoBehaviour
     public bool isIndustryDeactivated = false;
     public bool isHouseDeactivated = false;
 
-    public float totalUnivScore, totalSilverScore, totalIndustryScore, totalHouseScore; //±¸¿ªº° ´©Àû Á¡¼ö
-    public float totalScore; // ÃÑ ´©Àû Á¡¼ö
+    public float totalUnivScore, totalSilverScore, totalIndustryScore, totalHouseScore; //êµ¬ì—­ë³„ ëˆ„ì  ì ìˆ˜
+    public float totalScore; // ì´ ëˆ„ì  ì ìˆ˜
 
     void Awake()
     {
@@ -26,18 +26,18 @@ public class ScoreManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    //ÃÊ±â µ¥ÀÌÅÍ°ªÀ¸·Î ¼ÂÆÃ
+    //ì´ˆê¸° ë°ì´í„°ê°’ìœ¼ë¡œ ì…‹íŒ…
     public void InitData()
     {
         money = GameManager.Instance.START_MONEY;
         youthAffinity = GameManager.Instance.START_AFFINITY;
         seniorAffinity = GameManager.Instance.START_AFFINITY;
         corpAffinity = GameManager.Instance.START_AFFINITY;
-        
-        // °¢ Á¡¼ö 0À¸·Î ÃÊ±âÈ­
-        devUniv = 0f; 
-        devSilver = 0f; 
-        devIndustry = 0f; 
+
+        // ê° ì ìˆ˜ 0ìœ¼ë¡œ ì´ˆê¸°í™”
+        devUniv = 0f;
+        devSilver = 0f;
+        devIndustry = 0f;
         devHouse = 0f;
 
         isUnivDeactivated = false;
@@ -53,18 +53,18 @@ public class ScoreManager : MonoBehaviour
         totalScore = 0f;
     }
 
-    //µ· °è»ê ÇÔ¼ö(amount°¡ µé¾î¿Í¼­ ClampÇÔ¼ö·Î °è»ê, °è»ê °á°ú¸¦ 0°ú 100 »çÀÌ·Î Á¦ÇÑ)
+    //ëˆ ê³„ì‚° í•¨ìˆ˜(amountê°€ ë“¤ì–´ì™€ì„œ Clampí•¨ìˆ˜ë¡œ ê³„ì‚°, ê³„ì‚° ê²°ê³¼ë¥¼ 0ê³¼ 100 ì‚¬ì´ë¡œ ì œí•œ)
     public void ModifyMoney(float amount)
     {
         money = Mathf.Clamp(money + amount, 0f, GameManager.Instance.MAX_MONEY);
     }
-    
-    //¹Î½É °è»ê ÇÔ¼ö(°¢°¢ÀÇ ¹Î½É ClampÇÔ¼ö·Î °è»ê, °è»ê °á°ú¸¦ 0°ú 10 »çÀÌ·Î Á¦ÇÑ)
+
+    //ë¯¼ì‹¬ ê³„ì‚° í•¨ìˆ˜(ê°ê°ì˜ ë¯¼ì‹¬ Clampí•¨ìˆ˜ë¡œ ê³„ì‚°, ê³„ì‚° ê²°ê³¼ë¥¼ 0ê³¼ 10 ì‚¬ì´ë¡œ ì œí•œ)
     public void ModifyAffinity(float youth, float senior, float corp)
     {
         int min = GameManager.Instance.MIN_AFFINITY; // 0
         int max = GameManager.Instance.MAX_AFFINITY; // 10
-        
+
         youthAffinity = Mathf.Clamp(youthAffinity + youth, min, max);
         seniorAffinity = Mathf.Clamp(seniorAffinity + senior, min, max);
         corpAffinity = Mathf.Clamp(corpAffinity + corp, min, max);
@@ -72,20 +72,20 @@ public class ScoreManager : MonoBehaviour
         UIManager.Instance.UpdateAffinityUI();
     }
 
-    //¹ßÀüµµ °è»ê ÇÔ¼ö
+    //ë°œì „ë„ ê³„ì‚° í•¨ìˆ˜
     public void ModifyDev(float univ, float silver, float industry, float house)
     {
-        // µ¹¹ß ÀÌº¥Æ®·Î ¹ßÀüµµ°¡ À½¼ö°¡ µÉ ¼ö ÀÖ¾î Mathf.Max(µÎ °ª Áß Å« °ªÀ» ¹İÈ¯)À» »ç¿ëÇØ À½¼ö ¹æÁö
+        // ëŒë°œ ì´ë²¤íŠ¸ë¡œ ë°œì „ë„ê°€ ìŒìˆ˜ê°€ ë  ìˆ˜ ìˆì–´ Mathf.Max(ë‘ ê°’ ì¤‘ í° ê°’ì„ ë°˜í™˜)ì„ ì‚¬ìš©í•´ ìŒìˆ˜ ë°©ì§€
         devUniv = Mathf.Max(0f, devUniv + univ);
         devSilver = Mathf.Max(0f, devSilver + silver);
         devIndustry = Mathf.Max(0f, devIndustry + industry);
         devHouse = Mathf.Max(0f, devHouse + house);
     }
 
-        // Æ¯Á¤ Áö¿ªÀÇ ¹ßÀüµµ ·¹º§À» levelChange ¸¸Å­ ¿Ã¸®´Â ÇÔ¼ö
-    // QuestManager.ApplyEffect() ¿¡¼­ Äù½ºÆ® º¸»ó Àû¿ë ½Ã È£ÃâµÊ
-    // regionIndex : 0=½Åµµ½Ã(devUniv), 1=³óÃÌ(devSilver), 2=Áö¹æ(devIndustry), 3=¼öµµ±Ç(devHouse)
-    // levelChange : ¿Ã¸± ·¹º§ ¼ö (º¸Åë 1)
+        // íŠ¹ì • ì§€ì—­ì˜ ë°œì „ë„ ë ˆë²¨ì„ levelChange ë§Œí¼ ì˜¬ë¦¬ëŠ” í•¨ìˆ˜
+    // QuestManager.ApplyEffect() ì—ì„œ í€˜ìŠ¤íŠ¸ ë³´ìƒ ì ìš© ì‹œ í˜¸ì¶œë¨
+    // regionIndex : 0=ì‹ ë„ì‹œ(devUniv), 1=ë†ì´Œ(devSilver), 2=ì§€ë°©(devIndustry), 3=ìˆ˜ë„ê¶Œ(devHouse)
+    // levelChange : ì˜¬ë¦´ ë ˆë²¨ ìˆ˜ (ë³´í†µ 1)
     public void IncreaseDevLevel(int regionIndex, int levelChange)
     {
         for (int i = 0; i < levelChange; i++)
@@ -101,8 +101,8 @@ public class ScoreManager : MonoBehaviour
         UIManager.Instance.UpdateRegionImages();
     }
 
-    // ¹ßÀüµµ °ªÀ» ÇöÀç ·¹º§ÀÇ ´ÙÀ½ ·¹º§ ÃÖ¼Ú°ªÀ¸·Î ¿Ã·Á ¹İÈ¯ÇÏ´Â ÇïÆÛ ÇÔ¼ö
-    // LV1(0~19) ¡æ LV2 ÃÖ¼Ú°ª(20), LV2(20~49) ¡æ LV3 ÃÖ¼Ú°ª(50), LV3 ÀÌ»óÀº º¯È­ ¾øÀ½
+    // ë°œì „ë„ ê°’ì„ í˜„ì¬ ë ˆë²¨ì˜ ë‹¤ìŒ ë ˆë²¨ ìµœì†Ÿê°’ìœ¼ë¡œ ì˜¬ë ¤ ë°˜í™˜í•˜ëŠ” í—¬í¼ í•¨ìˆ˜
+    // LV1(0~19) â†’ LV2 ìµœì†Ÿê°’(20), LV2(20~49) â†’ LV3 ìµœì†Ÿê°’(50), LV3 ì´ìƒì€ ë³€í™” ì—†ìŒ
     private float BumpToNextLevel(float dev)
     {
         if (dev < 20f) return 20f;
@@ -110,27 +110,27 @@ public class ScoreManager : MonoBehaviour
         return dev;
     }
 
-    //ÇØ´ç ÅÏÀÇ È¹µæ Á¡¼ö¸¦ °è»êÇÏ¿© ´©Àû ÃÑÁ¡¿¡ ´õÇÏ´Â ÇÔ¼ö
+    //í•´ë‹¹ í„´ì˜ íšë“ ì ìˆ˜ë¥¼ ê³„ì‚°í•˜ì—¬ ëˆ„ì  ì´ì ì— ë”í•˜ëŠ” í•¨ìˆ˜
     public void CalculateTurnScore()
     {
-        // Áö¿ªÀÌ ºñÈ°¼ºÈ­µÇ¾ú´ÂÁö È®ÀÎÇÏ°í true¸é 0À¸·Î ¹İÈ¯
+        // ì§€ì—­ì´ ë¹„í™œì„±í™”ë˜ì—ˆëŠ”ì§€ í™•ì¸í•˜ê³  trueë©´ 0ìœ¼ë¡œ ë°˜í™˜
         float scoreUniv = isUnivDeactivated ? 0f : CalculateRegionScore(devUniv, 0.7f, 0.1f, 0.2f);
         float scoreSilver = isSilverDeactivated ? 0f : CalculateRegionScore(devSilver,0.1f, 0.8f, 0.1f);
         float scoreIndustry = isIndustryDeactivated ? 0f : CalculateRegionScore(devIndustry, 0.2f, 0.1f, 0.7f);
         float scoreHouse = isHouseDeactivated ? 0f : CalculateRegionScore(devHouse, 0.3f, 0.4f, 0.3f);
 
-        // ÅÏ¸¶´Ù ±¸¿ªº° Á¡¼ö¸¦ ´õÇÔ
+        // í„´ë§ˆë‹¤ êµ¬ì—­ë³„ ì ìˆ˜ë¥¼ ë”í•¨
         totalUnivScore += scoreUniv;
         totalSilverScore += scoreSilver;
         totalIndustryScore += scoreIndustry;
         totalHouseScore += scoreHouse;
 
-        // ÃÖÁ¾ Á¡¼ö´Â ÅÏ´ç Á¡¼öÀÇ ÃÑÇÕ
+        // ìµœì¢… ì ìˆ˜ëŠ” í„´ë‹¹ ì ìˆ˜ì˜ ì´í•©
         float turnTotalScore = scoreUniv + scoreSilver + scoreIndustry + scoreHouse;
         totalScore += turnTotalScore;
     }
 
-    //¹ßÀüµµ °ªÀ» ±â¹İÀ¸·Î Áö¿ª ·¹º§(1~3)À» ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+    //ë°œì „ë„ ê°’ì„ ê¸°ë°˜ìœ¼ë¡œ ì§€ì—­ ë ˆë²¨(1~3)ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
     private int GetDevLevel(float dev)
     {
         if (dev >= 50f) return 3;
@@ -138,97 +138,97 @@ public class ScoreManager : MonoBehaviour
         return 1;
     }
 
-    // ÇöÀç LV1 »óÅÂÀÎ Áö¿ª ÀÌ¸§ ¸ñ·ÏÀ» ¹İÈ¯
-    // GameManagerÀÇ °æ°í(15~19ÅÏ) ¹× ¼Ò¸ê ¼±º°(20ÅÏ)¿¡¼­ °øÅëÀ¸·Î »ç¿ë
+    // í˜„ì¬ LV1 ìƒíƒœì¸ ì§€ì—­ ì´ë¦„ ëª©ë¡ì„ ë°˜í™˜
+    // GameManagerì˜ ê²½ê³ (15~19í„´) ë° ì†Œë©¸ ì„ ë³„(20í„´)ì—ì„œ ê³µí†µìœ¼ë¡œ ì‚¬ìš©
     public List<string> GetLV1Regions()
     {
         List<string> lv1Regions = new List<string>();
 
         if (!isUnivDeactivated && GetDevLevel(devUniv) <= DEACTIVATE_LEVEL_DATA)
-            lv1Regions.Add("½Åµµ½Ã");
+            lv1Regions.Add("ì‹ ë„ì‹œ");
         if (!isSilverDeactivated && GetDevLevel(devSilver) <= DEACTIVATE_LEVEL_DATA)
-            lv1Regions.Add("³óÃÌ");
+            lv1Regions.Add("ë†ì´Œ");
         if (!isIndustryDeactivated && GetDevLevel(devIndustry) <= DEACTIVATE_LEVEL_DATA)
-            lv1Regions.Add("Áö¹æ");
+            lv1Regions.Add("ì§€ë°©");
         if (!isHouseDeactivated && GetDevLevel(devHouse) <= DEACTIVATE_LEVEL_DATA)
-            lv1Regions.Add("¼öµµ±Ç");
+            lv1Regions.Add("ìˆ˜ë„ê¶Œ");
 
         return lv1Regions;
     }
 
-    // 20ÅÏ Á¾·á ½ÃÁ¡¿¡ LV1 Áö¿ª Áß ·£´ı 1°³¸¸ ¼Ò¸ê½ÃÅ°´Â ÇÔ¼ö
-    // GameManager.OnPlayerActionCompleted()¿¡¼­ CURRENT_TURN == 20ÀÏ ¶§ È£Ãâ
+    // 20í„´ ì¢…ë£Œ ì‹œì ì— LV1 ì§€ì—­ ì¤‘ ëœë¤ 1ê°œë§Œ ì†Œë©¸ì‹œí‚¤ëŠ” í•¨ìˆ˜
+    // GameManager.OnPlayerActionCompleted()ì—ì„œ CURRENT_TURN == 20ì¼ ë•Œ í˜¸ì¶œ
     public void CheckDeactivationAtTurn20()
     {
         List<string> lv1Regions = GetLV1Regions();
 
-        // LV1 Áö¿ªÀÌ ÇÏ³ªµµ ¾øÀ¸¸é ¼Ò¸ê ¾øÀÌ Á¾·á
+        // LV1 ì§€ì—­ì´ í•˜ë‚˜ë„ ì—†ìœ¼ë©´ ì†Œë©¸ ì—†ì´ ì¢…ë£Œ
         if (lv1Regions.Count == 0) return;
 
-        // ¿©·¯ °³ÀÇ LV1 Áö¿ª Áß ·£´ıÀ¸·Î 1°³¸¸ ¼±ÅÃ
+        // ì—¬ëŸ¬ ê°œì˜ LV1 ì§€ì—­ ì¤‘ ëœë¤ìœ¼ë¡œ 1ê°œë§Œ ì„ íƒ
         int idx = Random.Range(0, lv1Regions.Count);
         string targetRegion = lv1Regions[idx];
 
         DeactivateSingleRegion(targetRegion);
     }
 
-    // Áö¿ª ÀÌ¸§À» ¹Ş¾Æ ÇØ´ç Áö¿ª 1°³¸¸ ¼Ò¸ê Ã³¸®ÇÏ´Â ÇÔ¼ö
-    // CheckDeactivationAtTurn20()¿¡¼­ ¼±º°µÈ 1°³ Áö¿ª¿¡¸¸ È£ÃâµÊ
+    // ì§€ì—­ ì´ë¦„ì„ ë°›ì•„ í•´ë‹¹ ì§€ì—­ 1ê°œë§Œ ì†Œë©¸ ì²˜ë¦¬í•˜ëŠ” í•¨ìˆ˜
+    // CheckDeactivationAtTurn20()ì—ì„œ ì„ ë³„ëœ 1ê°œ ì§€ì—­ì—ë§Œ í˜¸ì¶œë¨
     private void DeactivateSingleRegion(string regionName)
     {
-        if (regionName == "½Åµµ½Ã") isUnivDeactivated = true;
-        else if (regionName == "³óÃÌ") isSilverDeactivated = true;
-        else if (regionName == "Áö¹æ") isIndustryDeactivated = true;
-        else if (regionName == "¼öµµ±Ç") isHouseDeactivated = true;
+        if (regionName == "ì‹ ë„ì‹œ") isUnivDeactivated = true;
+        else if (regionName == "ë†ì´Œ") isSilverDeactivated = true;
+        else if (regionName == "ì§€ë°©") isIndustryDeactivated = true;
+        else if (regionName == "ìˆ˜ë„ê¶Œ") isHouseDeactivated = true;
 
         UIManager.Instance.ShowDeactivationNotice(regionName);
         UIManager.Instance.UpdateRegionImages();
     }
-    
-    // °¢ Áö¿ªÀÇ ¹Î½É µ¥ÀÌÅÍ Á¡¼ö °è»ê ÇÔ¼ö
+
+    // ê° ì§€ì—­ì˜ ë¯¼ì‹¬ ë°ì´í„° ì ìˆ˜ ê³„ì‚° í•¨ìˆ˜
     public float CalculateRegionScore(float dev, float wY, float wS, float wC)
     {
         float baseScore = dev * ((youthAffinity * wY) + (seniorAffinity * wS) + (corpAffinity * wC));
         float multiplier = dev >= 50f ? 2.5f : (dev >= 20f ? 1.5f : 1.0f);
-        // Áö¿ª ·¹º§¿¡ µû¸¥ Á¡¼ö ¹èÀ²
-        // ¹ßÀüµµ(dev)°¡ 50 ÀÌ»óÀÌ¸é x2.5 (LV 3)
-        // ¹ßÀüµµ(dev)°¡ 20 ÀÌ»óÀÌ¸é x1.5 (LV 2)
-        // ±× ¿Ü(0~19)´Â x1.0 (LV 1)
+        // ì§€ì—­ ë ˆë²¨ì— ë”°ë¥¸ ì ìˆ˜ ë°°ìœ¨
+        // ë°œì „ë„(dev)ê°€ 50 ì´ìƒì´ë©´ x2.5 (LV 3)
+        // ë°œì „ë„(dev)ê°€ 20 ì´ìƒì´ë©´ x1.5 (LV 2)
+        // ê·¸ ì™¸(0~19)ëŠ” x1.0 (LV 1)
         return baseScore * multiplier;
     }
 
-    //°ÔÀÓÀÌ ³¡³ª ÃÖÁ¾ Á¡¼ö¿¡ µû¸¥ °á°ú¸¦ EndingPanel·Î Ãâ·ÂÇÏ´Â ÇÔ¼ö
+    //ê²Œì„ì´ ëë‚˜ ìµœì¢… ì ìˆ˜ì— ë”°ë¥¸ ê²°ê³¼ë¥¼ EndingPanelë¡œ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
     public void GameEnding()
     {
         string grade = "F";
-        string title = "ÅºÇÙ À§±â";
+        string title = "íƒ„í•µ ìœ„ê¸°";
 
-        if (totalScore >= 12000f) 
-        { 
-            grade = "S"; 
-            title = "Àü¼³ÀûÀÎ ¼º±º";
+        if (totalScore >= 12000f)
+        {
+            grade = "S";
+            title = "ì „ì„¤ì ì¸ ì„±êµ°";
         }
-        else if (totalScore >= 8000f) 
-        { 
-            grade = "A"; 
-            title = "À¯´ÉÇÑ ÇàÁ¤°¡";
+        else if (totalScore >= 8000f)
+        {
+            grade = "A";
+            title = "ìœ ëŠ¥í•œ í–‰ì •ê°€";
         }
-        else if (totalScore >= 5000f) 
-        { 
-            grade = "B"; 
-            title = "¾ÈÁ¤ÀûÀÎ ½ÃÀå";
+        else if (totalScore >= 5000f)
+        {
+            grade = "B";
+            title = "ì•ˆì •ì ì¸ ì‹œì¥";
         }
-        else if (totalScore >= 2000f) 
-        { 
-            grade = "C"; 
-            title = "Æò¹üÇÑ °ü·á";
+        else if (totalScore >= 2000f)
+        {
+            grade = "C";
+            title = "í‰ë²”í•œ ê´€ë£Œ";
         }
-        else if (totalScore >= 500f) 
-        { 
-            grade = "D"; 
-            title = "À§ÅÂ·Î¿î ÃÊº¸";
+        else if (totalScore >= 500f)
+        {
+            grade = "D";
+            title = "ìœ„íƒœë¡œìš´ ì´ˆë³´";
         }
-        // UI·Î º¸ÀÌ°Ô ÇÔ
+        // UIë¡œ ë³´ì´ê²Œ í•¨
         UIManager.Instance.ShowEndingPanel(grade, title, totalScore);
     }
 }

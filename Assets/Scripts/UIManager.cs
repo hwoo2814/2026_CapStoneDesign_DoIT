@@ -7,102 +7,104 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public GameObject optionPanel; // ¿É¼ÇÃ¢ ÆĞ³Î
-    public GameObject emailBtn; // Äù½ºÆ®°¡ ÀÖÀ» ¶§¸¸ È°¼ºÈ­ÇÒ ÀÌ¸ŞÀÏ ¹öÆ°
-    public Image newsButtonImage; // ´º½º ¹öÆ° ÀÌ¹ÌÁö (Äù½ºÆ® ¾Ë¸² ½Ã ±³Ã¼ÇÒ Åä´ë)
-    public Sprite newsDefaultSprite; // ´º½º ¹öÆ° ±âº» ÀÌ¹ÌÁö
-    public Sprite newsQuestAlertSprite; // Äù½ºÆ® »ı¼º ½Ã Ç¥½ÃÇÒ ´º½º ¾Ë¸² ÀÌ¹ÌÁö
-    public GameObject newsBranchPanel; // ´º½º ºê·»Ä¡ ÆĞ³Î
-    public GameObject questPanel; // ÀÌ¸ŞÀÏ(Äù½ºÆ®) ÆĞ³Î
-    public GameObject newsPanel; // ´º½ºÃ¢ ÆĞ³Î
-    public Text ResultProposal; // ¼ö¶ô/°ÅÀı ¹®±¸ ÅØ½ºÆ®
-    public GameObject acceptBtn; // ¾È°Ç ¼ö¶ô ¹öÆ° ¿ÀºêÁ§Æ®
-    public GameObject refuseBtn; // ¾È°Ç °ÅÀı ¹öÆ° ¿ÀºêÁ§Æ®
-    public Button fundingBtn; // ÀÚ±İÀÌ 100ÀÏ¶§ ¹öÆ° ¼±ÅÃÀ» ¸·±âÀ§ÇØ¼­ °¡Á®¿È
-    public Image MoneyBar; // µ· °ÔÀÌÁö ½½¶óÀÌµå
-    public GameObject aiHintPanel; // AI ÈùÆ®¸¦ Ç¥½ÃÇÏ´Â ÆĞ³Î
-    public Text aiHintText; // AI ÈùÆ® ÀÜ¿© ÅÏ ¼ö ÅØ½ºÆ®
-    public Text questTitleText; // Äù½ºÆ® Á¦¸ñ ÅØ½ºÆ®
-    public Text questDescText; // Äù½ºÆ® ¹è°æ ¼³¸í ÅØ½ºÆ®
-    public Text summaryText; // Äù½ºÆ® ¿ä¾à ÅØ½ºÆ®
-    public Text resultProposalText; // Äù½ºÆ® ¼ö¶ô/°ÅÀı ÅØ½ºÆ®
-    public GameObject explainPolicyPanel; //Á¤Ã¥ ¼³¸í ÆĞ³Î
-    public Text policyTitleText; // Á¤Ã¥ ÀÌ¸§ ÅØ½ºÆ®
-    public Text policyDescText; // Á¤Ã¥ ¼³¸í ÅØ½ºÆ®
-    
-    //¹Î½É °ÔÀÌÁö Ç¥ÇöÇÒ Image
-    // Ã»³â ¹Î½É
-    public Image youthBorderImg; 
+    public GameObject optionPanel; // ì˜µì…˜ì°½ íŒ¨ë„
+    public GameObject emailBtn; // í€˜ìŠ¤íŠ¸ê°€ ìˆì„ ë•Œë§Œ í™œì„±í™”í•  ì´ë©”ì¼ ë²„íŠ¼
+    public Image newsButtonImage; // ë‰´ìŠ¤ ë²„íŠ¼ ì´ë¯¸ì§€ (í€˜ìŠ¤íŠ¸ ì•Œë¦¼ ì‹œ êµì²´í•  í† ëŒ€)
+    public Sprite newsDefaultSprite; // ë‰´ìŠ¤ ë²„íŠ¼ ê¸°ë³¸ ì´ë¯¸ì§€
+    public Sprite newsQuestAlertSprite; // í€˜ìŠ¤íŠ¸ ìƒì„± ì‹œ í‘œì‹œí•  ë‰´ìŠ¤ ì•Œë¦¼ ì´ë¯¸ì§€
+    public GameObject newsBranchPanel; // ë‰´ìŠ¤ ë¸Œë Œì¹˜ íŒ¨ë„
+    public GameObject questPanel; // ì´ë©”ì¼(í€˜ìŠ¤íŠ¸) íŒ¨ë„
+    public GameObject newsPanel; // ë‰´ìŠ¤ì°½ íŒ¨ë„
+    // AIë‰´ìŠ¤
+    public Text newsWarningText; // ë‰´ìŠ¤ ê²½ê³  ë¬¸êµ¬ í…ìŠ¤íŠ¸
+    public Text ResultProposal; // ìˆ˜ë½/ê±°ì ˆ ë¬¸êµ¬ í…ìŠ¤íŠ¸
+    public GameObject acceptBtn; // ì•ˆê±´ ìˆ˜ë½ ë²„íŠ¼ ì˜¤ë¸Œì íŠ¸
+    public GameObject refuseBtn; // ì•ˆê±´ ê±°ì ˆ ë²„íŠ¼ ì˜¤ë¸Œì íŠ¸
+    public Button fundingBtn; // ìê¸ˆì´ 100ì¼ë•Œ ë²„íŠ¼ ì„ íƒì„ ë§‰ê¸°ìœ„í•´ì„œ ê°€ì ¸ì˜´
+    public Image MoneyBar; // ëˆ ê²Œì´ì§€ ìŠ¬ë¼ì´ë“œ
+    public GameObject aiHintPanel; // AI íŒíŠ¸ë¥¼ í‘œì‹œí•˜ëŠ” íŒ¨ë„
+    public Text aiHintText; // AI íŒíŠ¸ ì”ì—¬ í„´ ìˆ˜ í…ìŠ¤íŠ¸
+    public Text questTitleText; // í€˜ìŠ¤íŠ¸ ì œëª© í…ìŠ¤íŠ¸
+    public Text questDescText; // í€˜ìŠ¤íŠ¸ ë°°ê²½ ì„¤ëª… í…ìŠ¤íŠ¸
+    public Text summaryText; // í€˜ìŠ¤íŠ¸ ìš”ì•½ í…ìŠ¤íŠ¸
+    public Text resultProposalText; // í€˜ìŠ¤íŠ¸ ìˆ˜ë½/ê±°ì ˆ í…ìŠ¤íŠ¸
+    public GameObject explainPolicyPanel; //ì •ì±… ì„¤ëª… íŒ¨ë„
+    public Text policyTitleText; // ì •ì±… ì´ë¦„ í…ìŠ¤íŠ¸
+    public Text policyDescText; // ì •ì±… ì„¤ëª… í…ìŠ¤íŠ¸
+
+    //ë¯¼ì‹¬ ê²Œì´ì§€ í‘œí˜„í•  Image
+    // ì²­ë…„ ë¯¼ì‹¬
+    public Image youthBorderImg;
     public Image youthFillImg;
-    // ³ë³â ¹Î½É
+    // ë…¸ë…„ ë¯¼ì‹¬
     public Image seniorBorderImg;
     public Image seniorFillImg;
-    // ±â¾÷ ¹Î½É
+    // ê¸°ì—… ë¯¼ì‹¬
     public Image corpBorderImg;
     public Image corpFillImg;
 
-    public Text turnText; // ÇöÀç ÅÏ ÅØ½ºÆ®
-    public Text totalScoreText; // °ÔÀÓ Ã¢¿¡ ¶ç¿ï ÇöÀç ´©ÀûµÈ ÃÑÁ¡ ÅØ½ºÆ®
-    public Text successProbText; // È®·ü ÅØ½ºÆ® º¯¼ö
-    public Text endingTotalScoreText; // ¿£µùÃ¢¿¡ ¶ç¿ï ÃÖÁ¾ Á¡¼ö ÅØ½ºÆ®
+    public Text turnText; // í˜„ì¬ í„´ í…ìŠ¤íŠ¸
+    public Text totalScoreText; // ê²Œì„ ì°½ì— ë„ìš¸ í˜„ì¬ ëˆ„ì ëœ ì´ì  í…ìŠ¤íŠ¸
+    public Text successProbText; // í™•ë¥  í…ìŠ¤íŠ¸ ë³€ìˆ˜
+    public Text endingTotalScoreText; // ì—”ë”©ì°½ì— ë„ìš¸ ìµœì¢… ì ìˆ˜ í…ìŠ¤íŠ¸
 
-    public GameObject eventPanel; // µ¹¹ß ÀÌº¥Æ®°¡ ¶ã ¶§ È­¸é¿¡ ³ªÅ¸³ª´Â GameObject
-    public Text eventTitleText; // µ¹¹ß ÀÌº¥Æ® Ã¢ÀÇ Á¦¸ñ ÅØ½ºÆ®
-    public Image eventImage; // µ¹¹ß ÀÌº¥Æ® ÀÌ¹ÌÁö(¾ŞÄ¿ ¿·¿¡)
+    public GameObject eventPanel; // ëŒë°œ ì´ë²¤íŠ¸ê°€ ëœ° ë•Œ í™”ë©´ì— ë‚˜íƒ€ë‚˜ëŠ” GameObject
+    public Text eventTitleText; // ëŒë°œ ì´ë²¤íŠ¸ ì°½ì˜ ì œëª© í…ìŠ¤íŠ¸
+    public Image eventImage; // ëŒë°œ ì´ë²¤íŠ¸ ì´ë¯¸ì§€(ì•µì»¤ ì˜†ì—)
 
-    public GameObject hoverTooltip; // ¸¶¿ì½º¸¦ Áö¿ª¿¡ ¿Ã·ÈÀ» ¶§ ¸¶¿ì½º ¿·¿¡ Æ¢¾î³ª¿À´Â ÀÛÀº Ã¢
-    //È£¹ö ÅøÆÁ À§Ä¡ ¼³Á¤ÇÏ´Â Transform º¯¼ö
+    public GameObject hoverTooltip; // ë§ˆìš°ìŠ¤ë¥¼ ì§€ì—­ì— ì˜¬ë ¸ì„ ë•Œ ë§ˆìš°ìŠ¤ ì˜†ì— íŠ€ì–´ë‚˜ì˜¤ëŠ” ì‘ì€ ì°½
+    //í˜¸ë²„ íˆ´íŒ ìœ„ì¹˜ ì„¤ì •í•˜ëŠ” Transform ë³€ìˆ˜
     public Transform univHoverPos;
     public Transform silverHoverPos;
     public Transform industryHoverPos;
     public Transform houseHoverPos;
 
-    public Text hoverInfoText; // ¿À¹ö Ã¢¿¡ µé¾î°¥ ÅØ½ºÆ®
-    private Outline outLine; // Áö¿ªÀ» °­Á¶ÇÏ´Â ¿Ü°¢¼±
+    public Text hoverInfoText; // ì˜¤ë²„ ì°½ì— ë“¤ì–´ê°ˆ í…ìŠ¤íŠ¸
+    private Outline outLine; // ì§€ì—­ì„ ê°•ì¡°í•˜ëŠ” ì™¸ê°ì„ 
 
-    public GameObject endingPanel; // ÅÏÀÌ ¸ğµÎ ³¡³­ ÈÄ È­¸éÀ» µ¤À¸¸ç ³ªÅ¸³¯ ÃÖÁ¾ °á°ú Ã¢
-    public Text regionUnivScoreText; // ´ëÇĞ°¡ Á¡¼ö
-    public Text regionSilverScoreText; // ½Ç¹öÅ¸¿î Á¡¼ö
-    public Text regionIndustryScoreText; // »ê¾÷´ÜÁö Á¡¼ö
-    public Text regionHouseScoreText; // ÁÖ°Å´ÜÁö Á¡¼ö
-    
-    public Text gradeText; // ÃÖÁ¾ °á°ú µî±Ş ÅØ½ºÆ®
-    public Text titleText; // µî±Ş¿¡ µû¸¥ ÄªÈ£ ÅØ½ºÆ®
-    
-    public GameObject univImage; // ´ëÇĞ°¡ ÀÌ¹ÌÁö
-    public GameObject silverImage; // ½Ç¹öÅ¸¿î ÀÌ¹ÌÁö
-    public GameObject industryImage; // »ê¾÷´ÜÁö ÀÌ¹ÌÁö
-    public GameObject houseImage; // ÁÖ°Å´ÜÁö ÀÌ¹ÌÁö
-  
-    public Text policyLogText; // Log Text º¯¼ö
-    public GameObject logPanel; // ·Î±× Àü¿ë ÆĞ³Î 
-    public GameObject logCloseBtn; // ·Î±× ÆĞ³Î ³»ºÎÀÇ ´İ±â ¹öÆ°
+    public GameObject endingPanel; // í„´ì´ ëª¨ë‘ ëë‚œ í›„ í™”ë©´ì„ ë®ìœ¼ë©° ë‚˜íƒ€ë‚  ìµœì¢… ê²°ê³¼ ì°½
+    public Text regionUnivScoreText; // ëŒ€í•™ê°€ ì ìˆ˜
+    public Text regionSilverScoreText; // ì‹¤ë²„íƒ€ìš´ ì ìˆ˜
+    public Text regionIndustryScoreText; // ì‚°ì—…ë‹¨ì§€ ì ìˆ˜
+    public Text regionHouseScoreText; // ì£¼ê±°ë‹¨ì§€ ì ìˆ˜
 
-    // °¢ Áö¿ªº° 1~3·¹º§ Àü¿ë ÀÌ¹ÌÁö º¯¼öµé
-    // ´ëÇĞ°¡ ¹ßÀüµµ ÀÌ¹ÌÁö
-    public GameObject univLv1Image; 
-    public GameObject univLv2Image; 
-    public GameObject univLv3Image; 
-    
-    // ½Ç¹öÅ¸¿î ¹ßÀüµµ ÀÌ¹ÌÁö
-    public GameObject silverLv1Image; 
-    public GameObject silverLv2Image; 
+    public Text gradeText; // ìµœì¢… ê²°ê³¼ ë“±ê¸‰ í…ìŠ¤íŠ¸
+    public Text titleText; // ë“±ê¸‰ì— ë”°ë¥¸ ì¹­í˜¸ í…ìŠ¤íŠ¸
+
+    public GameObject univImage; // ëŒ€í•™ê°€ ì´ë¯¸ì§€
+    public GameObject silverImage; // ì‹¤ë²„íƒ€ìš´ ì´ë¯¸ì§€
+    public GameObject industryImage; // ì‚°ì—…ë‹¨ì§€ ì´ë¯¸ì§€
+    public GameObject houseImage; // ì£¼ê±°ë‹¨ì§€ ì´ë¯¸ì§€
+
+    public Text policyLogText; // Log Text ë³€ìˆ˜
+    public GameObject logPanel; // ë¡œê·¸ ì „ìš© íŒ¨ë„
+    public GameObject logCloseBtn; // ë¡œê·¸ íŒ¨ë„ ë‚´ë¶€ì˜ ë‹«ê¸° ë²„íŠ¼
+
+    // ê° ì§€ì—­ë³„ 1~3ë ˆë²¨ ì „ìš© ì´ë¯¸ì§€ ë³€ìˆ˜ë“¤
+    // ëŒ€í•™ê°€ ë°œì „ë„ ì´ë¯¸ì§€
+    public GameObject univLv1Image;
+    public GameObject univLv2Image;
+    public GameObject univLv3Image;
+
+    // ì‹¤ë²„íƒ€ìš´ ë°œì „ë„ ì´ë¯¸ì§€
+    public GameObject silverLv1Image;
+    public GameObject silverLv2Image;
     public GameObject silverLv3Image;
-    
-    // »ê¾÷´ÜÁö ¹ßÀüµµ ÀÌ¹ÌÁö
-    public GameObject indLv1Image; 
-    public GameObject indLv2Image; 
+
+    // ì‚°ì—…ë‹¨ì§€ ë°œì „ë„ ì´ë¯¸ì§€
+    public GameObject indLv1Image;
+    public GameObject indLv2Image;
     public GameObject indLv3Image;
-    
-    // ÁÖ°Å´ÜÁö ¹ßÀüµµ ÀÌ¹ÌÁö
-    public GameObject houseLv1Image; 
-    public GameObject houseLv2Image; 
+
+    // ì£¼ê±°ë‹¨ì§€ ë°œì „ë„ ì´ë¯¸ì§€
+    public GameObject houseLv1Image;
+    public GameObject houseLv2Image;
     public GameObject houseLv3Image;
 
-    // ÀÚ¹°¼è ÇÁ¸®ÆÕ (ÇÏ³ª¸¸ »ç¿ë)
+    // ìë¬¼ì‡  í”„ë¦¬íŒ¹ (í•˜ë‚˜ë§Œ ì‚¬ìš©)
     public GameObject lockOverlayPrefab;
 
-    // °¢ Áö¿ª¿¡ »ı¼ºµÈ ÀÚ¹°¼è ÀÎ½ºÅÏ½º
+    // ê° ì§€ì—­ì— ìƒì„±ëœ ìë¬¼ì‡  ì¸ìŠ¤í„´ìŠ¤
     private GameObject univLock;
     private GameObject silverLock;
     private GameObject indLock;
@@ -119,7 +121,7 @@ public class UIManager : MonoBehaviour
         InitLockOverlays();
     }
 
-    // ÇöÀç ÅÏ Ç¥½Ã ÇÔ¼ö
+    // í˜„ì¬ í„´ í‘œì‹œ í•¨ìˆ˜
     public void UpdateTurnText()
     {
         if (turnText != null)
@@ -128,7 +130,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // µ· °ÔÀÌÁö, ¼º°ø È®·ü ¾÷µ¥ÀÌÆ®
+    // ëˆ ê²Œì´ì§€, ì„±ê³µ í™•ë¥  ì—…ë°ì´íŠ¸
     public void UpdateMoneyUI()
     {
         if (MoneyBar != null)
@@ -138,16 +140,16 @@ public class UIManager : MonoBehaviour
         UpdateSuccessProbabilityUI(ScoreManager.Instance.money);
     }
 
-    // ÇöÀç ´©ÀûÁ¡¼ö Ç¥½Ã
+    // í˜„ì¬ ëˆ„ì ì ìˆ˜ í‘œì‹œ
     public void UpdateTotalScoreUI(float score)
     {
         if (totalScoreText != null)
         {
-            totalScoreText.text = $"Á¡¼ö: {Mathf.RoundToInt(score)}";
+            totalScoreText.text = $"ì ìˆ˜: {Mathf.RoundToInt(score)}";
         }
     }
 
-    // Á¤Ã¥ ¼º°ø È®·üÀ» Ç¥½ÃÇÏ´Â ÇÔ¼ö
+    // ì •ì±… ì„±ê³µ í™•ë¥ ì„ í‘œì‹œí•˜ëŠ” í•¨ìˆ˜
     public void UpdateSuccessProbabilityUI(float money)
     {
         if (successProbText != null)
@@ -156,51 +158,51 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // ¼º°ø È®·ü ÅØ½ºÆ® Ç¥½Ã ÇÔ¼ö
+    // ì„±ê³µ í™•ë¥  í…ìŠ¤íŠ¸ í‘œì‹œ í•¨ìˆ˜
     public string GetSuccessProbabilityText(float money)
     {
-        if (money >= 100f) return "¼º°ø È®·ü : 100%";
-        if (money <= 0f) return "¼º°ø È®·ü : 0%";
+        if (money >= 100f) return "ì„±ê³µ í™•ë¥  : 100%";
+        if (money <= 0f) return "ì„±ê³µ í™•ë¥  : 0%";
 
-        if (money >= 80f) return "¼º°ø È®·ü : 80% ~ 99%";
-        else if (money >= 60f) return "¼º°ø È®·ü : 60% ~ 79%";
-        else if (money >= 40f) return "¼º°ø È®·ü : 40% ~ 59%";
-        else if (money >= 20f) return "¼º°ø È®·ü : 20% ~ 39%";
-        else return "¼º°ø È®·ü : 1% ~ 20%";
+        if (money >= 80f) return "ì„±ê³µ í™•ë¥  : 80% ~ 99%";
+        else if (money >= 60f) return "ì„±ê³µ í™•ë¥  : 60% ~ 79%";
+        else if (money >= 40f) return "ì„±ê³µ í™•ë¥  : 40% ~ 59%";
+        else if (money >= 20f) return "ì„±ê³µ í™•ë¥  : 20% ~ 39%";
+        else return "ì„±ê³µ í™•ë¥  : 1% ~ 20%";
     }
 
-    // ¹Î½É °ÔÀÌÁö Ç¥Çö ÇÔ¼ö
+    // ë¯¼ì‹¬ ê²Œì´ì§€ í‘œí˜„ í•¨ìˆ˜
     public void UpdateAffinityUI()
     {
-        // °¢ °èÃşº°·Î °ÔÀÌÁö Á¶Àı ÇÔ¼ö¸¦ È£ÃâÇÔ
+        // ê° ê³„ì¸µë³„ë¡œ ê²Œì´ì§€ ì¡°ì ˆ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•¨
         UpdateSingleAffinity(ScoreManager.Instance.youthAffinity, youthBorderImg, youthFillImg);
         UpdateSingleAffinity(ScoreManager.Instance.seniorAffinity, seniorBorderImg, seniorFillImg);
         UpdateSingleAffinity(ScoreManager.Instance.corpAffinity, corpBorderImg, corpFillImg);
     }
 
-    // ÇÏ³ªÀÇ ¹Î½É °ÔÀÌÁö¸¦ °è»êÇÏ°í »ö»óÀ» ¹Ù²ãÁÖ´Â ÇÔ¼ö
+    // í•˜ë‚˜ì˜ ë¯¼ì‹¬ ê²Œì´ì§€ë¥¼ ê³„ì‚°í•˜ê³  ìƒ‰ìƒì„ ë°”ê¿”ì£¼ëŠ” í•¨ìˆ˜
     private void UpdateSingleAffinity(float affinityValue, Image borderImg, Image fillImg)
     {
         if (borderImg == null || fillImg == null) return;
 
-        // Å×µÎ¸® »ö»ó Ã³¸® (1 ÀÌÇÏÀÏ ¶§¸¸ »¡°£»ö, ³ª¸ÓÁö´Â ¿ø·¡ »ö)
+        // í…Œë‘ë¦¬ ìƒ‰ìƒ ì²˜ë¦¬ (1 ì´í•˜ì¼ ë•Œë§Œ ë¹¨ê°„ìƒ‰, ë‚˜ë¨¸ì§€ëŠ” ì›ë˜ ìƒ‰)
         if (affinityValue == 0f)
         {
             borderImg.color = Color.red;
         }
         else
         {
-            borderImg.color = Color.white; // ¿ø·¡ Å×µÎ¸® »öÀÎ Èò»öÀ¸·Î ¼³Á¤
+            borderImg.color = Color.white; // ì›ë˜ í…Œë‘ë¦¬ ìƒ‰ì¸ í°ìƒ‰ìœ¼ë¡œ ì„¤ì •
         }
 
-        // °ÔÀÌÁö Ã¤¿ì±â (0 ~ 10 »çÀÌÀÇ °ª¸¸ °ÔÀÌÁö·Î Ç¥Çö)
-        float displayValue = Mathf.Clamp(affinityValue, GameManager.Instance.MIN_AFFINITY, GameManager.Instance.MAX_AFFINITY); 
-        
-        // °ÔÀÌÁöÀÇ ÃÖ´ëÄ¡°¡ 10ÀÌ¹Ç·Î 10À¸·Î ³ª´©¾î 0~1 »çÀÌÀÇ °ªÀ¸·Î ¸¸µë
-        fillImg.fillAmount = displayValue / GameManager.Instance.MAX_AFFINITY; 
+        // ê²Œì´ì§€ ì±„ìš°ê¸° (0 ~ 10 ì‚¬ì´ì˜ ê°’ë§Œ ê²Œì´ì§€ë¡œ í‘œí˜„)
+        float displayValue = Mathf.Clamp(affinityValue, GameManager.Instance.MIN_AFFINITY, GameManager.Instance.MAX_AFFINITY);
+
+        // ê²Œì´ì§€ì˜ ìµœëŒ€ì¹˜ê°€ 10ì´ë¯€ë¡œ 10ìœ¼ë¡œ ë‚˜ëˆ„ì–´ 0~1 ì‚¬ì´ì˜ ê°’ìœ¼ë¡œ ë§Œë“¬
+        fillImg.fillAmount = displayValue / GameManager.Instance.MAX_AFFINITY;
     }
 
-    // Á¤Ã¥ ÀÌ¸§°ú ¼³¸íÀ» ¹Ş¾Æ explainPolicyPanelÀ» È°¼ºÈ­ÇÏ´Â ÇÔ¼ö.
+    // ì •ì±… ì´ë¦„ê³¼ ì„¤ëª…ì„ ë°›ì•„ explainPolicyPanelì„ í™œì„±í™”í•˜ëŠ” í•¨ìˆ˜.
     public void ShowExplainPolicyPanel(string policyName, string policyDesc)
     {
         if (policyTitleText != null)
@@ -213,15 +215,15 @@ public class UIManager : MonoBehaviour
             explainPolicyPanel.SetActive(true);
     }
 
-    // explainPolicyPanel ºñÈ°¼ºÈ­ ÇÔ¼ö
-    // "¿¹" ¶Ç´Â "¾Æ´Ï¿ä" ¹öÆ° Å¬¸¯ ÀÌÈÄ GameManager¿¡¼­ È£ÃâµÊ
+    // explainPolicyPanel ë¹„í™œì„±í™” í•¨ìˆ˜
+    // "ì˜ˆ" ë˜ëŠ” "ì•„ë‹ˆìš”" ë²„íŠ¼ í´ë¦­ ì´í›„ GameManagerì—ì„œ í˜¸ì¶œë¨
     public void HideExplainPolicyPanel()
     {
         if (explainPolicyPanel != null)
             explainPolicyPanel.SetActive(false);
     }
 
-    // °¢ ±¸¿ª ¾÷µ¥ÀÌÆ® ½Ã, ¹ßÀüµµ ·¹º§¿¡ ¸Â´Â 3D ÇÁ¸®ÆÕÀ¸·Î Áö¿ª ¿ÀºêÁ§Æ® ÀüÃ¼¸¦ ±³Ã¼ÇÏ´Â ÇÔ¼ö
+    // ê° êµ¬ì—­ ì—…ë°ì´íŠ¸ ì‹œ, ë°œì „ë„ ë ˆë²¨ì— ë§ëŠ” 3D í”„ë¦¬íŒ¹ìœ¼ë¡œ ì§€ì—­ ì˜¤ë¸Œì íŠ¸ ì „ì²´ë¥¼ êµì²´í•˜ëŠ” í•¨ìˆ˜
     public void UpdateRegionImages()
     {
         if (univImage != null)
@@ -275,40 +277,40 @@ public class UIManager : MonoBehaviour
         UpdateLockOverlays();
     }
 
-    // ÇöÀç Áö¿ª ¿ÀºêÁ§Æ®¸¦ ¹ßÀüµµ ·¹º§¿¡ ¸Â´Â 3D ÇÁ¸®ÆÕÀ¸·Î ±³Ã¼ÇÏ´Â ÇÔ¼ö
-    // currentObj : ÇöÀç ¾À¿¡ ¹èÄ¡µÇ¾î ÀÖ´Â Áö¿ª ¿ÀºêÁ§Æ® ÂüÁ¶, newPrefab : »õ·Î »ı¼ºÇÒ ·¹º§º° 3D ÇÁ¸®ÆÕ
+    // í˜„ì¬ ì§€ì—­ ì˜¤ë¸Œì íŠ¸ë¥¼ ë°œì „ë„ ë ˆë²¨ì— ë§ëŠ” 3D í”„ë¦¬íŒ¹ìœ¼ë¡œ êµì²´í•˜ëŠ” í•¨ìˆ˜
+    // currentObj : í˜„ì¬ ì”¬ì— ë°°ì¹˜ë˜ì–´ ìˆëŠ” ì§€ì—­ ì˜¤ë¸Œì íŠ¸ ì°¸ì¡°, newPrefab : ìƒˆë¡œ ìƒì„±í•  ë ˆë²¨ë³„ 3D í”„ë¦¬íŒ¹
     private void ReplaceRegionObject(ref GameObject currentObj, GameObject newPrefab)
     {
-        // ±³Ã¼ÇÒ ÇÁ¸®ÆÕÀÌ ¾ø°Å³ª ÇöÀç ¿ÀºêÁ§Æ®°¡ ¾øÀ¸¸é ½ÇÇàÇÏÁö ¾ÊÀ½
+        // êµì²´í•  í”„ë¦¬íŒ¹ì´ ì—†ê±°ë‚˜ í˜„ì¬ ì˜¤ë¸Œì íŠ¸ê°€ ì—†ìœ¼ë©´ ì‹¤í–‰í•˜ì§€ ì•ŠìŒ
         if (currentObj == null || newPrefab == null) return;
 
-        // ÀÌ¹Ì °°Àº ÇÁ¸®ÆÕÀ¸·Î »ı¼ºµÈ ¿ÀºêÁ§Æ®¶ó¸é ºÒÇÊ¿äÇÑ ±³Ã¼¸¦ ¸·À½
-        // InstantiateµÈ ¿ÀºêÁ§Æ®´Â ÀÌ¸§ µÚ¿¡ (Clone)ÀÌ ºÙ±â ¶§¹®¿¡ ÀÌ¸§ ±âÁØÀ¸·Î ºñ±³
+        // ì´ë¯¸ ê°™ì€ í”„ë¦¬íŒ¹ìœ¼ë¡œ ìƒì„±ëœ ì˜¤ë¸Œì íŠ¸ë¼ë©´ ë¶ˆí•„ìš”í•œ êµì²´ë¥¼ ë§‰ìŒ
+        // Instantiateëœ ì˜¤ë¸Œì íŠ¸ëŠ” ì´ë¦„ ë’¤ì— (Clone)ì´ ë¶™ê¸° ë•Œë¬¸ì— ì´ë¦„ ê¸°ì¤€ìœ¼ë¡œ ë¹„êµ
         string currentName = currentObj.name.Replace("(Clone)", "").Trim();
         string prefabName = newPrefab.name.Replace("(Clone)", "").Trim();
 
         if (currentName == prefabName) return;
 
-        // ±âÁ¸ ¿ÀºêÁ§Æ®ÀÇ ºÎ¸ğ, À§Ä¡, È¸Àü, Å©±â Á¤º¸¸¦ ÀúÀå
+        // ê¸°ì¡´ ì˜¤ë¸Œì íŠ¸ì˜ ë¶€ëª¨, ìœ„ì¹˜, íšŒì „, í¬ê¸° ì •ë³´ë¥¼ ì €ì¥
         Transform parent = currentObj.transform.parent;
         Vector3 position = currentObj.transform.position;
         Quaternion rotation = currentObj.transform.rotation;
         Vector3 scale = currentObj.transform.localScale;
 
-        // ±âÁ¸ Áö¿ª ¿ÀºêÁ§Æ® Á¦°Å
+        // ê¸°ì¡´ ì§€ì—­ ì˜¤ë¸Œì íŠ¸ ì œê±°
         Destroy(currentObj);
 
-        // »õ ÇÁ¸®ÆÕÀ» ±âÁ¸ ¿ÀºêÁ§Æ®¿Í °°Àº À§Ä¡¿¡ »ı¼º
+        // ìƒˆ í”„ë¦¬íŒ¹ì„ ê¸°ì¡´ ì˜¤ë¸Œì íŠ¸ì™€ ê°™ì€ ìœ„ì¹˜ì— ìƒì„±
         GameObject createdObj = Instantiate(newPrefab, position, rotation, parent);
 
-        // ±âÁ¸ ¿ÀºêÁ§Æ®ÀÇ ½ºÄÉÀÏÀ» À¯Áö
+        // ê¸°ì¡´ ì˜¤ë¸Œì íŠ¸ì˜ ìŠ¤ì¼€ì¼ì„ ìœ ì§€
         createdObj.transform.localScale = scale;
 
-        // ÇöÀç Áö¿ª ¿ÀºêÁ§Æ® ÂüÁ¶¸¦ »õ·Î »ı¼ºµÈ ¿ÀºêÁ§Æ®·Î °»½Å
+        // í˜„ì¬ ì§€ì—­ ì˜¤ë¸Œì íŠ¸ ì°¸ì¡°ë¥¼ ìƒˆë¡œ ìƒì„±ëœ ì˜¤ë¸Œì íŠ¸ë¡œ ê°±ì‹ 
         currentObj = createdObj;
     }
 
-    // ¹ßÀüµµ °ªÀ» ±âÁØÀ¸·Î ÇöÀç ·¹º§¿¡ ¸Â´Â 3D ÇÁ¸®ÆÕÀ» ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+    // ë°œì „ë„ ê°’ì„ ê¸°ì¤€ìœ¼ë¡œ í˜„ì¬ ë ˆë²¨ì— ë§ëŠ” 3D í”„ë¦¬íŒ¹ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
     private GameObject GetLevelPrefab(float dev, GameObject lv1, GameObject lv2, GameObject lv3)
     {
         if (dev >= 50f) return lv3;
@@ -316,7 +318,7 @@ public class UIManager : MonoBehaviour
         else return lv1;
     }
 
-    // °¢ Áö¿ª À§¿¡ ÀÚ¹°¼è ¿ÀºêÁ§Æ®¸¦ »ı¼ºÇÏ´Â ÇÔ¼ö
+    // ê° ì§€ì—­ ìœ„ì— ìë¬¼ì‡  ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒì„±í•˜ëŠ” í•¨ìˆ˜
     private void InitLockOverlays()
     {
         if (lockOverlayPrefab == null) return;
@@ -333,14 +335,14 @@ public class UIManager : MonoBehaviour
         if (houseImage != null)
             houseLock = Instantiate(lockOverlayPrefab, houseImage.transform);
 
-        // Ã³À½¿¡´Â ÀüºÎ ²¨µÒ
+        // ì²˜ìŒì—ëŠ” ì „ë¶€ êº¼ë‘ 
         if (univLock != null) univLock.SetActive(false);
         if (silverLock != null) silverLock.SetActive(false);
         if (indLock != null) indLock.SetActive(false);
         if (houseLock != null) houseLock.SetActive(false);
     }
 
-    // °¢ Áö¿ªÀÇ ºñÈ°¼ºÈ­ »óÅÂ¿¡ µû¶ó ÀÚ¹°¼è ¿À¹ö·¹ÀÌ¸¦ °³º°ÀûÀ¸·Î Á¦¾îÇÏ´Â ÇÔ¼ö
+    // ê° ì§€ì—­ì˜ ë¹„í™œì„±í™” ìƒíƒœì— ë”°ë¼ ìë¬¼ì‡  ì˜¤ë²„ë ˆì´ë¥¼ ê°œë³„ì ìœ¼ë¡œ ì œì–´í•˜ëŠ” í•¨ìˆ˜
     private void UpdateLockOverlays()
     {
         if (univLock != null)
@@ -356,11 +358,11 @@ public class UIManager : MonoBehaviour
             houseLock.SetActive(ScoreManager.Instance.isHouseDeactivated);
     }
 
-    // µ¹¹ß ÀÌº¥Æ® º¸¿©ÁÖ´Â ÇÔ¼ö
+    // ëŒë°œ ì´ë²¤íŠ¸ ë³´ì—¬ì£¼ëŠ” í•¨ìˆ˜
     public void ShowEventPopup(string title, Sprite eventSprite)
     {
         eventTitleText.text = title;
-        
+
         if (eventImage != null)
         {
             eventImage.sprite = eventSprite;
@@ -368,8 +370,8 @@ public class UIManager : MonoBehaviour
         eventPanel.SetActive(true);
     }
 
-    //¸¶¿ì½º ¿À¹ö½Ã °¢ Áö¿ª Á¤º¸¸¦ HoverTooltip¿¡ º¸¿©ÁÖ´Â ÇÔ¼ö
-    public void OnRegionHoverEnter(int regionIndex) 
+    //ë§ˆìš°ìŠ¤ ì˜¤ë²„ì‹œ ê° ì§€ì—­ ì •ë³´ë¥¼ HoverTooltipì— ë³´ì—¬ì£¼ëŠ” í•¨ìˆ˜
+    public void OnRegionHoverEnter(int regionIndex)
     {
         hoverTooltip.SetActive(true);
         float dev = 0f;
@@ -379,53 +381,53 @@ public class UIManager : MonoBehaviour
         RectTransform tooltipRect = hoverTooltip.GetComponent<RectTransform>();
         outLine = GetComponent<Outline>();
 
-        // Áö¿ª¿¡ µû¶ó ÀÌ¸§, ¹ßÀüµµ¸¦ ÇÒ´ç, Transform º¯¼ö ÁöÁ¤
-        if (regionIndex == 1) 
-        { 
-            rName = "½Åµµ½Ã"; 
+        // ì§€ì—­ì— ë”°ë¼ ì´ë¦„, ë°œì „ë„ë¥¼ í• ë‹¹, Transform ë³€ìˆ˜ ì§€ì •
+        if (regionIndex == 1)
+        {
+            rName = "ì‹ ë„ì‹œ";
             dev = ScoreManager.Instance.devUniv;
             isDeactivated = ScoreManager.Instance.isUnivDeactivated;
             if (univHoverPos != null) tooltipRect.position = univHoverPos.position;
         }
-        else if (regionIndex == 2) 
+        else if (regionIndex == 2)
         {
-            rName = "³óÃÌ"; 
+            rName = "ë†ì´Œ";
             dev = ScoreManager.Instance.devSilver;
             isDeactivated = ScoreManager.Instance.isSilverDeactivated;
-            if (silverHoverPos != null) tooltipRect.position = silverHoverPos.position; 
+            if (silverHoverPos != null) tooltipRect.position = silverHoverPos.position;
         }
-        else if (regionIndex == 3) 
+        else if (regionIndex == 3)
         {
-            rName = "Áö¹æ"; 
+            rName = "ì§€ë°©";
             dev = ScoreManager.Instance.devIndustry;
             isDeactivated = ScoreManager.Instance.isIndustryDeactivated;
             if (industryHoverPos != null) tooltipRect.position = industryHoverPos.position;
 
         }
         else if (regionIndex == 4)
-        { 
-            rName = "¼öµµ±Ç"; 
+        {
+            rName = "ìˆ˜ë„ê¶Œ";
             dev = ScoreManager.Instance.devHouse;
             isDeactivated = ScoreManager.Instance.isHouseDeactivated;
             if (houseHoverPos != null) tooltipRect.position = houseHoverPos.position;
         }
 
-        // Áö¿ªÀÌ ºñÈ°¼ºÈ­ µÇ¾ú´Ù¸é È£¹ö½Ã Áö¿ª ºñÈ°¼ºÈ­ Ç¥½Ã
+        // ì§€ì—­ì´ ë¹„í™œì„±í™” ë˜ì—ˆë‹¤ë©´ í˜¸ë²„ì‹œ ì§€ì—­ ë¹„í™œì„±í™” í‘œì‹œ
         if (isDeactivated)
         {
-            hoverInfoText.text = $"{rName}\n[ Àá±è ]";
+            hoverInfoText.text = $"{rName}\n[ ì ê¹€ ]";
             outLine.enabled = true;
         }
-        // Áö¿ªÀÌ È°¼ºÈ­ µÇ¾îÀÖ´Ù¸é Áö¿ª ·¹º§ Ç¥½Ã
+        // ì§€ì—­ì´ í™œì„±í™” ë˜ì–´ìˆë‹¤ë©´ ì§€ì—­ ë ˆë²¨ í‘œì‹œ
         else
         {
             string lv = dev >= 50f ? "LV 3" : (dev >= 20f ? "LV 2" : "LV 1");
-            hoverInfoText.text = $"{rName}\n¹ßÀüµµ : {lv}";
+            hoverInfoText.text = $"{rName}\në°œì „ë„ : {lv}";
             outLine.enabled = true;
         }
     }
 
-    // ¸¶¿ì½º ¿À¹ö ³¡³ª¸é ²¨Áö°Ô ÇÏ´Â ÇÔ¼ö
+    // ë§ˆìš°ìŠ¤ ì˜¤ë²„ ëë‚˜ë©´ êº¼ì§€ê²Œ í•˜ëŠ” í•¨ìˆ˜
     public void OnRegionHoverExit()
     {
         outLine = GetComponent<Outline>();
@@ -433,46 +435,46 @@ public class UIManager : MonoBehaviour
         hoverTooltip.SetActive(false);
     }
 
-    // ÀÚ±İ 100ÀÌ¸é ¹öÆ° ºñÈ°¼ºÈ­ÇÏ´Â ÇÔ¼ö
+    // ìê¸ˆ 100ì´ë©´ ë²„íŠ¼ ë¹„í™œì„±í™”í•˜ëŠ” í•¨ìˆ˜
     public void UpdateFundingButtonState()
     {
         if (fundingBtn != null)
         {
-            // ÀÚ±İÀÌ 100ÀÌ°Å³ª Å©¸é
+            // ìê¸ˆì´ 100ì´ê±°ë‚˜ í¬ë©´
             bool isFull = ScoreManager.Instance.money >= GameManager.Instance.MAX_MONEY;
-            fundingBtn.interactable = !isFull; // ¹öÆ° ºñÈ°¼ºÈ­
+            fundingBtn.interactable = !isFull; // ë²„íŠ¼ ë¹„í™œì„±í™”
         }
     }
 
-    // °ÔÀÓ ³¡³ª¸é ÃÖÁ¾ Á¡¼ö¿Í Æò°¡ º¸ÀÌ°Ô ÇÏ´Â ÇÔ¼ö
+    // ê²Œì„ ëë‚˜ë©´ ìµœì¢… ì ìˆ˜ì™€ í‰ê°€ ë³´ì´ê²Œ í•˜ëŠ” í•¨ìˆ˜
     public void ShowEndingPanel(string grade, string title, float finalScore)
     {
-        // ¿£µù ÆĞ³Î È°¼ºÈ­  ÈÄ ½Ã°£ Á¤Áö
+        // ì—”ë”© íŒ¨ë„ í™œì„±í™”  í›„ ì‹œê°„ ì •ì§€
         endingPanel.SetActive(true);
         Time.timeScale = 0f;
 
-        // ±¸¿ªº° ´©Àû Á¡¼ö °¡Á®¿Í º¸¿©ÁÖ±â (RoundToInt·Î ¼Ò¼öÁ¡ ¹ö¸®°í ½ºÆ®¸µÀ¸·Î Ç¥Çö)
-        regionUnivScoreText.text = "´ëÇĞ°¡ ÃÖÁ¾ Á¡¼ö : " + Mathf.RoundToInt(ScoreManager.Instance.totalUnivScore).ToString();
-        regionSilverScoreText.text = "½Ç¹öÅ¸¿î ÃÖÁ¾ Á¡¼ö : " + Mathf.RoundToInt(ScoreManager.Instance.totalSilverScore).ToString();
-        regionIndustryScoreText.text = "»ê¾÷´ÜÁö ÃÖÁ¾ Á¡¼ö : " + Mathf.RoundToInt(ScoreManager.Instance.totalIndustryScore).ToString();
-        regionHouseScoreText.text = "ÁÖ°Å´ÜÁö ÃÖÁ¾ Á¡¼ö : " + Mathf.RoundToInt(ScoreManager.Instance.totalHouseScore).ToString();
+        // êµ¬ì—­ë³„ ëˆ„ì  ì ìˆ˜ ê°€ì ¸ì™€ ë³´ì—¬ì£¼ê¸° (RoundToIntë¡œ ì†Œìˆ˜ì  ë²„ë¦¬ê³  ìŠ¤íŠ¸ë§ìœ¼ë¡œ í‘œí˜„)
+        regionUnivScoreText.text = "ëŒ€í•™ê°€ ìµœì¢… ì ìˆ˜ : " + Mathf.RoundToInt(ScoreManager.Instance.totalUnivScore).ToString();
+        regionSilverScoreText.text = "ì‹¤ë²„íƒ€ìš´ ìµœì¢… ì ìˆ˜ : " + Mathf.RoundToInt(ScoreManager.Instance.totalSilverScore).ToString();
+        regionIndustryScoreText.text = "ì‚°ì—…ë‹¨ì§€ ìµœì¢… ì ìˆ˜ : " + Mathf.RoundToInt(ScoreManager.Instance.totalIndustryScore).ToString();
+        regionHouseScoreText.text = "ì£¼ê±°ë‹¨ì§€ ìµœì¢… ì ìˆ˜ : " + Mathf.RoundToInt(ScoreManager.Instance.totalHouseScore).ToString();
 
-        // ÃÖÁ¾ Á¡¼ö (RoundToInt·Î ¼Ò¼öÁ¡ ¹ö¸®°í ½ºÆ®¸µÀ¸·Î Ç¥Çö), µî±Ş, ÄªÈ£ ÀÔ·Â
-        endingTotalScoreText.text = "ÃÖÁ¾ Á¡¼ö : " + Mathf.RoundToInt(finalScore).ToString();
+        // ìµœì¢… ì ìˆ˜ (RoundToIntë¡œ ì†Œìˆ˜ì  ë²„ë¦¬ê³  ìŠ¤íŠ¸ë§ìœ¼ë¡œ í‘œí˜„), ë“±ê¸‰, ì¹­í˜¸ ì…ë ¥
+        endingTotalScoreText.text = "ìµœì¢… ì ìˆ˜ : " + Mathf.RoundToInt(finalScore).ToString();
         gradeText.text = grade;
         titleText.text = title;
     }
 
-    // Áö¿ª ºñÈ°¼ºÈ­ ¹ßµ¿ ½Ã ºñÈ°¼ºÈ­µÈ Áö¿ª¸íÀ» ¹Ş¾Æ 
-    // ·Î±×¿¡ °æ°í ¸Ş½ÃÁö¸¦ º¸³»´Â ÇÔ¼ö
-    // ScoreManager.CheckSingleRegionDeactivation()¿¡¼­ È£ÃâµÊ
+    // ì§€ì—­ ë¹„í™œì„±í™” ë°œë™ ì‹œ ë¹„í™œì„±í™”ëœ ì§€ì—­ëª…ì„ ë°›ì•„
+    // ë¡œê·¸ì— ê²½ê³  ë©”ì‹œì§€ë¥¼ ë³´ë‚´ëŠ” í•¨ìˆ˜
+    // ScoreManager.CheckSingleRegionDeactivation()ì—ì„œ í˜¸ì¶œë¨
     public void ShowDeactivationNotice(string regionName)
     {
-        AddPolicyLog($"°æ°í! : [{regionName}] Áö¿ªÀÌ ºñÈ°¼ºÈ­µÇ¾ú½À´Ï´Ù!!!\nÀÌÁ¦ºÎÅÍ ÇØ´ç Áö¿ª Á¡¼ö°¡ Á¦¿ÜµË´Ï´Ù.");
+        AddPolicyLog($"ê²½ê³ ! : [{regionName}] ì§€ì—­ì´ ë¹„í™œì„±í™”ë˜ì—ˆìŠµë‹ˆë‹¤!!!\nì´ì œë¶€í„° í•´ë‹¹ ì§€ì—­ ì ìˆ˜ê°€ ì œì™¸ë©ë‹ˆë‹¤.");
     }
 
-    // Äù½ºÆ® ÆĞ³ÎÀ» È°¼ºÈ­ÇÏ°í Äù½ºÆ® ±âº» Á¤º¸¸¦ Ç¥½ÃÇÏ´Â ÇÔ¼ö
-    // QuestManager.GenerateNewQuest() ¿¡¼­ »õ Äù½ºÆ® µîÀå ½Ã È£ÃâµÊ
+    // í€˜ìŠ¤íŠ¸ íŒ¨ë„ì„ í™œì„±í™”í•˜ê³  í€˜ìŠ¤íŠ¸ ê¸°ë³¸ ì •ë³´ë¥¼ í‘œì‹œí•˜ëŠ” í•¨ìˆ˜
+    // QuestManager.GenerateNewQuest() ì—ì„œ ìƒˆ í€˜ìŠ¤íŠ¸ ë“±ì¥ ì‹œ í˜¸ì¶œë¨
     public void ShowQuestPanel(QuestDefinition quest)
     {
         if (questPanel == null) return;
@@ -480,12 +482,12 @@ public class UIManager : MonoBehaviour
         if (ResultProposal != null) ResultProposal.text = "";
         if (questTitleText != null) questTitleText.text = quest.questTitle;
         if (questDescText  != null) questDescText.text  = quest.questDesc;
-        if (summaryText != null) summaryText.text = $"¸ñÇ¥: {quest.questGoalText}\nº¸»ó: {quest.questRewardText}\n¸®½ºÅ©: {quest.questRiskText}";
+        if (summaryText != null) summaryText.text = $"ëª©í‘œ: {quest.questGoalText}\në³´ìƒ: {quest.questRewardText}\në¦¬ìŠ¤í¬: {quest.questRiskText}";
 
-        // Äù½ºÆ® Á¸Àç ½Ã ÀÌ¸ŞÀÏ ¹öÆ° È°¼ºÈ­
+        // í€˜ìŠ¤íŠ¸ ì¡´ì¬ ì‹œ ì´ë©”ì¼ ë²„íŠ¼ í™œì„±í™”
         if (emailBtn != null) emailBtn.SetActive(true);
 
-        // ´º½º ¹öÆ° ÀÌ¹ÌÁö¸¦ Äù½ºÆ® ¾Ë¸² ÀÌ¹ÌÁö·Î ±³Ã¼
+        // ë‰´ìŠ¤ ë²„íŠ¼ ì´ë¯¸ì§€ë¥¼ í€˜ìŠ¤íŠ¸ ì•Œë¦¼ ì´ë¯¸ì§€ë¡œ êµì²´
         if (newsButtonImage != null && newsQuestAlertSprite != null)
             newsButtonImage.sprite = newsQuestAlertSprite;
 
@@ -494,8 +496,8 @@ public class UIManager : MonoBehaviour
 
     }
 
-    // Äù½ºÆ® Á¾·á(¼º°ø/½ÇÆĞ/°ÅÀı) ½Ã ÅØ½ºÆ® ÃÊ±âÈ­, ¹öÆ° ºñÈ°¼ºÈ­, ´º½º ¹öÆ° ÀÌ¹ÌÁö º¹±¸ÇÏ´Â ÇÔ¼ö
-    // QuestManager ¿¡¼­ È£ÃâµÊ
+    // í€˜ìŠ¤íŠ¸ ì¢…ë£Œ(ì„±ê³µ/ì‹¤íŒ¨/ê±°ì ˆ) ì‹œ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”, ë²„íŠ¼ ë¹„í™œì„±í™”, ë‰´ìŠ¤ ë²„íŠ¼ ì´ë¯¸ì§€ ë³µêµ¬í•˜ëŠ” í•¨ìˆ˜
+    // QuestManager ì—ì„œ í˜¸ì¶œë¨
     public void ClearQuestPanel()
     {
         if (questTitleText != null) questTitleText.text = "";
@@ -503,54 +505,54 @@ public class UIManager : MonoBehaviour
         if (summaryText != null) summaryText.text = "";
         if (resultProposalText != null) resultProposalText.text = "";
 
-        // Äù½ºÆ® ¾øÀ» ¶§ ÀÌ¸ŞÀÏ ¹öÆ° ºñÈ°¼ºÈ­
+        // í€˜ìŠ¤íŠ¸ ì—†ì„ ë•Œ ì´ë©”ì¼ ë²„íŠ¼ ë¹„í™œì„±í™”
         if (emailBtn != null) emailBtn.SetActive(false);
 
-        // ´º½º ¹öÆ° ÀÌ¹ÌÁö¸¦ ±âº» ÀÌ¹ÌÁö·Î º¹±¸
+        // ë‰´ìŠ¤ ë²„íŠ¼ ì´ë¯¸ì§€ë¥¼ ê¸°ë³¸ ì´ë¯¸ì§€ë¡œ ë³µêµ¬
         if (newsButtonImage != null && newsDefaultSprite != null)
             newsButtonImage.sprite = newsDefaultSprite;
     }
 
-    // AI ÈùÆ® ÆĞ³Î Ç¥½Ã »óÅÂ¸¦ °»½ÅÇÏ´Â ÇÔ¼ö
-    // QuestManager.OnTurnStart() ¿¡¼­ ¸Å ÅÏ È£ÃâµÊ
-    // isActive : AI ÈùÆ® È°¼ºÈ­ ¿©ºÎ / remainingTurns : ÀÜ¿© È°¼ºÈ­ ÅÏ ¼ö
+    // AI íŒíŠ¸ íŒ¨ë„ í‘œì‹œ ìƒíƒœë¥¼ ê°±ì‹ í•˜ëŠ” í•¨ìˆ˜
+    // QuestManager.OnTurnStart() ì—ì„œ ë§¤ í„´ í˜¸ì¶œë¨
+    // isActive : AI íŒíŠ¸ í™œì„±í™” ì—¬ë¶€ / remainingTurns : ì”ì—¬ í™œì„±í™” í„´ ìˆ˜
     public void UpdateAIHintUI(bool isActive, int remainingTurns)
     {
         if (aiHintPanel == null) return;
         aiHintPanel.SetActive(isActive);
         if (isActive && aiHintText != null)
-            aiHintText.text = $"AI ÈùÆ® È°¼ºÈ­ ({remainingTurns}ÅÏ ³²À½)";
+            aiHintText.text = $"AI íŒíŠ¸ í™œì„±í™” ({remainingTurns}í„´ ë‚¨ìŒ)";
     }
 
-    // ·Î±× ¸Ş½ÃÁö¸¦ È­¸é¿¡ ¶ç¿ì´Â ÇÔ¼ö
+    // ë¡œê·¸ ë©”ì‹œì§€ë¥¼ í™”ë©´ì— ë„ìš°ëŠ” í•¨ìˆ˜
     public void AddPolicyLog(string logMsg)
     {
         if (policyLogText != null)
         {
-            // »õ·Î µé¾î¿Â ¸Ş½ÃÁö´Â ÁÙ¹Ù²Ş(\n)
+            // ìƒˆë¡œ ë“¤ì–´ì˜¨ ë©”ì‹œì§€ëŠ” ì¤„ë°”ê¿ˆ(\n)
             policyLogText.text += logMsg + "\n" + "\n";
         }
     }
 
-    // ·Î±× ¹öÆ° Å¬¸¯ ½Ã ·Î±× ÆĞ³ÎÀ» ¿©´Â ÇÔ¼ö
-    // GameManager.LogButton()¿¡¼­ È£ÃâµÊ
+    // ë¡œê·¸ ë²„íŠ¼ í´ë¦­ ì‹œ ë¡œê·¸ íŒ¨ë„ì„ ì—¬ëŠ” í•¨ìˆ˜
+    // GameManager.LogButton()ì—ì„œ í˜¸ì¶œë¨
     public void OpenLogPanel()
     {
         if (logPanel == null) return;
         logPanel.SetActive(true);
     }
 
-    // ·Î±× ÆĞ³Î ´İ±â ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö
-    // ·Î±× ÆĞ³Î ³»ºÎÀÇ ´İ±â ¹öÆ° OnClick¿¡ ¿¬°á
+    // ë¡œê·¸ íŒ¨ë„ ë‹«ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
+    // ë¡œê·¸ íŒ¨ë„ ë‚´ë¶€ì˜ ë‹«ê¸° ë²„íŠ¼ OnClickì— ì—°ê²°
     public void CloseLogPanel()
     {
         if (logPanel == null) return;
         logPanel.SetActive(false);
     }
 
-    // Äù½ºÆ® »ı¼º ÅÏ(7, 14, 21, 28)¿¡ ·Î±× ÆĞ³ÎÀ» °­Á¦·Î ¿­°í
-    // ´İ±â ¹öÆ°À» delaySecondsÃÊ µ¿¾È ºñÈ°¼ºÈ­ÇÏ´Â ÇÔ¼ö
-    // GameManager.StartTurn()¿¡¼­ Äù½ºÆ® »ı¼º ÅÏ¿¡ È£ÃâµÊ
+    // í€˜ìŠ¤íŠ¸ ìƒì„± í„´(7, 14, 21, 28)ì— ë¡œê·¸ íŒ¨ë„ì„ ê°•ì œë¡œ ì—´ê³ 
+    // ë‹«ê¸° ë²„íŠ¼ì„ delaySecondsì´ˆ ë™ì•ˆ ë¹„í™œì„±í™”í•˜ëŠ” í•¨ìˆ˜
+    // GameManager.StartTurn()ì—ì„œ í€˜ìŠ¤íŠ¸ ìƒì„± í„´ì— í˜¸ì¶œë¨
     public void ShowLogPanelForced(float delaySeconds = 4f)
     {
         if (logPanel == null) return;
@@ -558,8 +560,8 @@ public class UIManager : MonoBehaviour
         StartCoroutine(DisableLogCloseBtnTemporarily(delaySeconds));
     }
 
-    // ·Î±× ´İ±â ¹öÆ°À» ÀÏÁ¤ ½Ã°£ µ¿¾È ºñÈ°¼ºÈ­ÇÏ´Â ÄÚ·çÆ¾
-    // ShowLogPanelForced()¿¡¼­¸¸ È£ÃâµÊ
+    // ë¡œê·¸ ë‹«ê¸° ë²„íŠ¼ì„ ì¼ì • ì‹œê°„ ë™ì•ˆ ë¹„í™œì„±í™”í•˜ëŠ” ì½”ë£¨í‹´
+    // ShowLogPanelForced()ì—ì„œë§Œ í˜¸ì¶œë¨
     private IEnumerator DisableLogCloseBtnTemporarily(float seconds)
     {
         if (logCloseBtn != null)

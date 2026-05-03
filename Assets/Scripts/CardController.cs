@@ -2,60 +2,60 @@ using UnityEngine;
 
 public class CardController : MonoBehaviour
 {
-    // ÇÃ·¹ÀÌ¾î°¡ ¹öÆ°À» ´­·¶À» ¶§ ¾ÆÁ÷ È®Á¤µÇÁö ¾ÊÀº Á¤Ã¥ Å¸ÀÔÀ» ÀúÀå
-    // (0 = ÀÚ±İÈ®º¸, 1 = Ã»³â, 2 = ³ë³â, 3 = ±â¾÷ / -1 = ¾øÀ½)
+    // í”Œë ˆì´ì–´ê°€ ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ ì•„ì§ í™•ì •ë˜ì§€ ì•Šì€ ì •ì±… íƒ€ì…ì„ ì €ì¥
+    // (0 = ìê¸ˆí™•ë³´, 1 = ì²­ë…„, 2 = ë…¸ë…„, 3 = ê¸°ì—… / -1 = ì—†ìŒ)
     public int pendingPolicyType = -1;
-    public float pendingPolicyCost = 0f; // Á¤Ã¥ ºñ¿ë (ÀÚ±İ Â÷°¨ °ª)
+    public float pendingPolicyCost = 0f; // ì •ì±… ë¹„ìš© (ìê¸ˆ ì°¨ê° ê°’)
 
 
-    // °¢ Á¤Ã¥ Å¸ÀÔ¿¡ ´ëÀÀÇÏ´Â ÀÌ¸§ ¹è¿­, [0]=ÀÚ±İÈ®º¸ [1]=Ã»³â [2]=³ë³â [3]=±â¾÷
+    // ê° ì •ì±… íƒ€ì…ì— ëŒ€ì‘í•˜ëŠ” ì´ë¦„ ë°°ì—´, [0]=ìê¸ˆí™•ë³´ [1]=ì²­ë…„ [2]=ë…¸ë…„ [3]=ê¸°ì—…
     private readonly string[] policyNames =
     {
-        "ÀÚ±İ È®º¸",
-        "Ã»³â Á¤Ã¥",
-        "³ë³â Á¤Ã¥",
-        "±â¾÷ Á¤Ã¥"
+        "ìê¸ˆ í™•ë³´",
+        "ì²­ë…„ ì •ì±…",
+        "ë…¸ë…„ ì •ì±…",
+        "ê¸°ì—… ì •ì±…"
     };
 
-    // °¢ Á¤Ã¥ Å¸ÀÔ¿¡ ´ëÀÀÇÏ´Â ¼³¸í ¹è¿­, [0]=ÀÚ±İÈ®º¸ [1]=Ã»³â [2]=³ë³â [3]=±â¾÷
-    // UIManager¿¡ explainPolicyPanelÀÇ ExplainPolicyText¿¡ Ç¥½ÃµÉ ÅØ½ºÆ®
+    // ê° ì •ì±… íƒ€ì…ì— ëŒ€ì‘í•˜ëŠ” ì„¤ëª… ë°°ì—´, [0]=ìê¸ˆí™•ë³´ [1]=ì²­ë…„ [2]=ë…¸ë…„ [3]=ê¸°ì—…
+    // UIManagerì— explainPolicyPanelì˜ ExplainPolicyTextì— í‘œì‹œë  í…ìŠ¤íŠ¸
     private readonly string[] policyDescs =
     {
-        "ÀÚ±İÀ» È®º¸ÇÕ´Ï´Ù.\n¼³¸í...",
-        "Ã»³âÃşÀ» À§ÇÑ Á¤Ã¥À» ½ÃÇàÇÕ´Ï´Ù.\n¼³¸í...",
-        "³ë³âÃşÀ» À§ÇÑ Á¤Ã¥À» ½ÃÇàÇÕ´Ï´Ù.\n¼³¸í...",
-        "±â¾÷À» À§ÇÑ Á¤Ã¥À» ½ÃÇàÇÕ´Ï´Ù.\n¼³¸í..."
+        "ìê¸ˆì„ í™•ë³´í•©ë‹ˆë‹¤.\nì„¤ëª…...",
+        "ì²­ë…„ì¸µì„ ìœ„í•œ ì •ì±…ì„ ì‹œí–‰í•©ë‹ˆë‹¤.\nì„¤ëª…...",
+        "ë…¸ë…„ì¸µì„ ìœ„í•œ ì •ì±…ì„ ì‹œí–‰í•©ë‹ˆë‹¤.\nì„¤ëª…...",
+        "ê¸°ì—…ì„ ìœ„í•œ ì •ì±…ì„ ì‹œí–‰í•©ë‹ˆë‹¤.\nì„¤ëª…..."
     };
 
-    //Ã»³â/³ë³â/±â¾÷ Á¤Ã¥ ÇÔ¼ö´Â pendingPolicyType°ú pendingPolicyCost¿¡ °ªÀ» ÀúÀåÇÑ µÚ
-    //explainPolicyPanelÀ» ¶ç¿ö ÇÃ·¹ÀÌ¾îÀÇ ÃÖÁ¾ È®ÀÎÀ» ±â´Ù¸²
-    public void OnClickYouthPolicy() // Ã»³â Á¤Ã¥
-    { 
-        // Æ©Åä¸®¾ó ÁßÀÌ¶ó¸é Ã»³â Á¤Ã¥À» ´©¸£¸é ´ÙÀ½ ÄªÂù ´ë»ç·Î ³Ñ¾î°¡µµ·Ï Áö½Ã
+    //ì²­ë…„/ë…¸ë…„/ê¸°ì—… ì •ì±… í•¨ìˆ˜ëŠ” pendingPolicyTypeê³¼ pendingPolicyCostì— ê°’ì„ ì €ì¥í•œ ë’¤
+    //explainPolicyPanelì„ ë„ì›Œ í”Œë ˆì´ì–´ì˜ ìµœì¢… í™•ì¸ì„ ê¸°ë‹¤ë¦¼
+    public void OnClickYouthPolicy() // ì²­ë…„ ì •ì±…
+    {
+        // íŠœí† ë¦¬ì–¼ ì¤‘ì´ë¼ë©´ ì²­ë…„ ì •ì±…ì„ ëˆ„ë¥´ë©´ ë‹¤ìŒ ì¹­ì°¬ ëŒ€ì‚¬ë¡œ ë„˜ì–´ê°€ë„ë¡ ì§€ì‹œ
         if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial)
         {
-            TutorialManager.Instance.OnYouthPolicyClicked(); 
+            TutorialManager.Instance.OnYouthPolicyClicked();
         }
-        ShowPolicyConfirmPanel(1, Random.Range(-35f, -30f)); 
+        ShowPolicyConfirmPanel(1, Random.Range(-35f, -30f));
     }
-    public void OnClickSeniorPolicy() // ³ë³â Á¤Ã¥
-    { 
-        ShowPolicyConfirmPanel(2, Random.Range(-20f, -10f)); 
+    public void OnClickSeniorPolicy() // ë…¸ë…„ ì •ì±…
+    {
+        ShowPolicyConfirmPanel(2, Random.Range(-20f, -10f));
     }
-    public void OnClickCorpPolicy() // ±â¾÷ Á¤Ã¥
-    { 
+    public void OnClickCorpPolicy() // ê¸°ì—… ì •ì±…
+    {
         ShowPolicyConfirmPanel(3, Random.Range(-50f, -40f));
     }
 
-    // ÀÚ±İ È®º¸ ¹öÆ°.
-    // ShowPolicyConfirmPanel()À» ÅëÇØ ÆĞ³ÎÀ» ¸ÕÀú Ç¥½ÃÇÏ°í
-    // ÀÚ±İÀ» ¾ó¸¶³ª Ã¤¿ïÁö´Â "¿¹" È®Á¤ ÈÄ ExecuteFunding() ¾È¿¡¼­ Ã³¸®
-    public void OnClickFunding() 
+    // ìê¸ˆ í™•ë³´ ë²„íŠ¼.
+    // ShowPolicyConfirmPanel()ì„ í†µí•´ íŒ¨ë„ì„ ë¨¼ì € í‘œì‹œí•˜ê³ 
+    // ìê¸ˆì„ ì–¼ë§ˆë‚˜ ì±„ìš¸ì§€ëŠ” "ì˜ˆ" í™•ì • í›„ ExecuteFunding() ì•ˆì—ì„œ ì²˜ë¦¬
+    public void OnClickFunding()
     {
         ShowPolicyConfirmPanel(0, 0f);
     }
 
-    //ÀÚ±İ ÇĞº¸ ¼±ÅÃ½Ã ¾ó¸¶Å­ È®º¸ÇÏ´ÂÁö ½ÇÇàÇÏ¿© °áÁ¤ÇÏ´Â ÇÔ¼ö
+    //ìê¸ˆ í•™ë³´ ì„ íƒì‹œ ì–¼ë§ˆí¼ í™•ë³´í•˜ëŠ”ì§€ ì‹¤í–‰í•˜ì—¬ ê²°ì •í•˜ëŠ” í•¨ìˆ˜
     public void ExecuteFunding()
     {
         float currentMoney = ScoreManager.Instance.money;
@@ -73,16 +73,16 @@ public class CardController : MonoBehaviour
         ScoreManager.Instance.ModifyMoney(getMoney);
 
         int turn = GameManager.Instance.CURRENT_TURN;
-        UIManager.Instance.AddPolicyLog($"{turn}¹øÂ° ÅÏ : ÀÚ±İ È®º¸ ¼º°ø. ÀÚ±İ Ãß°¡ +{getMoney:F0}");
+        UIManager.Instance.AddPolicyLog($"{turn}ë²ˆì§¸ í„´ : ìê¸ˆ í™•ë³´ ì„±ê³µ. ìê¸ˆ ì¶”ê°€ +{getMoney:F0}");
 
         GameManager.Instance.OnPlayerActionCompleted();
     }
 
-    // Á¤Ã¥ ¹öÆ° Å¬¸¯ ½Ã Á¤Ã¥ Å¸ÀÔ°ú Â÷°¨µÉ ÀÚ±İÀ» ÀÎ¼ö·Î ¹Ş¾Æ ÀúÀåÇÏ°í 
-    // UIManager¿¡ policyNames, policyDescs ¹è¿­¿¡¼­ 
-    // ÇØ´ç ÅØ½ºÆ®¸¦ ²¨³» ÆĞ³Î Ç¥½Ã¸¦ ¿äÃ»
-    // policyType : 0=ÀÚ±İÈ®º¸ 1=Ã»³â 2=³ë³â 3=±â¾÷
-    // cost : Á¤Ã¥ ½ÇÇà ½Ã Â÷°¨µÉ ÀÚ±İ (À½¼ö)
+    // ì •ì±… ë²„íŠ¼ í´ë¦­ ì‹œ ì •ì±… íƒ€ì…ê³¼ ì°¨ê°ë  ìê¸ˆì„ ì¸ìˆ˜ë¡œ ë°›ì•„ ì €ì¥í•˜ê³ 
+    // UIManagerì— policyNames, policyDescs ë°°ì—´ì—ì„œ
+    // í•´ë‹¹ í…ìŠ¤íŠ¸ë¥¼ êº¼ë‚´ íŒ¨ë„ í‘œì‹œë¥¼ ìš”ì²­
+    // policyType : 0=ìê¸ˆí™•ë³´ 1=ì²­ë…„ 2=ë…¸ë…„ 3=ê¸°ì—…
+    // cost : ì •ì±… ì‹¤í–‰ ì‹œ ì°¨ê°ë  ìê¸ˆ (ìŒìˆ˜)
     private void ShowPolicyConfirmPanel(int policyType, float cost)
     {
         pendingPolicyType = policyType;
@@ -90,66 +90,66 @@ public class CardController : MonoBehaviour
         UIManager.Instance.ShowExplainPolicyPanel(policyNames[policyType], policyDescs[policyType]);
     }
 
-    // Á¤Ã¥ ¹öÆ°À» ¼±ÅÃÇßÀ»¶§ Àü´Ş¹ŞÀº °¢°¢ÀÇ cost¿Í policyType¸¦ ¹Ş¾Æ ½ÇÇàÇÏ´Â ÇÔ¼ö
+    // ì •ì±… ë²„íŠ¼ì„ ì„ íƒí–ˆì„ë•Œ ì „ë‹¬ë°›ì€ ê°ê°ì˜ costì™€ policyTypeë¥¼ ë°›ì•„ ì‹¤í–‰í•˜ëŠ” í•¨ìˆ˜
     public void ProcessPolicy(float cost, int policyType)
     {
         float currentMoney = ScoreManager.Instance.money;
-        bool isSuccess = CheckSuccess(currentMoney); // ¼º°ø, ½ÇÆĞ Ã¼Å©
+        bool isSuccess = CheckSuccess(currentMoney); // ì„±ê³µ, ì‹¤íŒ¨ ì²´í¬
 
-        ScoreManager.Instance.ModifyMoney(cost); // µ· Â÷°¨
-        int turn = GameManager.Instance.CURRENT_TURN; // ·Î±×¿¡ ¸î ¹øÂ° ÅÏÀÎÁö Àû±â À§ÇÑ º¯¼ö
-        string logMessage = $"{turn}¹øÂ° ÅÏ : Á¤Ã¥ÀÌ "; // ·Î±× ¾Õ¹®Àå ¹Ì¸®¾²±â
+        ScoreManager.Instance.ModifyMoney(cost); // ëˆ ì°¨ê°
+        int turn = GameManager.Instance.CURRENT_TURN; // ë¡œê·¸ì— ëª‡ ë²ˆì§¸ í„´ì¸ì§€ ì ê¸° ìœ„í•œ ë³€ìˆ˜
+        string logMessage = $"{turn}ë²ˆì§¸ í„´ : ì •ì±…ì´ "; // ë¡œê·¸ ì•ë¬¸ì¥ ë¯¸ë¦¬ì“°ê¸°
 
         if (isSuccess)
         {
-            logMessage += "¼º°ø ÇÏ¿´½À´Ï´Ù.\n(";
+            logMessage += "ì„±ê³µ í•˜ì˜€ìŠµë‹ˆë‹¤.\n(";
 
-            if (policyType == 1) // Ã»³âÁ¤Ã¥ ¼º°ø½Ã
+            if (policyType == 1) // ì²­ë…„ì •ì±… ì„±ê³µì‹œ
             {
-                // º¯È­·®À» ·Î±×¿¡ Àû±â À§ÇØ ·£´ı°ªÀ» dY, dS, dC¿¡ ÀúÀå
-                float dY = Random.Range(1f, 1.5f); 
-                float dS = Random.Range(0.5f, 0.9f); 
+                // ë³€í™”ëŸ‰ì„ ë¡œê·¸ì— ì ê¸° ìœ„í•´ ëœë¤ê°’ì„ dY, dS, dCì— ì €ì¥
+                float dY = Random.Range(1f, 1.5f);
+                float dS = Random.Range(0.5f, 0.9f);
                 float dC = Random.Range(0.5f, 0.9f);
 
                 ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(5f, 0, 0, 5f);
-                
-                logMessage += $"Ã»³â ¹Î½É+{dY:F1}, ³ë³â ¹Î½É+{dS:F1}, ±â¾÷ ¹Î½É+{dC:F1} / ´ëÇĞ°¡ ¹ßÀüµµ+5, ÁÖ°Å´ÜÁö ¹ßÀüµµ+5)";
+
+                logMessage += $"ì²­ë…„ ë¯¼ì‹¬+{dY:F1}, ë…¸ë…„ ë¯¼ì‹¬+{dS:F1}, ê¸°ì—… ë¯¼ì‹¬+{dC:F1} / ëŒ€í•™ê°€ ë°œì „ë„+5, ì£¼ê±°ë‹¨ì§€ ë°œì „ë„+5)";
             }
-            else if (policyType == 2) // ³ë³âÁ¤Ã¥ ¼º°ø½Ã
+            else if (policyType == 2) // ë…¸ë…„ì •ì±… ì„±ê³µì‹œ
             {
-                float dY = Random.Range(-0.9f, -0.5f); 
-                float dS = Random.Range(1f, 1.5f); 
+                float dY = Random.Range(-0.9f, -0.5f);
+                float dS = Random.Range(1f, 1.5f);
                 float dC = Random.Range(-0.9f, -0.5f);
 
                 ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(0, 5f, 0, 5f);
 
-                logMessage += $"Ã»³â ¹Î½É+{dY:F1}, ³ë³â ¹Î½É+{dS:F1}, ±â¾÷ ¹Î½É+{dC:F1} / ½Ç¹öÅ¸¿î ¹ßÀüµµ+5, ÁÖ°Å´ÜÁö ¹ßÀüµµ+5)";
+                logMessage += $"ì²­ë…„ ë¯¼ì‹¬+{dY:F1}, ë…¸ë…„ ë¯¼ì‹¬+{dS:F1}, ê¸°ì—… ë¯¼ì‹¬+{dC:F1} / ì‹¤ë²„íƒ€ìš´ ë°œì „ë„+5, ì£¼ê±°ë‹¨ì§€ ë°œì „ë„+5)";
             }
-            else if (policyType == 3) // ±â¾÷Á¤Ã¥ ¼º°ø½Ã
+            else if (policyType == 3) // ê¸°ì—…ì •ì±… ì„±ê³µì‹œ
             {
-                float dY = Random.Range(0.5f, 0.9f); 
-                float dS = Random.Range(-0.9f, -0.5f); 
+                float dY = Random.Range(0.5f, 0.9f);
+                float dS = Random.Range(-0.9f, -0.5f);
                 float dC = Random.Range(1f, 1.5f);
 
                 ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
                 ScoreManager.Instance.ModifyDev(0, 0, 5f, 0);
 
-                logMessage += $"Ã»³â ¹Î½É+{dY:F1}, ³ë³â ¹Î½É+{dS:F1}, ±â¾÷ ¹Î½É+{dC:F1} / »ê¾÷´ÜÁö ¹ßÀüµµ+5)";
+                logMessage += $"ì²­ë…„ ë¯¼ì‹¬+{dY:F1}, ë…¸ë…„ ë¯¼ì‹¬+{dS:F1}, ê¸°ì—… ë¯¼ì‹¬+{dC:F1} / ì‚°ì—…ë‹¨ì§€ ë°œì „ë„+5)";
             }
         }
-        else // ½ÇÆĞ ½Ã -0.5 ~ -1.5 »çÀÌ°ªÀ¸·Î ÇÏ¶ô, ¹ßÀüµµ Áõ°¡ ¾øÀ½
+        else // ì‹¤íŒ¨ ì‹œ -0.5 ~ -1.5 ì‚¬ì´ê°’ìœ¼ë¡œ í•˜ë½, ë°œì „ë„ ì¦ê°€ ì—†ìŒ
         {
-            float fMin = GameManager.Instance.FAIL_RND_MIN; 
-            float fMax = GameManager.Instance.FAIL_RND_MAX; 
-            
-            float dY = Random.Range(fMin, fMax); 
-            float dS = Random.Range(fMin, fMax); 
+            float fMin = GameManager.Instance.FAIL_RND_MIN;
+            float fMax = GameManager.Instance.FAIL_RND_MAX;
+
+            float dY = Random.Range(fMin, fMax);
+            float dS = Random.Range(fMin, fMax);
             float dC = Random.Range(fMin, fMax);
             ScoreManager.Instance.ModifyAffinity(dY, dS, dC);
-            
-            logMessage += $"½ÇÆĞ ÇÏ¿´½À´Ï´Ù. (Ã»³â ¹Î½É{dY:F1}, ³ë³â ¹Î½É{dS:F1}, ±â¾÷ ¹Î½É{dC:F1})";
+
+            logMessage += $"ì‹¤íŒ¨ í•˜ì˜€ìŠµë‹ˆë‹¤. (ì²­ë…„ ë¯¼ì‹¬{dY:F1}, ë…¸ë…„ ë¯¼ì‹¬{dS:F1}, ê¸°ì—… ë¯¼ì‹¬{dC:F1})";
         }
 
         UIManager.Instance.AddPolicyLog(logMessage);
@@ -160,17 +160,17 @@ public class CardController : MonoBehaviour
         GameManager.Instance.OnPlayerActionCompleted();
     }
 
-    // ÇöÀç µ· °ÔÀÌÁö¸¦ ±âÁØÀ¸·Î Á¤Ã¥ÀÇ ¼º°ø È®·üÀ» °è»êÇÏ´Â ÇÔ¼ö
+    // í˜„ì¬ ëˆ ê²Œì´ì§€ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì •ì±…ì˜ ì„±ê³µ í™•ë¥ ì„ ê³„ì‚°í•˜ëŠ” í•¨ìˆ˜
     private bool CheckSuccess(float money)
     {
-        // Æ©Åä¸®¾ó ÁßÀÌ¶ó¸é µ·ÀÌ³ª È®·ü¿¡ »ó°ü¾øÀÌ ¹«Á¶°Ç 100% ¼º°ø
+        // íŠœí† ë¦¬ì–¼ ì¤‘ì´ë¼ë©´ ëˆì´ë‚˜ í™•ë¥ ì— ìƒê´€ì—†ì´ ë¬´ì¡°ê±´ 100% ì„±ê³µ
         if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorial) return true;
 
         if (money >= 100f) return true;
         if (money <= 0f) return false;
 
-        float chance = 0f; // ÀÚ±İÀÇ ¾ç¿¡ µû¶ó È®·üÀ» ÀúÀåÇÏ´Â º¯¼ö
-        
+        float chance = 0f; // ìê¸ˆì˜ ì–‘ì— ë”°ë¼ í™•ë¥ ì„ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
+
         if (money >= 80f) chance = Random.Range(80f, 100f);
         else if (money >= 60f) chance = Random.Range(60f, 80f);
         else if (money >= 40f) chance = Random.Range(40f, 60f);
