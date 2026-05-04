@@ -1,6 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable] public class HighlightTargetGroup 
+{ 
+    // 해당 대사에서 동시에 밝게 강조할 UI 오브젝트 배열 
+    public GameObject[] targets; 
+}
+
 public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance;
@@ -23,9 +29,9 @@ public class TutorialManager : MonoBehaviour
     [TextArea(1, 5)] // 한 대사에 최소 줄수 1 ~ 최대 줄수 5줄까지 입력할수 있음. 자유롭게 수정하여 사용.
     public string[] dialogues;
 
-    // 대사가 넘어갈 때마다 밝게 강조할 UI 오브젝트를 넣을 배열과 현재 강조 중인 대상을 기억할 변수
-    public GameObject[] highlightTargets;
-    private GameObject currentHighlightTarget = null;
+    public HighlightTargetGroup[] highlightTargets; // 대사가 넘어갈 때마다 밝게 강조할 UI 오브젝트를 넣을 배열
+    private readonly System.Collections.Generic.List<GameObject> currentHighlightTargets = 
+    new System.Collections.Generic.List<GameObject>(); // 현재 강조 중인 UI 오브젝트들을 기억하는 리스트
 
     public Button youthPolicyBtn; // 청년 정책 (이것만 누르게 함)
     public Button seniorPolicyBtn; // 노년 정책 (튜토리얼 중 잠금)
@@ -114,51 +120,27 @@ public class TutorialManager : MonoBehaviour
         ResetHighlight();
 
         // 이번 대사 순번에 맞게 강조해야 할 타겟 UI가 있다면 어두운 배경 앞으로 끌어옴
-        if (highlightTargets != null && highlightTargets.Length > currentStep && highlightTargets[currentStep] != null)
+        if (highlightTargets != null &&highlightTargets.Length > currentStep && highlightTargets[currentStep] != null)
         {
-            currentHighlightTarget = highlightTargets[currentStep];
-            SetHighlight(currentHighlightTarget);
-        }
+            HighlightTargetGroup group = highlightTargets[currentStep];
 
-        if (currentStep == buttonClickStep)
-        {
-            // 청년 버튼만 켜서 청년 정책 누르는게 함, 튜토리얼 패널 클릭 비활성화
-            tutorialPanel.GetComponent<Image>().raycastTarget = false;
-            youthPolicyBtn.interactable = true;
-        }
-        else if (currentStep == yesBtnClickStep)
-        {
-            tutorialPanel.GetComponent<Image>().raycastTarget = false;
-            // "예" 버튼만 활성화하고 "아니요"는 잠가 무조건 확정하도록 유도
-            if (yesBtn != null) yesBtn.interactable = true;
-            if (noBtn != null) noBtn.interactable = false;
-        }
-        // 뉴스 버튼 클릭 유도 단계
-        else if (currentStep == newsButtonClickStep)
-        {
-            PrepareQuestTutorialSection(); // emailBtn 강제 활성화 (퀘스트 없어도 데모 가능하도록)
-            tutorialPanel.GetComponent<Image>().raycastTarget = false;
-            if (newsButton != null) newsButton.interactable = true;
-        }
-        // 이메일 버튼 클릭 유도 단계
-        else if (currentStep == emailBtnClickStep)
-        {
-            tutorialPanel.GetComponent<Image>().raycastTarget = false;
-            if (emailBtn != null) emailBtn.interactable = true;
-        }
-        // 로그 버튼 유도 단계
-        else if (currentStep == logBtnClickStep) 
-        {
-            tutorialPanel.GetComponent<Image>().raycastTarget = false; 
-            if (logBtn != null) 
+            if (group.targets != null)
             {
-                Button logButton = logBtn.GetComponent<Button>(); 
-                if (logButton != null) logButton.interactable = true; 
-            } 
-        }
-        else
-        {
-            tutorialPanel.GetComponent<Image>().raycastTarget = true;
+                for (int i = 0; i < group.targets.Length; i++)
+                {
+                    GameObject target = group.targets[i];
+
+                    if (target == null)
+                        continue;
+
+                    SetHighlight(target);
+
+                    if (!currentHighlightTargets.Contains(target))
+                    {
+                        currentHighlightTargets.Add(target);
+                    }
+                }
+            }
         }
     }
 
@@ -193,18 +175,30 @@ public class TutorialManager : MonoBehaviour
     }
 
     // 맨 앞으로 튀어나왔던 UI를 다시 원래 자리로 돌려놓는 함수
-    private void ResetHighlight()
+    private void ResetHighlight() 
+    { 
+        for (int i = 0; i < currentHighlightTargets.Count; i++) 
+        { 
+            GameObject target = currentHighlightTargets[i]; 
+            if (target == null) continue; ResetSingleHighlight(target); 
+        } 
+        currentHighlightTargets.Clear(); 
+    }
+
+    // 특정 UI 오브젝트 하나의 Highlight 상태를 해제하는 함수
+    // SetHighlight()에서 변경한 Canvas.overrideSorting과 sortingOrder 값을 원래 상태로 되돌림
+    private void ResetSingleHighlight(GameObject target)
     {
-        if (currentHighlightTarget != null)
+        if (target == null)
+            return;
+
+        Canvas canvas = target.GetComponent<Canvas>();
+
+        if (canvas != null)
         {
-            Canvas canvas = currentHighlightTarget.GetComponent<Canvas>();
-            if (canvas != null)
-            {
-                // 강제로 높였던 렌더링 순서 설정을 해제
-                canvas.overrideSorting = false;
-                canvas.sortingOrder = 0;
-            }
-            currentHighlightTarget = null; // 타겟 초기화
+            // 강제로 높였던 렌더링 순서 설정을 해제
+            canvas.overrideSorting = false;
+            canvas.sortingOrder = 0;
         }
     }
 

@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public CardController cardController; //explainPolicyPanel의 "예"/"아니요" 버튼 처리를 위해
                                           //CardController의 pending 데이터와 Execute 함수에 접근할 참조 변수.
-    public QuestManager questManager;
     public static bool isTutorialMode = false;
 
     public Image MoneyBar; // 돈 게이지 슬라이드
