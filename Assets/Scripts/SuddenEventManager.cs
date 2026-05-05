@@ -14,7 +14,7 @@ public class SuddenEventManager : MonoBehaviour
         public float dUniv, dSilver, dInd, dHouse; // 변경될 지역들
     }
 
-    public float eventTriggerChance = 40f; // 이벤트 발생 확률, 임시로 정함
+    public float eventTriggerChance = 20f; // 이벤트 발생 확률
 
     public List<EventData> events; // 이벤트 목록
 
