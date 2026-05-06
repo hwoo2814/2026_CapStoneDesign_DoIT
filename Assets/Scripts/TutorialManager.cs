@@ -12,7 +12,7 @@ public class TutorialManager : MonoBehaviour
     public static TutorialManager Instance;
 
     public bool isTutorial = false; // 튜토리얼 상태
-    private int currentStep = 0; // 튜토리얼 대사 한줄씩 카운팅
+    private int currentStep = 0; // 튜토리얼 대사 순선를 한번씩 카운팅
 
     public GameObject tutorialPanel; // 화면 전체를 덮는 투명 패널
     public Image characterImage;  // 비서 캐릭터 이미지
@@ -22,11 +22,11 @@ public class TutorialManager : MonoBehaviour
     // 캐릭터 이미지와 대사창의 위치 정보를 담을 배열입니다.
     // Dialogues 배열과 크기가 같아야 합니다.
     // characterPositions, dialogBoxPositions, dialogues, highlightTargets
-    // 위 4개의 배열을 크기가 같아야 에러가 나지 않습니다.
+    // 이 4개의 배열을 크기가 같아야 에러가 나지 않습니다.
     public Vector2[] characterPositions; // 각 스텝별 캐릭터 위치
     public Vector2[] dialogBoxPositions; // 각 스텝별 대사창 위치
 
-    [TextArea(1, 5)] // 한 대사에 최소 줄수 1 ~ 최대 줄수 5줄까지 입력할수 있음. 자유롭게 수정하여 사용.
+    [TextArea(1, 10)] // 한 대사에 최소 줄수 1 ~ 최대 줄수 5줄까지 입력할수 있음. 자유롭게 수정하여 사용.
     public string[] dialogues;
 
     public HighlightTargetGroup[] highlightTargets; // 대사가 넘어갈 때마다 밝게 강조할 UI 오브젝트를 넣을 배열
@@ -43,14 +43,11 @@ public class TutorialManager : MonoBehaviour
     public Button emailBtn; // NewsBranchPanel 안의 이메일(퀘스트) 버튼
     public Button logBtn; // 로그 열기/닫기 버튼 오브젝트
 
-    public int buttonClickStep = 5;
-    public int yesBtnClickStep = 6; // 청년 정책 버튼을 누르라고 지시하는 대사의 순번
-                                    // 6번째 대사에서 클릭을 기다리게함 (임시)
-    public int newsButtonClickStep = 10; // 뉴스 버튼을 누르라고 지시하는 대사의 순번
-                                         // 10번째 대사에서 클릭을 기다리게함 (임시)
-    public int emailBtnClickStep = 12; // 이메일 버튼을 누르라고 지시하는 대사의 순번
-                                       // 12번째 대사에서 클릭을 기다리게함 (임시)
-    public int logBtnClickStep = 14; // 로그 버튼 클릭을 유도하는 대사의 순번 (임시값, 인스펙터에서 조정)
+    public int buttonClickStep = 8; // 청년 정책 버튼을 누르라고 지시하는 대사의 순번
+    public int yesBtnClickStep = 9; // 정책의 "예" 버튼을 누르라고 지시하는 대사의 순번
+    public int newsButtonClickStep = 12; // 뉴스 버튼을 누르라고 지시하는 대사의 순번
+    public int emailBtnClickStep = 14; // 이메일 버튼을 누르라고 지시하는 대사의 순번
+    public int logBtnClickStep = 16; // 로그 버튼 클릭을 유도하는 대사의 순번
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -80,7 +77,7 @@ public class TutorialManager : MonoBehaviour
         // 시작 시 뉴스/이메일/로그 버튼 잠금
         if (newsButton != null) newsButton.interactable = false;
         if (emailBtn != null) emailBtn.interactable = false;
-        if (logBtn != null) emailBtn.interactable = false;
+        if (logBtn != null) logBtn.interactable = false;
 
         ShowNextDialogue();
     }
@@ -114,6 +111,7 @@ public class TutorialManager : MonoBehaviour
     // 설명 출력하는 함수
     private void ShowNextDialogue()
     {
+        CloseTutorialRelatedPanels();
         dialogText.text = dialogues[currentStep];
 
         UpdateUIPositions();
@@ -255,7 +253,6 @@ public class TutorialManager : MonoBehaviour
             EndTutorial();
     }
 
-
     // GameManager.EmaillButton() 에서 튜토리얼 중 호출
     // QuestPanel이 열린 직후 다음 대사(퀘스트 패널 설명)로 진행
     // 이메일 버튼을 눌러 QuestPanel이 열린 직후 GameManager에서 호출.
@@ -289,6 +286,19 @@ public class TutorialManager : MonoBehaviour
             ShowNextDialogue();
         else
             EndTutorial();
+    }
+
+    // UI 패널을 끄는 함수
+    private void CloseTutorialRelatedPanels() 
+    {
+        if (UIManager.Instance.explainPolicyPanel != null && UIManager.Instance.explainPolicyPanel.activeSelf != false && currentStep == 10) 
+            UIManager.Instance.explainPolicyPanel.SetActive(false);
+        
+        if (UIManager.Instance.newsBranchPanel != null && UIManager.Instance.newsBranchPanel.activeSelf != false && currentStep == 15) 
+            UIManager.Instance.newsBranchPanel.SetActive(false); 
+        
+        if (UIManager.Instance.questPanel != null && UIManager.Instance.questPanel.activeSelf != false && currentStep == 16) 
+            UIManager.Instance.questPanel.SetActive(false); 
     }
 
     // 뉴스/퀘스트 튜토리얼 섹션 진입 전처리 함수
@@ -326,7 +336,7 @@ public class TutorialManager : MonoBehaviour
         // 튜토리얼 종료 시 뉴스/이메일/로그 버튼 잠금 해제
         if (newsButton != null) newsButton.interactable = true;
         if (emailBtn != null) emailBtn.interactable = true;
-        if (logBtn != null) emailBtn.interactable = true;
+        if (logBtn != null) logBtn.interactable = true;
 
         // 퀘스트 데모로 열렸을 수 있는 패널들 초기화
         if (UIManager.Instance.newsBranchPanel != null)
@@ -335,6 +345,10 @@ public class TutorialManager : MonoBehaviour
             UIManager.Instance.questPanel.SetActive(false);
         if (UIManager.Instance.newsPanel != null)
             UIManager.Instance.newsPanel.SetActive(false);
+        if (UIManager.Instance.logPanel != null)
+            UIManager.Instance.logPanel.SetActive(false);
+        if (UIManager.Instance.explainPolicyPanel != null)
+            UIManager.Instance.explainPolicyPanel.SetActive(false);
 
         // 튜토리얼에서 변했던 데이터를 전부 초기화 함
         ScoreManager.Instance.InitData();
