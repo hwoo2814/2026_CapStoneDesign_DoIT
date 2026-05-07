@@ -60,7 +60,13 @@ public class UIManager : MonoBehaviour
     public Transform houseHoverPos;
 
     public Text hoverInfoText; // 오버 창에 들어갈 텍스트
-    private Outline outLine; // 지역을 강조하는 외각선
+
+    // 지역을 강조하는 외각선들
+    public Outline univOutline; // 신도시 지역 Outline
+    public Outline silverOutline; // 농촌 지역 Outline
+    public Outline industryOutline; // 지방 지역 Outline
+    public Outline houseOutline; // 수도권 지역 Outline
+    private Outline currentRegionOutline; // 현재 마우스가 올라가 있는 지역의 Outline을 임시로 저장하는 변수
 
     public GameObject endingPanel; // 턴이 모두 끝난 후 화면을 덮으며 나타날 최종 결과 창
     public Text regionUnivScoreText; // 대학가 점수
@@ -373,13 +379,19 @@ public class UIManager : MonoBehaviour
     //마우스 오버시 각 지역 정보를 HoverTooltip에 보여주는 함수
     public void OnRegionHoverEnter(int regionIndex)
     {
-        hoverTooltip.SetActive(true);
+        if (hoverTooltip != null)
+            hoverTooltip.SetActive(true);
         float dev = 0f;
         string rName = "";
         bool isDeactivated = false;
+        RectTransform tooltipRect = null;
 
-        RectTransform tooltipRect = hoverTooltip.GetComponent<RectTransform>();
-        outLine = GetComponent<Outline>();
+        if (hoverTooltip != null)
+            tooltipRect = hoverTooltip.GetComponent<RectTransform>();
+
+        // 이전에 저장되어 있을 수 있는 Outline 정보를 초기화
+        // 새로 마우스가 올라간 지역의 Outline을 다시 저장하기 위함
+        currentRegionOutline = null;
 
         // 지역에 따라 이름, 발전도를 할당, Transform 변수 지정
         if (regionIndex == 1)
@@ -387,52 +399,73 @@ public class UIManager : MonoBehaviour
             rName = "신도시";
             dev = ScoreManager.Instance.devUniv;
             isDeactivated = ScoreManager.Instance.isUnivDeactivated;
-            if (univHoverPos != null) tooltipRect.position = univHoverPos.position;
+            currentRegionOutline = univOutline;
+            if (tooltipRect != null && univHoverPos != null)
+                tooltipRect.position = univHoverPos.position;
         }
         else if (regionIndex == 2)
         {
             rName = "농촌";
             dev = ScoreManager.Instance.devSilver;
             isDeactivated = ScoreManager.Instance.isSilverDeactivated;
-            if (silverHoverPos != null) tooltipRect.position = silverHoverPos.position;
+            currentRegionOutline = silverOutline;
+            if (tooltipRect != null && silverHoverPos != null)
+                tooltipRect.position = silverHoverPos.position;
         }
         else if (regionIndex == 3)
         {
             rName = "지방";
             dev = ScoreManager.Instance.devIndustry;
             isDeactivated = ScoreManager.Instance.isIndustryDeactivated;
-            if (industryHoverPos != null) tooltipRect.position = industryHoverPos.position;
-
+            currentRegionOutline = industryOutline;
+            if (tooltipRect != null && industryHoverPos != null)
+                tooltipRect.position = industryHoverPos.position;
         }
         else if (regionIndex == 4)
         {
             rName = "수도권";
             dev = ScoreManager.Instance.devHouse;
             isDeactivated = ScoreManager.Instance.isHouseDeactivated;
-            if (houseHoverPos != null) tooltipRect.position = houseHoverPos.position;
+            currentRegionOutline = houseOutline;
+            if (tooltipRect != null && houseHoverPos != null)
+                tooltipRect.position = houseHoverPos.position;
         }
 
-        // 지역이 비활성화 되었다면 호버시 지역 비활성화 표시
-        if (isDeactivated)
+        if (hoverInfoText != null)
         {
-            hoverInfoText.text = $"{rName}\n[ 잠김 ]";
-            outLine.enabled = true;
+            // 지역이 비활성화 상태라면 잠김 문구 표시
+            if (isDeactivated)
+            {
+                hoverInfoText.text = $"{rName}\n[ 잠김 ]";
+            }
+
+            // 지역이 활성화 상태라면 발전도 레벨 표시
+            else
+            {
+                string lv = dev >= 50f ? "LV 3" : (dev >= 20f ? "LV 2" : "LV 1");
+                hoverInfoText.text = $"{rName}\n발전도 : {lv}";
+            }
         }
-        // 지역이 활성화 되어있다면 지역 레벨 표시
-        else
-        {
-            string lv = dev >= 50f ? "LV 3" : (dev >= 20f ? "LV 2" : "LV 1");
-            hoverInfoText.text = $"{rName}\n발전도 : {lv}";
-            outLine.enabled = true;
-        }
+
+        // 현재 지역의 Outline이 정상적으로 연결되어 있다면 Outline 켜기
+        if (currentRegionOutline != null)
+            currentRegionOutline.enabled = true;
     }
 
     // 마우스 오버 끝나면 꺼지게 하는 함수
     public void OnRegionHoverExit()
     {
-        outLine = GetComponent<Outline>();
-        outLine.enabled = false;
-        hoverTooltip.SetActive(false);
+        // 현재 마우스가 올라가 있던 지역의 Outline이 있다면 끔
+        if (currentRegionOutline != null)
+        {
+            currentRegionOutline.enabled = false;
+
+            // 더 이상 호버 중인 지역이 없으므로 저장된 Outline 참조를 비움
+            currentRegionOutline = null;
+        }
+        // 호버 툴팁 오브젝트가 연결되어 있다면 화면에서 숨김
+        if (hoverTooltip != null)
+            hoverTooltip.SetActive(false);
     }
 
     // 자금 100이면 버튼 비활성화하는 함수
