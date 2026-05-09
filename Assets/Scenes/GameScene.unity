@@ -5623,7 +5623,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: QuestDetail
+  m_Text: "\uC5C5\uBB34 \uC81C\uC548 \uB0B4\uC6A9"
 --- !u!222 &824360443
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9176,7 +9176,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 7ec3875902f557a47a54c674990e8b85, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -10356,7 +10356,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: QuestTitle
+  m_Text: "\uC5C5\uBB34 \uC81C\uC548 \uC81C\uBAA9"
 --- !u!222 &1484029127
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11749,7 +11749,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 049f408b0ea654d448e813785b538844, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -12538,7 +12538,7 @@ MonoBehaviour:
     \uC2DC\uD589\uD560 \uB54C\uB9C8\uB2E4 \uC774 \uC790\uAE08\uC774 \uC0AC\uC6A9\uB429\uB2C8\uB2E4."
   - "\uB2E4\uC74C\uC740 '\uBBFC\uC2EC' \uAC8C\uC774\uC9C0\uC608\uC694.\r\n\uCCAD\uB144\xB7\uB178\uB144\xB7\uAE30\uC5C5
     \uC138 \uACC4\uCE35\uC758 \n\uC9C0\uC9C0\uC728\uC744 \uB098\uD0C0\uB0C5\uB2C8\uB2E4.\r\n\uC5B4\uB290
-    \uD55C\uCABD\uC73C\uB85C \uCE58\uC6B0\uCE58\uC9C0 \uC54A\uAC8C \uADE0\uD615\uC774
+    \uD55C\uCABD\uC73C\uB85C \uCE58\uC6B0\uCE58\uC9C0 \uC54A\uAC8C \n\uADE0\uD615\uC774
     \uC911\uC694\uD574\uC694."
   - "\uADF8\uB9AC\uACE0 \uC774\uAC74 '\uD604\uC7AC \uD134'\uC774\uC5D0\uC694.\r\n\uC2DC\uC7A5\uB2D8\uAED8
     \uC8FC\uC5B4\uC9C4 \uC784\uAE30\uB294 \n\uCD1D 35\uD134\uC785\uB2C8\uB2E4.\r\n\uD55C
@@ -12576,7 +12576,7 @@ MonoBehaviour:
     '\uB274\uC2A4' \uBC84\uD2BC\uC744 \uB204\uB974\uBA74  \n\uB3C4\uC2DC\uC758 \uD750\uB984\uC744
     \uC77D\uC744 \uC218 \uC788\uB294 \uB274\uC2A4\uAC00 \uB098\uC624\uACE0 \n\uC2DC\uC7A5\uB2D8\uAED8
     \uB4E4\uC5B4\uC628 \uC5C5\uBB34\uB97C \uD655\uC778\uD560 \uC218 \uC788\uC5B4\uC694."
-  - "'\uC774\uBA54\uC77C' \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694!\r\n\uC911\uC694\uD55C
+  - "'\uC5C5\uBB34' \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694!\r\n\uC911\uC694\uD55C
     \uC5C5\uBB34 \uC81C\uC548\uC774 \uB4E4\uC5B4\uC640 \uC788\uC744 \uAC70\uC608\uC694."
   - "\uC774\uAC8C \uBC14\uB85C '\uC5C5\uBB34 \uD328\uB110'\uC774\uC5D0\uC694.\r\n\uC81C\uC548\uC744
     \uC218\uB77D\uD558\uBA74 \uBCF4\uB108\uC2A4\uB97C \uC5BB\uC744 \uC218 \uC788\uC9C0\uB9CC,\r\n\uC2E4\uD328\uD558\uBA74
@@ -14669,7 +14669,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Summary
+  m_Text: "\uC815\uB9AC"
 --- !u!222 &2055031198
 CanvasRenderer:
   m_ObjectHideFlags: 0
