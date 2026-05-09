@@ -425,7 +425,10 @@ public class GameManager : MonoBehaviour
     { 
         StopRandomBGM(); 
         if (endingAudioSource == null) return; 
-        float savedVolume = PlayerPrefs.GetFloat("BGMVolume", endingAudioSource.volume); 	endingAudioSource.volume = savedVolume; 
+
+        float savedVolume = PlayerPrefs.GetFloat("BGMVolume", endingAudioSource.volume); 	
+        endingAudioSource.volume = savedVolume; 
+        
         if (!endingAudioSource.isPlaying) 
         { 
             endingAudioSource.Play(); 
@@ -453,6 +456,15 @@ public class GameManager : MonoBehaviour
     public void RestartWithoutTutorial()
     {
         Time.timeScale = 1f;
+
+        // 현재 게임 BGM 코루틴과 재생 중인 일반 BGM 정지
+        StopRandomBGM();
+
+        // 엔딩 음악이 재생 중일 수도 있으므로 별도로 정지
+        if (endingAudioSource != null)
+        {
+            endingAudioSource.Stop();
+        }
         PlayerPrefs.SetInt("PlayTutorial", 0);
         PlayerPrefs.Save();
         SceneManager.LoadScene("GameScene");
