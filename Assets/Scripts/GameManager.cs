@@ -92,9 +92,16 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (CURRENT_TURN > 1)
+        // 현재 튜토리얼 진행 중인지 확인하는 변수
+        bool isTutorialRunning = TutorialManager.Instance != null && TutorialManager.Instance.isTutorial;
+
+        // 튜토리얼 중이 아닐 때만 돌발 이벤트를 체크함
+        if (CURRENT_TURN > 1 && !isTutorialRunning)
         {
-            SuddenEventManager.Instance.CheckAndTriggerEvent(); // 돌발 이벤트 체크 및 발생 함수
+            if (SuddenEventManager.Instance != null)
+            {
+                SuddenEventManager.Instance.CheckAndTriggerEvent(); // 돌발 이벤트 체크 및 발생 함수
+            }
         }
 
         if (QuestManager.Instance != null)
