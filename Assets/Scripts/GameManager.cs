@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private AudioSource currentBgmAudioSource; // 현재 어떤 배경음악이 재생 중인지 확인하기 위해 사용
     public AudioSource endingAudioSource; // 엔딩 배경음악
     public AudioSource questSuccessAudioSource; // 퀘스트 성공 음악
+    public AudioSource questFailedAudioSource; // 퀘스트 실패 음악
     public AudioSource clickAudioSource; // 모든 버튼, 정책 클릭시 나는 사운드
 
     public int CURRENT_TURN = 1;
@@ -47,10 +48,6 @@ public class GameManager : MonoBehaviour
             StartRandomBGM(); // 배경음악 재생
             CURRENT_TURN = 1;
             ScoreManager.Instance.InitData();
-            if (UIManager.Instance.emailBtn != null)
-            {
-                UIManager.Instance.emailBtn.SetActive(false);
-            }
 
             // "PlayTutorial" 을 찾아서 읽기
             int doTutorial = PlayerPrefs.GetInt("PlayTutorial", 1);

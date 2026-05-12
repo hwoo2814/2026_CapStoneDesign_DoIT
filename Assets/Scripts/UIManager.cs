@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     public GameObject optionPanel; // 옵션창 패널
-    public GameObject emailBtn; // 퀘스트가 있을 때만 활성화할 이메일 버튼
+    public GameObject emailBtn; // 이메일 버튼
     public Image newsButtonImage; // 뉴스 버튼 이미지 (퀘스트 알림 시 교체할 토대)
     public Sprite newsDefaultSprite; // 뉴스 버튼 기본 이미지
     public Sprite newsQuestAlertSprite; // 퀘스트 생성 시 표시할 뉴스 알림 이미지
@@ -521,9 +521,6 @@ public class UIManager : MonoBehaviour
         if (questDescText  != null) questDescText.text  = quest.questDesc;
         if (summaryText != null) summaryText.text = $"목표: {quest.questGoalText}\n보상: {quest.questRewardText}\n리스크: {quest.questRiskText}";
 
-        // 퀘스트 존재 시 이메일 버튼 활성화
-        if (emailBtn != null) emailBtn.SetActive(true);
-
         // 뉴스 버튼 이미지를 퀘스트 알림 이미지로 교체
         if (newsButtonImage != null && newsQuestAlertSprite != null)
             newsButtonImage.sprite = newsQuestAlertSprite;
@@ -541,9 +538,6 @@ public class UIManager : MonoBehaviour
         if (questDescText != null) questDescText.text = "";
         if (summaryText != null) summaryText.text = "";
         if (resultProposalText != null) resultProposalText.text = "";
-
-        // 퀘스트 없을 때 이메일 버튼 비활성화
-        if (emailBtn != null) emailBtn.SetActive(false);
 
         // 뉴스 버튼 이미지를 기본 이미지로 복구
         if (newsButtonImage != null && newsDefaultSprite != null)
