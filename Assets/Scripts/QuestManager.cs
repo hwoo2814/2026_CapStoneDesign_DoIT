@@ -223,6 +223,10 @@ public class QuestManager : MonoBehaviour
         fundingDebuffRemainingTurns = 0;
         fundingDebuffRate = 0f;
         aiHintRemainingTurns = 0;
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateAIHintUI(false, 0);
+        }
         ResetProgressCounters();
     }
 
@@ -381,7 +385,13 @@ public class QuestManager : MonoBehaviour
 
         // AI 힌트 활성화
         if (effect.activateAIHint)
+        {
             aiHintRemainingTurns = effect.aiHintTurns + 1;
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.UpdateAIHintUI(true, effect.aiHintTurns);
+            }
+        }
     }
 
     // 민심 타입 인덱스(0=청년, 1=노년, 2=기업)로 실제 민심 값을 반환

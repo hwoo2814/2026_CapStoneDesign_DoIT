@@ -21,7 +21,7 @@ public class CardController : MonoBehaviour
     // UIManager에 explainPolicyPanel의 ExplainPolicyText에 표시될 텍스트
     private readonly string[] policyDescs =
     {
-        "자금을 확보합니다.\n설명...",
+        "자금을 확보합니다.",
         "청년층을 위한 정책을 시행합니다.\n설명...",
         "노년층을 위한 정책을 시행합니다.\n설명...",
         "기업을 위한 정책을 시행합니다.\n설명..."
@@ -29,6 +29,83 @@ public class CardController : MonoBehaviour
 
     //청년/노년/기업 정책 함수는 pendingPolicyType과 pendingPolicyCost에 값을 저장한 뒤
     //explainPolicyPanel을 띄워 플레이어의 최종 확인을 기다림
+    private readonly string[][] randomPolicyTexts =
+    {
+        null,
+        new[]
+        {
+            "청년 문화패스 지급",
+            "청년 월세 상담센터 운영",
+            "심야 대중교통 확대",
+            "청년 창업 멘토링 데이",
+            "공유오피스 이용권 지원",
+            "청년 커뮤니티 공간 조성",
+            "청년 취업 특강 개최",
+            "청년 면접 정장 대여",
+            "공공 와이파이 확대",
+            "청년 운동시설 야간 개방",
+            "청년 생활정보 플랫폼 운영",
+            "청년 동아리 지원금",
+            "지역 축제 청년 부스 지원",
+            "청년 교통비 포인트",
+            "청년 마음상담 프로그램",
+            "공공 스터디룸 개방",
+            "청년 자원봉사 포인트",
+            "청년 취미 클래스 지원",
+            "청년 정책 공모전",
+            "지역 청년 인터뷰 홍보"
+        },
+        new[]
+        {
+            "어르신 건강검진 주간",
+            "경로당 냉난방비 지원",
+            "동네 순환버스 증편",
+            "디지털 기기 교육교실",
+            "어르신 스마트폰 상담소",
+            "공원 벤치 추가 설치",
+            "그늘막 설치 확대",
+            "어르신 일자리 안내센터",
+            "무료 혈압 측정 부스",
+            "경로당 프로그램 다양화",
+            "노년층 문화교실 운영",
+            "전통시장 장보기 도우미",
+            "어르신 보행로 정비",
+            "횡단보도 신호시간 연장",
+            "동네 병원 안내 지도 제작",
+            "경로 우대 쿠폰 확대",
+            "어르신 말벗 봉사단",
+            "노인 복지 민원창구 운영",
+            "공원 체조 프로그램",
+            "어르신 이동식 건강상담소 운영"
+        },
+        new[]
+        {
+            "중소기업 행정서류 간소화",
+            "지역 상권 홍보 캠페인",
+            "소상공인 배달비 지원",
+            "전통시장 주말 이벤트",
+            "기업 채용설명회 개최",
+            "플리마켓 허가 완화",
+            "간판 정비 지원사업",
+            "소상공인 회계 상담",
+            "지역 상품 온라인몰 입점 지원",
+            "창업 절차 안내센터 운영",
+            "공장 주변 도로 정비",
+            "산업단지 셔틀버스 운영",
+            "기업 민원 빠른 처리 주간",
+            "지역 브랜드 인증마크 도입",
+            "소상공인 카드수수료 지원",
+            "창업 박람회 개최",
+            "낡은 상가 외벽 개선 지원",
+            "야간 영업구역 조명 개선",
+            "지역 물류비 일부 지원",
+            "기업 세무 상담의 날"
+        }
+    };
+
+    private readonly int[][] randomPolicyTextOrders = new int[4][];
+    private readonly int[] nextPolicyTextIndexes = new int[4];
+
     public void OnClickYouthPolicy() // 청년 정책
     { 
         // 튜토리얼 중이라면 청년 정책을 누르면 다음 칭찬 대사로 넘어가도록 지시
@@ -87,12 +164,81 @@ public class CardController : MonoBehaviour
     {
         pendingPolicyType = policyType;
         pendingPolicyCost = cost;
-        UIManager.Instance.ShowExplainPolicyPanel(policyNames[policyType], policyDescs[policyType]);
+        UIManager.Instance.ShowExplainPolicyPanel(policyNames[policyType], GetPolicyDesc(policyType));
+    }
+
+    // 청년/노년/기업 정책 설명은 현재 순번의 텍스트만 보여주고, 실제 선택 확정 시 다음 순번으로 이동
+    private string GetPolicyDesc(int policyType)
+    {
+        if (policyType <= 0 || policyType >= randomPolicyTexts.Length)
+        {
+            return policyDescs[policyType];
+        }
+
+        string[] texts = randomPolicyTexts[policyType];
+        if (texts == null || texts.Length == 0)
+        {
+            return policyDescs[policyType];
+        }
+
+        EnsurePolicyTextOrder(policyType, texts.Length);
+
+        int currentIndex = nextPolicyTextIndexes[policyType];
+        int textIndex = randomPolicyTextOrders[policyType][currentIndex];
+        return texts[textIndex];
+    }
+
+    private void AdvancePolicyDesc(int policyType)
+    {
+        if (policyType <= 0 || policyType >= randomPolicyTexts.Length)
+        {
+            return;
+        }
+
+        string[] texts = randomPolicyTexts[policyType];
+        if (texts == null || texts.Length == 0)
+        {
+            return;
+        }
+
+        EnsurePolicyTextOrder(policyType, texts.Length);
+
+        nextPolicyTextIndexes[policyType]++;
+        if (nextPolicyTextIndexes[policyType] >= texts.Length)
+        {
+            nextPolicyTextIndexes[policyType] = 0;
+        }
+    }
+
+    private void EnsurePolicyTextOrder(int policyType, int textCount)
+    {
+        if (randomPolicyTextOrders[policyType] != null)
+        {
+            return;
+        }
+
+        int[] order = new int[textCount];
+        for (int i = 0; i < order.Length; i++)
+        {
+            order[i] = i;
+        }
+
+        for (int i = order.Length - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            int temp = order[i];
+            order[i] = order[randomIndex];
+            order[randomIndex] = temp;
+        }
+
+        randomPolicyTextOrders[policyType] = order;
     }
 
     // 정책 버튼을 선택했을때 전달받은 각각의 cost와 policyType를 받아 실행하는 함수
     public void ProcessPolicy(float cost, int policyType)
     {
+        AdvancePolicyDesc(policyType);
+
         float currentMoney = ScoreManager.Instance.money;
         bool isSuccess = CheckSuccess(currentMoney); // 성공, 실패 체크
 

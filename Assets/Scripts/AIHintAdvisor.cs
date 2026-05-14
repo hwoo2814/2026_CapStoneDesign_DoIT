@@ -35,7 +35,7 @@ public class AIHintAdvisor : MonoBehaviour
     [SerializeField] private Color normalColor = Color.white;
 
     [Header("Refresh")]
-    [SerializeField] private bool alwaysShowHintForTesting = true;
+    [SerializeField] private bool alwaysShowHintForTesting = false;
     [SerializeField] private float refreshIntervalSeconds = 0.5f;
     [SerializeField] private int ollamaTimeoutSeconds = 20;
 
@@ -189,7 +189,7 @@ public class AIHintAdvisor : MonoBehaviour
             isSilverDeactivated = sm.isSilverDeactivated,
             isIndustryDeactivated = sm.isIndustryDeactivated,
             isHouseDeactivated = sm.isHouseDeactivated,
-            isHintActive = alwaysShowHintForTesting || (qm != null && qm.IsAIHintActive()),
+            isHintActive = qm != null && qm.IsAIHintActive(),
             hintRemainingTurns = qm != null ? qm.aiHintRemainingTurns : 0
         };
 
