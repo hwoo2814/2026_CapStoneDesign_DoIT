@@ -163,9 +163,6 @@ public class TutorialManager : MonoBehaviour
         // 버튼 클릭 단계에서는 tutorialPanel이 클릭을 막으면 안 되므로 raycastTarget을 false로 설정
         SetTutorialPanelRaycast(!isButtonStep);
 
-        // 이메일 버튼은 GameManager.Start()에서 SetActive(false) 되므로 튜토리얼 중 필요한 구간에서 다시 켜야 함
-        UpdateTutorialEmailButtonVisibility();
-
         // 청년 정책 버튼 클릭 유도 단계
         if (currentStep == buttonClickStep)
         {
@@ -206,21 +203,6 @@ public class TutorialManager : MonoBehaviour
             SetButtonInteractable(logBtn, true);
             return;
         }
-    }
-
-    // 튜토리얼 중 이메일 버튼 표시 여부를 제어하는 함수
-    // 실제 퀘스트가 없어도 튜토리얼 설명을 위해 이메일 버튼을 임시로 보여줌
-    private void UpdateTutorialEmailButtonVisibility()
-    {
-        if (UIManager.Instance == null) return;
-        if (UIManager.Instance.emailBtn == null) return;
-
-        // 뉴스 버튼을 누른 다음 단계부터 이메일 버튼을 누르는 단계까지 이메일 버튼 표시
-        bool shouldShowEmailButton =
-            currentStep >= newsButtonClickStep + 1 &&
-            currentStep <= emailBtnClickStep;
-
-        UIManager.Instance.emailBtn.SetActive(shouldShowEmailButton);
     }
 
     // 설명 출력하는 함수

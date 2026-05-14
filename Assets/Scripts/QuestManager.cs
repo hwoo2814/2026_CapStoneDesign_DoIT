@@ -278,6 +278,8 @@ public class QuestManager : MonoBehaviour
     // 퀘스트 실패: 리스크만 적용
     private void FailCurrentQuest()
     {
+        GameManager.Instance.questFailedAudioSource.PlayOneShot(GameManager.Instance.questFailedAudioSource.clip);
+
         string title = activeQuest.questTitle;
         ApplyEffect(activeQuest.risk);
 
