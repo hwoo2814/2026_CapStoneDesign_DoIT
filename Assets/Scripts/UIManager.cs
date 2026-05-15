@@ -167,14 +167,14 @@ public class UIManager : MonoBehaviour
     // 성공 확률 텍스트 표시 함수
     public string GetSuccessProbabilityText(float money)
     {
-        if (money >= 100f) return "성공 확률 : 100%";
-        if (money <= 0f) return "성공 확률 : 0%";
+        if (money >= 100f) return "100%";
+        if (money <= 0f) return "0%";
 
-        if (money >= 80f) return "성공 확률 : 80% ~ 99%";
-        else if (money >= 60f) return "성공 확률 : 60% ~ 79%";
-        else if (money >= 40f) return "성공 확률 : 40% ~ 59%";
-        else if (money >= 20f) return "성공 확률 : 20% ~ 39%";
-        else return "성공 확률 : 1% ~ 20%";
+        if (money >= 80f) return "80% ~ 99%";
+        else if (money >= 60f) return "60% ~ 79%";
+        else if (money >= 40f) return "40% ~ 59%";
+        else if (money >= 20f) return "20% ~ 39%";
+        else return "1% ~ 20%";
     }
 
     // 민심 게이지 표현 함수
