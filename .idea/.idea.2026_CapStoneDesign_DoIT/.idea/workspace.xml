@@ -11,22 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f560e8cc-d47d-44ed-b595-7008915e315c" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/News.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/News.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PadMain.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PadMain.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/QuestEmail.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/QuestEmail.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AIHintAdvisor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/AIHintAdvisor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CardController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/gear.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/gear.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/tablet.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/tablet.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,6 +114,8 @@
       <workItem from="1777902143551" duration="4879000" />
       <workItem from="1778334287783" duration="14000" />
       <workItem from="1778765066484" duration="1627000" />
+      <workItem from="1778825828537" duration="20000" />
+      <workItem from="1778825872269" duration="760000" />
     </task>
     <servers />
   </component>

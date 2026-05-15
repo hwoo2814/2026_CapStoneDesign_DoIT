@@ -151,7 +151,7 @@ public class UIManager : MonoBehaviour
     {
         if (totalScoreText != null)
         {
-            totalScoreText.text = $"점수: {Mathf.RoundToInt(score)}";
+            totalScoreText.text = $"{Mathf.RoundToInt(score)}";
         }
     }
 
@@ -491,10 +491,10 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0f;
 
         // 구역별 누적 점수 가져와 보여주기 (RoundToInt로 소수점 버리고 스트링으로 표현)
-        regionUnivScoreText.text = "대학가 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalUnivScore).ToString();
-        regionSilverScoreText.text = "실버타운 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalSilverScore).ToString();
-        regionIndustryScoreText.text = "산업단지 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalIndustryScore).ToString();
-        regionHouseScoreText.text = "주거단지 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalHouseScore).ToString();
+        regionUnivScoreText.text = "신도시 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalUnivScore).ToString();
+        regionSilverScoreText.text = "농촌 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalSilverScore).ToString();
+        regionIndustryScoreText.text = "지방 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalIndustryScore).ToString();
+        regionHouseScoreText.text = "수도권 최종 점수 : " + Mathf.RoundToInt(ScoreManager.Instance.totalHouseScore).ToString();
 
         // 최종 점수 (RoundToInt로 소수점 버리고 스트링으로 표현), 등급, 칭호 입력
         endingTotalScoreText.text = "최종 점수 : " + Mathf.RoundToInt(finalScore).ToString();
