@@ -12,8 +12,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f560e8cc-d47d-44ed-b595-7008915e315c" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Image/newspaper.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/newspaper.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Image/newspaper.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/newspaper.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +116,8 @@
       <workItem from="1778334287783" duration="14000" />
       <workItem from="1778765066484" duration="1627000" />
       <workItem from="1778825828537" duration="20000" />
-      <workItem from="1778825872269" duration="1987000" />
+      <workItem from="1778825872269" duration="3902000" />
+      <workItem from="1778906220002" duration="1574000" />
     </task>
     <servers />
   </component>
