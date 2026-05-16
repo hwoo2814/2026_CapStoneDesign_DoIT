@@ -555,7 +555,18 @@ public class UIManager : MonoBehaviour
             aiHintText.text = $"AI 힌트 활성화 ({remainingTurns}턴 남음)";
     }
 
-    // 로그 메시지를 화면에 띄우는 함수
+// 로그 메시지를 화면에 띄우는 함수
+    public void AddPolicyLog(string logMsg)
+    {
+        if (policyLogText != null)
+        {
+            // 새로 들어온 메시지를 맨 위에 추가
+            policyLogText.text = logMsg + "\n\n" + policyLogText.text;
+        }
+    }
+    
+    /*
+         // 로그 메시지를 화면에 띄우는 함수
     public void AddPolicyLog(string logMsg)
     {
         if (policyLogText != null)
@@ -564,6 +575,9 @@ public class UIManager : MonoBehaviour
             policyLogText.text += logMsg + "\n" + "\n";
         }
     }
+    // 기존 로그 코드, 기존에는 로그가 위에서 아래로 쌓이는 형식이였다면 변경된건 아래에서 위로.
+    // 즉 최신 로그가 맨 위에 뜨게 함
+     */
 
     // 로그 버튼 클릭 시 로그 패널을 여는 함수
     // GameManager.LogButton()에서 호출됨
