@@ -109,6 +109,10 @@ public class UIManager : MonoBehaviour
 
     // 자물쇠 프리팹 (하나만 사용)
     public GameObject lockOverlayPrefab;
+    public Transform univLockRegion;
+    public Transform silverLockRegion;
+    public Transform industryLockRegion;
+    public Transform houseLockRegion;
 
     // 각 지역에 생성된 자물쇠 인스턴스
     private GameObject univLock;
@@ -242,6 +246,8 @@ public class UIManager : MonoBehaviour
             );
 
             ReplaceRegionObject(ref univImage, nextPrefab);
+            // 0517아웃라인수정
+            RefreshRegionOutline(ref univOutline, univImage);
         }
 
         if (silverImage != null)
@@ -254,6 +260,8 @@ public class UIManager : MonoBehaviour
             );
 
             ReplaceRegionObject(ref silverImage, nextPrefab);
+            // 0517아웃라인수정
+            RefreshRegionOutline(ref silverOutline, silverImage);
         }
 
         if (industryImage != null)
@@ -266,6 +274,8 @@ public class UIManager : MonoBehaviour
             );
 
             ReplaceRegionObject(ref industryImage, nextPrefab);
+            // 0517아웃라인수정
+            RefreshRegionOutline(ref industryOutline, industryImage);
         }
 
         if (houseImage != null)
@@ -278,6 +288,8 @@ public class UIManager : MonoBehaviour
             );
 
             ReplaceRegionObject(ref houseImage, nextPrefab);
+            // 0517아웃라인수정
+            RefreshRegionOutline(ref houseOutline, houseImage);
         }
 
         UpdateLockOverlays();
@@ -316,6 +328,15 @@ public class UIManager : MonoBehaviour
         currentObj = createdObj;
     }
 
+    private void RefreshRegionOutline(ref Outline regionOutline, GameObject regionObject)
+    {
+        if (regionObject == null) return;
+
+        regionOutline = regionObject.GetComponentInChildren<Outline>(true);
+        if (regionOutline != null)
+            regionOutline.enabled = false;
+    }
+
     // 발전도 값을 기준으로 현재 레벨에 맞는 3D 프리팹을 반환하는 함수
     private GameObject GetLevelPrefab(float dev, GameObject lv1, GameObject lv2, GameObject lv3)
     {
@@ -329,17 +350,23 @@ public class UIManager : MonoBehaviour
     {
         if (lockOverlayPrefab == null) return;
 
-        if (univImage != null)
-            univLock = Instantiate(lockOverlayPrefab, univImage.transform);
+        // 자물쇠 위치 변경
+        Transform univParent = univLockRegion != null ? univLockRegion : (univImage != null ? univImage.transform : null);
+        Transform silverParent = silverLockRegion != null ? silverLockRegion : (silverImage != null ? silverImage.transform : null);
+        Transform industryParent = industryLockRegion != null ? industryLockRegion : (industryImage != null ? industryImage.transform : null);
+        Transform houseParent = houseLockRegion != null ? houseLockRegion : (houseImage != null ? houseImage.transform : null);
 
-        if (silverImage != null)
-            silverLock = Instantiate(lockOverlayPrefab, silverImage.transform);
+        if (univParent != null)
+            univLock = Instantiate(lockOverlayPrefab, univParent);
 
-        if (industryImage != null)
-            indLock = Instantiate(lockOverlayPrefab, industryImage.transform);
+        if (silverParent != null)
+            silverLock = Instantiate(lockOverlayPrefab, silverParent);
 
-        if (houseImage != null)
-            houseLock = Instantiate(lockOverlayPrefab, houseImage.transform);
+        if (industryParent != null)
+            indLock = Instantiate(lockOverlayPrefab, industryParent);
+
+        if (houseParent != null)
+            houseLock = Instantiate(lockOverlayPrefab, houseParent);
 
         // 처음에는 전부 꺼둠
         if (univLock != null) univLock.SetActive(false);
@@ -448,8 +475,12 @@ public class UIManager : MonoBehaviour
         }
 
         // 현재 지역의 Outline이 정상적으로 연결되어 있다면 Outline 켜기
+        // 지역 소멸시 빨간색 아웃라인으로 표시 
         if (currentRegionOutline != null)
+        {
+            currentRegionOutline.OutlineColor = isDeactivated ? Color.red : Color.white;
             currentRegionOutline.enabled = true;
+        }
     }
 
     // 마우스 오버 끝나면 꺼지게 하는 함수
@@ -598,7 +629,7 @@ public class UIManager : MonoBehaviour
     // 퀘스트 생성 턴(7, 14, 21, 28)에 로그 패널을 강제로 열고
     // 닫기 버튼을 delaySeconds초 동안 비활성화하는 함수
     // GameManager.StartTurn()에서 퀘스트 생성 턴에 호출됨
-    public void ShowLogPanelForced(float delaySeconds = 4f)
+    public void ShowLogPanelForced(float delaySeconds = 0.5f)
     {
         if (logPanel == null) return;
         logPanel.SetActive(true);

@@ -141,8 +141,8 @@ public class CardController : MonoBehaviour
         if (currentMoney >= 100f) return;
         float getMoney = 0f;
 
-        if (rand <= 0.5f) getMoney = Random.Range(10f, 25f);
-        else if (rand <= 0.8f) getMoney = Random.Range(20f, 35f);
+        if (rand <= 0.5f) getMoney = Random.Range(20f, 30f);
+        else if (rand <= 0.8f) getMoney = Random.Range(35f, 55f);
         else getMoney = GameManager.Instance.MAX_MONEY - currentMoney;
 
         getMoney *= QuestManager.Instance != null ? QuestManager.Instance.GetFundingMultiplier() : 1f;

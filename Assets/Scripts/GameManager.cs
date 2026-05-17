@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         bool isQuestGenerationTurn = System.Array.IndexOf(new int[] { 7, 14, 21, 28 }, CURRENT_TURN) >= 0;
         if (isQuestGenerationTurn && !(TutorialManager.Instance != null && TutorialManager.Instance.isTutorial))
         {
-            UIManager.Instance.ShowLogPanelForced(4f);
+            UIManager.Instance.ShowLogPanelForced(0.5f);
         }
 
         UIManager.Instance.UpdateMoneyUI(); // 돈 게이지 업데이트
