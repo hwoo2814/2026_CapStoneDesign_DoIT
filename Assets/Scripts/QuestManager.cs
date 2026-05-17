@@ -225,6 +225,8 @@ public class QuestManager : MonoBehaviour
         aiHintRemainingTurns = 0;
         if (UIManager.Instance != null)
         {
+            // 게임 시작시 퀘스트 부분 공백
+            UIManager.Instance.ClearQuestPanel();
             UIManager.Instance.UpdateAIHintUI(false, 0);
         }
         ResetProgressCounters();

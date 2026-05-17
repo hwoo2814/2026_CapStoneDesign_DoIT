@@ -809,6 +809,13 @@ public class OllamaNewsClient : MonoBehaviour
     private void ShowGeneratedNews(string value)
     {
         SetOutputText(value);
+
+        if (UIManager.Instance != null &&
+            UIManager.Instance.newsButtonImage != null &&
+            UIManager.Instance.newsQuestAlertSprite != null)
+        {
+            UIManager.Instance.newsButtonImage.sprite = UIManager.Instance.newsQuestAlertSprite;
+        }
     }
 
     private void SetOutputText(string value)

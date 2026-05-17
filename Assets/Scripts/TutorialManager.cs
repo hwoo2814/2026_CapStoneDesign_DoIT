@@ -35,6 +35,9 @@ public class TutorialManager : MonoBehaviour
     private readonly System.Collections.Generic.List<GameObject> currentHighlightTargets = 
     new System.Collections.Generic.List<GameObject>(); // 현재 강조 중인 UI 오브젝트들을 기억하는 리스트
 
+    private readonly System.Collections.Generic.List<Outline> currentHighlightOutlines =
+    new System.Collections.Generic.List<Outline>();
+
     public Button youthPolicyBtn; // 청년 정책 (이것만 누르게 함)
     public Button seniorPolicyBtn; // 노년 정책 (튜토리얼 중 잠금)
     public Button corpPolicyBtn; // 기업 정책 (튜토리얼 중 잠금)
@@ -153,6 +156,9 @@ public class TutorialManager : MonoBehaviour
     {
         if (!isTutorial) return;
 
+        // 정책 승인 버튼 하이라이트 수정 부분 0518
+        SetYesButtonTextColor(currentStep == yesBtnClickStep ? Color.white : Color.black);
+
         // 먼저 모든 버튼을 잠금
         LockAllTutorialButtons();
 
@@ -257,6 +263,18 @@ public class TutorialManager : MonoBehaviour
     // 특정 UI가 tutorialPanel을 뚫고 맨 앞으로 보이게 해주는 함수
     private void SetHighlight(GameObject target)
     {
+        // 3D모델, 즉 도시 하이라이트 수정 부분 0518
+        Outline outline = target.GetComponentInChildren<Outline>(true);
+        if (outline != null)
+        {
+            outline.enabled = true;
+            outline.OutlineColor = Color.white;
+            if (!currentHighlightOutlines.Contains(outline))
+            {
+                currentHighlightOutlines.Add(outline);
+            }
+        }
+
         // 타겟에 Canvas 컴포넌트가 없으면 임시로 붙임
         Canvas canvas = target.GetComponent<Canvas>();
         if (canvas == null) canvas = target.AddComponent<Canvas>();
@@ -270,6 +288,32 @@ public class TutorialManager : MonoBehaviour
         canvas.sortingOrder = 100;
     }
 
+    private void RefreshHighlight()
+    {
+        ResetHighlight();
+
+        if (highlightTargets == null || highlightTargets.Length <= currentStep || highlightTargets[currentStep] == null)
+            return;
+
+        HighlightTargetGroup group = highlightTargets[currentStep];
+        if (group.targets == null)
+            return;
+
+        for (int i = 0; i < group.targets.Length; i++)
+        {
+            GameObject target = group.targets[i];
+            if (target == null)
+                continue;
+
+            SetHighlight(target);
+
+            if (!currentHighlightTargets.Contains(target))
+            {
+                currentHighlightTargets.Add(target);
+            }
+        }
+    }
+
     // 맨 앞으로 튀어나왔던 UI를 다시 원래 자리로 돌려놓는 함수
     private void ResetHighlight() 
     { 
@@ -279,6 +323,14 @@ public class TutorialManager : MonoBehaviour
             if (target == null) continue; ResetSingleHighlight(target); 
         } 
         currentHighlightTargets.Clear(); 
+
+        for (int i = 0; i < currentHighlightOutlines.Count; i++)
+        {
+            Outline outline = currentHighlightOutlines[i];
+            if (outline != null)
+                outline.enabled = false;
+        }
+        currentHighlightOutlines.Clear();
     }
 
     // 특정 UI 오브젝트 하나의 Highlight 상태를 해제하는 함수
@@ -306,6 +358,27 @@ public class TutorialManager : MonoBehaviour
         SetButtonInteractable(youthPolicyBtn, false);
 
         AdvanceTutorialStep();
+        // 정책 승인 버튼 하이라이트 수정 부분 0518
+        RefreshHighlight();
+        StartCoroutine(RefreshHighlightNextFrame());
+    }
+
+    private System.Collections.IEnumerator RefreshHighlightNextFrame()
+    {
+        yield return null;
+        RefreshHighlight();
+    }
+
+    private void SetYesButtonTextColor(Color color)
+    {
+        if (yesBtn == null)
+            return;
+
+        Text yesText = yesBtn.GetComponentInChildren<Text>(true);
+        if (yesText != null)
+        {
+            yesText.color = color;
+        }
     }
 
     // "예" 버튼이 눌려 정책이 실행된 직후 다음 대사로 진행시키는 함수
@@ -317,6 +390,9 @@ public class TutorialManager : MonoBehaviour
 
         SetButtonInteractable(yesBtn, false);
         SetButtonInteractable(noBtn, false);
+
+        // 정책 승인 버튼 하이라이트 수정 부분 0518
+        SetYesButtonTextColor(Color.black);
 
         AdvanceTutorialStep();
     }

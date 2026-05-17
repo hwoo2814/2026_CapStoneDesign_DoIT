@@ -151,6 +151,12 @@ public class GameManager : MonoBehaviour
 
         UIManager.Instance.HideExplainPolicyPanel();
 
+        // 정책횟수 카운트
+        if (OllamaFinalEvaluationClient.Instance != null)
+        {
+            OllamaFinalEvaluationClient.Instance.RecordPolicySelection(cardController.pendingPolicyType);
+        }
+
         if (cardController.pendingPolicyType == 0)
         {
             cardController.ExecuteFunding();
@@ -234,6 +240,15 @@ public class GameManager : MonoBehaviour
             clickAudioSource.PlayOneShot(clickAudioSource.clip);
             UIManager.Instance.newsBranchPanel.SetActive(false);
             UIManager.Instance.newsPanel.SetActive(true);
+
+            // 뉴스 버튼 클릭시 가져온 퀘스트 알람 이미지를 원래대롣 되돌림
+            if (UIManager.Instance.newsButtonImage != null && UIManager.Instance.newsDefaultSprite != null)
+            {
+                bool hasActiveQuest = QuestManager.Instance != null && QuestManager.Instance.HasActiveQuest();
+                UIManager.Instance.newsButtonImage.sprite = hasActiveQuest && UIManager.Instance.newsQuestAlertSprite != null
+                    ? UIManager.Instance.newsQuestAlertSprite
+                    : UIManager.Instance.newsDefaultSprite;
+            }
         }
     }
 

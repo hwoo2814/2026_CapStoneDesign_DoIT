@@ -33,6 +33,7 @@ public class OllamaFinalEvaluationClient : MonoBehaviour
         "당신은 도시 운영 게임의 최종 평가 AI다.\n" +
         "입력된 최종 게임 데이터만 사용해 한국어 평가문을 작성하라.\n" +
         "없는 사실을 만들지 말고, 점수와 지역 발전도와 정책 선택 횟수의 균형을 근거로 평가하라.\n" +
+        "지금 말해주는 단어들은 모두 대체어로 말해라. 대학교를 신도시로, 실버타운을 농촌으로, 산업지구를 지방으로, 주거구역을 수도권이라는 단어들로 바꿔말해라. 절대 잊지 말 것\n"  +
         "플레이어를 시장님이라고 부르며, 장점과 아쉬운 점을 모두 간결하게 말하라.";
 
     private int fundingPolicyCount;
@@ -90,16 +91,10 @@ public class OllamaFinalEvaluationClient : MonoBehaviour
         }
     }
 
-    // Confirm 버튼 OnClick에서 GameManager.OnClickConfirmPolicy 대신 이 함수를 연결하면
-    // 기존 정책 실행 흐름은 유지하면서 선택 횟수를 정확히 기록할 수 있다.
+    // 기존 Confirm 버튼 연결을 유지하기 위한 호환용 함수
+    // 실제 정책 선택 횟수 기록은 GameManager.OnClickConfirmPolicy()에서 처리한다.
     public void RecordAndConfirmPolicy()
     {
-        int policyType = GameManager.Instance != null && GameManager.Instance.cardController != null
-            ? GameManager.Instance.cardController.pendingPolicyType
-            : -1;
-
-        RecordPolicySelection(policyType);
-
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnClickConfirmPolicy();
@@ -249,6 +244,7 @@ public class OllamaFinalEvaluationClient : MonoBehaviour
         builder.AppendLine("다음 최종 게임 데이터를 바탕으로 평가문만 작성하라.");
         builder.AppendLine($"정확히 {data.paragraphCount}문단으로 작성하라.");
         builder.AppendLine($"전체 평가문은 공백 포함 {MaxEvaluationCharacterCount}자 이하로 작성하라.");
+        builder.AppendLine("글자 수 제한을 넘길 것 같으면 문단 내용을 줄이고, 모든 문장은 반드시 마침표로 끝내라.");
         builder.AppendLine("제목, 표, 불릿 없이 본문만 작성하라.");
         builder.AppendLine("최종점수, 각 지역 발전도, 가장 많이 선택한 정책, 가장 적게 선택한 정책을 반드시 언급하라.");
         builder.AppendLine();
@@ -288,9 +284,19 @@ public class OllamaFinalEvaluationClient : MonoBehaviour
         }
 
         string trimmed = value.Trim();
-        return trimmed.Length <= MaxEvaluationCharacterCount
-            ? trimmed
-            : trimmed.Substring(0, MaxEvaluationCharacterCount).TrimEnd();
+        if (trimmed.Length <= MaxEvaluationCharacterCount)
+        {
+            return trimmed;
+        }
+
+        string limited = trimmed.Substring(0, MaxEvaluationCharacterCount).TrimEnd();
+        int sentenceEndIndex = limited.LastIndexOfAny(new[] { '.', '!', '?', '。', '\n' });
+        if (sentenceEndIndex >= 0)
+        {
+            return limited.Substring(0, sentenceEndIndex + 1).TrimEnd();
+        }
+
+        return limited;
     }
 
     private string BuildChatRequestUrl()

@@ -12,19 +12,13 @@
   <component name="ChangeListManager">
     <list default="true" id="f560e8cc-d47d-44ed-b595-7008915e315c" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/House/House_Lv1.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/House/House_Lv1.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/House/House_Lv2.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/House/House_Lv2.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/House/House_Lv3.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/House/House_Lv3.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/Sliver/Sliver_Lv1.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/Sliver/Sliver_Lv1.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/Sliver/Sliver_Lv2.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/Sliver/Sliver_Lv2.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/Sliver/Sliver_Lv3.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/Sliver/Sliver_Lv3.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/Univ/Univ_LV1.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/Univ/Univ_LV1.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/Univ/Univ_LV2.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/Univ/Univ_LV2.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Image/3D/Univ/Univ_LV3.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Image/3D/Univ/Univ_LV3.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/LockOverlayPrefab.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/LockOverlayPrefab.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CardController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/OllamaFinalEvaluationClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/OllamaFinalEvaluationClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/OllamaNewsClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/OllamaNewsClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TutorialManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TutorialManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -130,6 +124,7 @@
       <workItem from="1778825872269" duration="3902000" />
       <workItem from="1778906220002" duration="2436000" />
       <workItem from="1778951635894" duration="4167000" />
+      <workItem from="1779032466279" duration="4655000" />
     </task>
     <servers />
   </component>

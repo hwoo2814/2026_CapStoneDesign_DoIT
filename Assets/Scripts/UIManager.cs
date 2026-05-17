@@ -569,6 +569,8 @@ public class UIManager : MonoBehaviour
         if (questDescText != null) questDescText.text = "";
         if (summaryText != null) summaryText.text = "";
         if (resultProposalText != null) resultProposalText.text = "";
+        if (acceptBtn != null) acceptBtn.SetActive(false);
+        if (refuseBtn != null) refuseBtn.SetActive(false);
 
         // 뉴스 버튼 이미지를 기본 이미지로 복구
         if (newsButtonImage != null && newsDefaultSprite != null)
