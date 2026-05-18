@@ -10,7 +10,7 @@ public class OllamaFinalEvaluationClient : MonoBehaviour
 {
     private const string DefaultOllamaBaseUrl = "http://210.115.229.20:1100";
     private const string OllamaChatEndpoint = "/api/chat";
-    private const int MaxEvaluationCharacterCount = 199;
+    private const int MaxEvaluationCharacterCount = 400;
 
     public static OllamaFinalEvaluationClient Instance { get; private set; }
 

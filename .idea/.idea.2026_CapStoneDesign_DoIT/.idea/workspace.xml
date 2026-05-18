@@ -13,13 +13,7 @@
     <list default="true" id="f560e8cc-d47d-44ed-b595-7008915e315c" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.2026_CapStoneDesign_DoIT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/OllamaFinalEvaluationClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/OllamaFinalEvaluationClient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/OllamaNewsClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/OllamaNewsClient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TutorialManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TutorialManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,6 +119,7 @@
       <workItem from="1778906220002" duration="2436000" />
       <workItem from="1778951635894" duration="4167000" />
       <workItem from="1779032466279" duration="4655000" />
+      <workItem from="1779090486554" duration="2015000" />
     </task>
     <servers />
   </component>
