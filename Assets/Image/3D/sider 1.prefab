@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2418260328059728451}
   - component: {fileID: 2418260328060694531}
   m_Layer: 0
-  m_Name: sider 7
+  m_Name: sider 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
