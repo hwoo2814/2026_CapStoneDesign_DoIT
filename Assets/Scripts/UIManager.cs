@@ -334,7 +334,9 @@ public class UIManager : MonoBehaviour
 
         regionOutline = regionObject.GetComponentInChildren<Outline>(true);
         if (regionOutline != null)
-            regionOutline.enabled = false;
+        //5.20 수정 항상 검정
+            regionOutline.enabled = true;
+            regionOutline.OutlineColor = Color.black;
     }
 
     // 발전도 값을 기준으로 현재 레벨에 맞는 3D 프리팹을 반환하는 함수
@@ -480,6 +482,7 @@ public class UIManager : MonoBehaviour
         {
             currentRegionOutline.OutlineColor = isDeactivated ? Color.red : Color.white;
             currentRegionOutline.enabled = true;
+            
         }
     }
 
@@ -488,8 +491,9 @@ public class UIManager : MonoBehaviour
     {
         // 현재 마우스가 올라가 있던 지역의 Outline이 있다면 끔
         if (currentRegionOutline != null)
-        {
-            currentRegionOutline.enabled = false;
+        {//520수정-> 호버 끝나면 검정으로
+            //currentRegionOutline.enabled = false;
+            currentRegionOutline.OutlineColor = Color.black;
 
             // 더 이상 호버 중인 지역이 없으므로 저장된 Outline 참조를 비움
             currentRegionOutline = null;
